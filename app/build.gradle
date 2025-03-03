@@ -35,6 +35,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:21.0.0'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 //android {
 //    useLibrary 'org.apache.http.legacy'
 //}

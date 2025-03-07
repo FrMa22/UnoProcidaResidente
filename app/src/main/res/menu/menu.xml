@@ -6,24 +6,20 @@
         android:enabled="true"
         android:orderInCategory="1"
         android:title="@string/about"
-        android:visible="true"></item>
-    <item
-        android:id="@+id/finTemp"
-        android:enabled="false"
-        android:visible="false"></item>
+        android:visible="true" />
     <item
         android:id="@+id/updateWeb"
         android:orderInCategory="2"
-        android:title="@string/updateWeb"></item>
+        android:title="@string/updateWeb" />
     <item
         android:id="@+id/meteo"
         android:orderInCategory="3"
         android:title="@string/meteo"
-        android:titleCondensed="@string/meteo"></item>
+        android:titleCondensed="@string/meteo" />
     <item
         android:id="@+id/esci"
         android:enabled="true"
         android:orderInCategory="4"
         android:title="@string/esci"
-        android:visible="true"></item>
+        android:visible="true" />
 </menu>

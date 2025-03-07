@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Uno Procida Residente</string>
     <string-array name="strMezzi">
-        <item>Any</item>
+        <item>Any ship</item>
         <item>Ferries (Traghetti)</item>
         <item>Hydrofoils (Aliscafi)</item>
         <item>Traghetto Caremar</item>
@@ -16,7 +16,7 @@
         <item>Traghetto LazioMar</item>
     </string-array>
     <string-array name="strPorti">
-        <item>Any</item>
+        <item>Any port</item>
         <item>Procida</item>
         <item>Napoli</item>
         <item>Pozzuoli</item>
@@ -103,7 +103,8 @@
     <string name="sudEst">Soth-East</string>
     <string name="est">East</string>
     <string name="nordEst">North-East</string>
-    <string name="tutti">Any</string>
+    <string name="qualsiasi_porto">Any port</string>
+    <string name="qualsiasi_imbarcazione">Any ship</string>
     <string name="traghetti">Ferries</string>
     <string name="aliscafi">Hydrofoils</string>
     <string name="traghetto">Ferry</string>
@@ -143,6 +144,7 @@
     <string name="error_update_alerts">An error occurred</string>
     <string name="error_update_transports">An error occurred</string>
     <string name="error_update_companies">An error occurred</string>
-
+    <string name="text_view_costo_intero">Full</string>
+    <string name="text_view_costo_ridotto">Residents</string>
 </resources>
 

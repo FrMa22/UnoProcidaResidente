@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColor">#FFFFFF</color>
+    <color name="secondaryColor">#20359A</color>
+    <color name="text_primary_color">#20359A</color>
+    <color name="border_spinner_color">#20359A</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="list_item_background_color">#FFFFFF</color>
+    <color name="list_item_border_color">#20359A</color>
+    <color name="spinner_text_color">#000000</color>
+
+    <color name="button_reset_date_time">#20359A</color>
+
+</resources>

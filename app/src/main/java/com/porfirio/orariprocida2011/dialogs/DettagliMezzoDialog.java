@@ -3,6 +3,7 @@ package com.porfirio.orariprocida2011.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +22,8 @@ import com.porfirio.orariprocida2011.entity.Mezzo;
 import com.porfirio.orariprocida2011.threads.alerts.AlertsDAO;
 import com.porfirio.orariprocida2011.threads.taxies.TaxisDAO;
 import com.porfirio.orariprocida2011.utils.Analytics;
+
+import org.w3c.dom.Text;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,10 +45,18 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     private OrariProcida2011Activity callingActivity;
     private FragmentManager fragmentManager;
     private ArrayList<Compagnia> lc;
+    private String[] ragioni;
 
     private final AlertsDAO alertsDAO;
     private final TaxisDAO taxisDAO;
     private Analytics analytics;
+    private TextView txtMezzo;
+    private TextView txtPartenza;
+    private TextView txtArrivo;
+    private TextView txtCostoIntero;
+    private TextView txtCostoRidotto;
+    private TextView txtAuto;
+    private TextView txtAllertaMeteo;
 
     public DettagliMezzoDialog(AlertsDAO alertsDAO, TaxisDAO taxisDAO) {
         this.alertsDAO = Objects.requireNonNull(alertsDAO);
@@ -70,22 +81,13 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         View view = inflater.inflate(R.layout.dettaglimezzo, container);
         //setContentView(R.layout.dettaglimezzo);
 
-        TextView txtMezzo = view.findViewById(R.id.txtMezzo);
-        TextView txtPartenza = view.findViewById(R.id.txtPartenza);
-        TextView txtArrivo = view.findViewById(R.id.txtArrivo);
-//		txtOrario = (TextView) findViewById(R.id.txtOrario);
-//		txtOraPartenza = (TextView) findViewById(R.id.txtOraPartenza);
-//		txtOraArrivo = (TextView) findViewById(R.id.txtOraArrivo);
-//		txtPortoPartenza = (TextView) findViewById(R.id.txtPortoPartenza);
-//		txtPortoArrivo = (TextView) findViewById(R.id.txtPortoArrivo);
-        TextView txtPeriodo = view.findViewById(R.id.txtPeriodo);
-        txtPeriodo.setText("");
-        TextView txtGiorniSettimana = view.findViewById(R.id.txtGiorniSettimana);
-        txtGiorniSettimana.setText("");
-//		txtNomeCompagnia = (TextView) findViewById(R.id.txtNomeCompagnia);
-//		txtTelefonoCompagnia = (TextView) findViewById(R.id.txtTelefonoCompagnia);
-        TextView txtCosto = view.findViewById(R.id.txtCosto);
-        TextView txtAuto = view.findViewById(R.id.txtAuto);
+        txtMezzo = view.findViewById(R.id.txtMezzo);
+        txtPartenza = view.findViewById(R.id.txtPartenza);
+        txtArrivo = view.findViewById(R.id.txtArrivo);
+        txtCostoIntero = view.findViewById(R.id.txtCostoIntero);
+        txtCostoRidotto = view.findViewById(R.id.txtCostoRidotto);
+        txtAuto = view.findViewById(R.id.txtAuto);
+        txtAllertaMeteo = view.findViewById(R.id.txtAllertaMeteo);
 
         Button btnReturnToHome = view.findViewById(R.id.btnReturnToHome);
         btnReturnToHome.setOnClickListener(v -> dismiss());
@@ -123,35 +125,25 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             arrivalDate = arrivalDate.plusDays(1);
         }
 
-        String s = callingContext.getString(R.string.parteAlle) + " " + DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(mezzo.getDepartureTime());
-        s += " " + callingContext.getString(R.string.del) + " " + DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(departureDate);
-        s += " " + callingContext.getString(R.string.da) + " " + mezzo.portoPartenza;
+        String s = mezzo.portoPartenza + " - " + DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(mezzo.getDepartureTime()) + " " + DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(departureDate);
         txtPartenza.setText(s);
-        //s=new String();
-        s = callingContext.getString(R.string.arrivaAlle) + " " + DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(mezzo.getArrivalTime());
-        s += " " + callingContext.getString(R.string.del) + " " + DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(arrivalDate);
-        s += " " + callingContext.getString(R.string.a) + " " + mezzo.portoArrivo;
+
+        s = mezzo.portoArrivo + " - " + DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(mezzo.getArrivalTime()) + " - " + DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(arrivalDate);
         txtArrivo.setText(s);
 
 
-//		if (mezzo.isEsclusione())
-//			txtPeriodo.setText(mezzo.inizioEsclusione.get(Calendar.DAY_OF_MONTH));
-//		txtGiorniSettimana.setText(mezzo.giorniSettimana);
 
-//        listNumeri = new ArrayList <String>();
-//        lvNumeri=(ListView)findViewById(R.id.listViewNumeri);
-//        aalvNumeri = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_list_item_1);
-//        lvNumeri.setAdapter(aalvNumeri);
-//
-        s = "";
+        if (mezzo.getReducedPrice() > 0){
+            String ridotto = mezzo.getReducedPrice() + " € ";
+            txtCostoRidotto.setText(ridotto);
+        }
 
-        if (mezzo.getReducedPrice() > 0)
-            s += callingContext.getString(R.string.costo) + " " + String.format(Locale.getDefault(), "%.2f", mezzo.getReducedPrice()) + " € ";
 
-        if (mezzo.getFullPrice() > 0)
-            s += callingContext.getString(R.string.residenteO) + " " + String.format(Locale.getDefault(), "%.2f", mezzo.getFullPrice()) + " € " + callingContext.getString(R.string.intero);
+        if (mezzo.getFullPrice() > 0) {
+            String intero = String.format(Locale.getDefault(), "%.2f", mezzo.getFullPrice()) + " € ";
+            txtCostoIntero.setText(intero);
+        }
 
-        txtCosto.setText(s);
 
         //trova compagnia c
         Compagnia c = null;
@@ -167,9 +159,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             else
                 txtAuto.setText(callingContext.getString(R.string.trasportaAutoPasseggeri));
 
-            //biglietterieDialog = new BiglietterieDialog(this.getContext());
-            //FragmentManager fm = callingContext.getSupportFragmentManager();
-            //BiglietterieDialog biglietterieDialog = new BiglietterieDialog();
             biglietterieDialog.setCompagnia(c);
         } else
             txtAuto.setText("");
@@ -189,6 +178,30 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         segnalazioneDialog.setListCompagnia(lc);
         //segnalazioneDialog.fill(lc);
 
+        ragioni = getResources().getStringArray(R.array.strRagioni);
+        String spc = "";
+        if (mezzo.segnalazionePiuComune() > -1) {
+            spc = ragioni[mezzo.segnalazionePiuComune()];
+        }
+        if (mezzo.tot > 0 || mezzo.conferme > 0) {
+            StringBuilder alert = new StringBuilder();
+            if (mezzo.tot > 0) {
+                if (mezzo.conc) {
+                    alert.append(" - ").append(mezzo.tot).append(mezzo.tot == 1 ? " " + getString(R.string.segnalazione) : " " + getString(R.string.segnalazioni));
+                    alert.append(" ").append(getString(R.string.diProblemi)).append(" (").append(spc).append(")");
+                } else {
+                    alert.append(" - ").append(getString(R.string.possibiliProblemi)).append(" (").append(mezzo.tot);
+                    alert.append(mezzo.tot == 1 ? " " + getString(R.string.segnalazione) + ")" : " " + getString(R.string.segnalazioni) + ")");
+                    alert.append(", ").append(getString(R.string.inParticolare)).append(" ").append(spc);
+                }
+            }
+            if (mezzo.conferme > 0) {
+                alert.append(" - ").append(mezzo.conferme).append(mezzo.conferme == 1 ? " " + getString(R.string.utenteDice) : " " + getString(R.string.utentiDicono));
+                alert.append(" ").append(getString(R.string.cheLaCorsaERegolare));
+            }
+
+            txtAllertaMeteo.setText(alert);
+        }
 
         return view;
     }

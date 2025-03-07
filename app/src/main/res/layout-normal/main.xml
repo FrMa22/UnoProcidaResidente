@@ -1,120 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="app:tint=&quot;@color/COLOR_OF_ICON&quot;" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:translationZ="1dp"/>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:background="@color/primaryColor"
+        >
 
         <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/mezzo"
-            android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
-
-        <Spinner
-            android:id="@+id/spnNave"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            tools:backgroundTint="@color/common_google_signin_btn_text_dark_pressed"
-            tools:backgroundTintMode="screen"></Spinner>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/portoPartenza"
-            android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+            android:text="UnoProcidaResidente"
+            android:textSize="20sp"
+            android:textColor="@color/primaryColor"
+            android:gravity="center"
+            android:paddingVertical="15dp"
+            android:background="@drawable/background_main_title_text_view"
+            />
 
         <Spinner
             android:id="@+id/spnPortoPartenza"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"></Spinner>
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/portoArrivo"
-            android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+            android:background="@drawable/border_spinner"
+            android:popupBackground="@drawable/spinner_dropdown_background"
+            android:dropDownVerticalOffset="8dp"
+            android:spinnerMode="dropdown"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:paddingStart="10dp"
+            android:paddingVertical="5dp"/>
 
         <Spinner
             android:id="@+id/spnPortoArrivo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_spinner"
+            android:popupBackground="@drawable/spinner_dropdown_background"
+            android:dropDownVerticalOffset="8dp"
+            android:spinnerMode="dropdown"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="5dp"
+            android:paddingStart="10dp"
+            android:paddingVertical="5dp"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"></Spinner>
-    </LinearLayout>
+            android:gravity="center_vertical"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="5dp"
+            >
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="fill_parent"
+            <Spinner
+                android:id="@+id/spnNave"
+                android:layout_width="0dp"
+                android:layout_weight="0.6"
+                android:layout_height="match_parent"
+                android:background="@drawable/border_spinner"
+                android:popupBackground="@drawable/spinner_dropdown_background"
+                android:dropDownVerticalOffset="8dp"
+                android:spinnerMode="dropdown"
+                android:paddingStart="10dp"
+                android:paddingVertical="5dp"/>
+
+            <ImageButton
+                android:id="@+id/time_button"
+                android:layout_width="0dp"
+                android:layout_weight="0.15"
+                android:layout_height="match_parent"
+                android:src="@drawable/clock"
+                android:background="@drawable/image_button_main_background"
+                android:layout_marginHorizontal="10dp"
+                />
+
+            <ImageButton
+                android:id="@+id/date_button"
+                android:layout_width="0dp"
+                android:layout_weight="0.15"
+                android:layout_height="match_parent"
+                android:src="@drawable/calendar"
+                android:background="@drawable/image_button_main_background"
+                />
+
+        </LinearLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/secondaryColor"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            >
+            <Button
+                android:id="@+id/dateResetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dal 1/2/2020"
+                android:textSize="16sp"
+                android:textColor="@color/primaryColor"
+                android:background="@drawable/rounded_button"
+                android:drawableLeft="@drawable/cross"
+                android:drawablePadding="10dp"
+                android:layout_marginHorizontal="10dp"
+                android:minHeight="35dp"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/timeResetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dalle 00:30"
+                android:textSize="16sp"
+                android:textColor="@color/primaryColor"
+                android:background="@drawable/rounded_button"
+                android:drawableLeft="@drawable/cross"
+                android:drawablePadding="10dp"
+                android:layout_marginHorizontal="10dp"
+                android:minHeight="35dp"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+
+
+
+
+
+        <ListView
+            android:id="@+id/listMezzi"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:paddingHorizontal="15dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dp"/>
+
+    </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:layout_margin="20dp"
+        android:src="@drawable/cloudy_icon_fab"
+        android:backgroundTint="@color/secondaryColor"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        app:maxImageSize="32dp"
+        app:tint="@null"
+        />
 
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btnConfermaOSmentisci"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/minusminus"></Button>
+</RelativeLayout>
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/minus"></Button>
 
-        <TextView
-            android:id="@+id/txtOrario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="@string/timeTest"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/plus"></Button>
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/plusplus"></Button>
-        
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/listMezzi"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"></ListView>
-</LinearLayout>

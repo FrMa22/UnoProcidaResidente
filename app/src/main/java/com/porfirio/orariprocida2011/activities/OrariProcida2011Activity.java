@@ -1,7 +1,12 @@
 package com.porfirio.orariprocida2011.activities;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -15,18 +20,27 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.porfirio.orariprocida2011.adapter.MezzoAdapter;
 import com.porfirio.orariprocida2011.threads.companies.CompaniesUpdate;
 import com.porfirio.orariprocida2011.threads.companies.OnRequestCompaniesDAO;
 import com.porfirio.orariprocida2011.threads.taxies.OnRequestTaxisDAO;
@@ -74,11 +88,14 @@ public class OrariProcida2011Activity extends FragmentActivity {
     private String nave;
     private String portoPartenza;
     private String portoArrivo;
-    private ArrayAdapter<String> aalvMezzi;
-    private TextView txtOrario;
+    //Custom list item usage
+//    private ArrayAdapter<String> aalvMezzi;
+    private MezzoAdapter aalvMezzi;
+    private List<Mezzo> selectMezzi;
+    //end
+
     //public AlertDialog novitaDialog;
     private DettagliMezzoDialog dettagliMezzoDialog;
-    private ArrayList<Mezzo> selectMezzi;
     private final ArrayList<Compagnia> listCompagnia = new ArrayList<>();
     private LocationManager myManager;
     private String BestProvider;
@@ -92,6 +109,11 @@ public class OrariProcida2011Activity extends FragmentActivity {
     private Analytics analytics;
 
     private boolean hasReceivedWeather, hasReceivedCompanies, hasReceivedTransports, hasReceivedAlerts;
+
+    private ImageButton timeButton, dateButton;
+    private Button timeResetButton, dateResetButton;
+    private ProgressBar progressBar;
+    private SwipeRefreshLayout swipe_refresh_layout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,50 +172,129 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         meteo = new Meteo();
 
+        timeButton = findViewById(R.id.time_button);
+        dateButton = findViewById(R.id.date_button);
+        timeResetButton = findViewById(R.id.timeResetButton);
+        dateResetButton = findViewById(R.id.dateResetButton);
+
+        progressBar = findViewById(R.id.progressBar);
+
         c = Calendar.getInstance(TimeZone.getDefault());
-        txtOrario = findViewById(R.id.txtOrario);
-        setTxtOrario(c);
 
-        Button buttonMinusMinus = findViewById(R.id.btnConfermaOSmentisci);
-        buttonMinusMinus.setOnClickListener(v -> {
-            analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Button --");
-            c.add(Calendar.HOUR, -1);
-            setTxtOrario(c);
-            aggiornaLista();
+        timeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ottieni l'ora corrente
+                Calendar calendar = Calendar.getInstance();
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+
+                // Mostra il TimePickerDialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(
+                        OrariProcida2011Activity.this,
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                // Impedire la selezione di orari antecedenti all'ora attuale
+                                Calendar currentCalendar = Calendar.getInstance();
+                                if (hourOfDay < currentCalendar.get(Calendar.HOUR_OF_DAY) ||
+                                        (hourOfDay == currentCalendar.get(Calendar.HOUR_OF_DAY) && minute < currentCalendar.get(Calendar.MINUTE))) {
+                                    hourOfDay = currentCalendar.get(Calendar.HOUR_OF_DAY);
+                                    minute = currentCalendar.get(Calendar.MINUTE);
+                                }
+
+                                c.set(Calendar.HOUR,hourOfDay);
+                                c.set(Calendar.MINUTE, minute);
+                                timeResetButton.setText(String.format("%02d:%02d", hourOfDay, minute));
+                                timeResetButton.setVisibility(VISIBLE);
+                                aggiornaLista();
+                            }
+                        },
+                        hour, minute, true);
+                timePickerDialog.show();
+            }
         });
 
-        Button buttonMinus = findViewById(R.id.button2);
-        buttonMinus.setOnClickListener(v -> {
-            analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Button -");
-            c.add(Calendar.MINUTE, -15);
-            setTxtOrario(c);
-            aggiornaLista();
+        dateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ottieni la data corrente
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+                // Mostra il DatePickerDialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        OrariProcida2011Activity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                // Impedire la selezione di date antecedenti alla data attuale
+                                Calendar currentCalendar = Calendar.getInstance();
+                                if (year < currentCalendar.get(Calendar.YEAR) ||
+                                        (year == currentCalendar.get(Calendar.YEAR) && monthOfYear < currentCalendar.get(Calendar.MONTH)) ||
+                                        (year == currentCalendar.get(Calendar.YEAR) && monthOfYear == currentCalendar.get(Calendar.MONTH) && dayOfMonth < currentCalendar.get(Calendar.DAY_OF_MONTH))) {
+                                    year = currentCalendar.get(Calendar.YEAR);
+                                    monthOfYear = currentCalendar.get(Calendar.MONTH);
+                                    dayOfMonth = currentCalendar.get(Calendar.DAY_OF_MONTH);
+                                }
+
+                                c.set(Calendar.YEAR, year);
+                                c.set(Calendar.MONTH, monthOfYear);
+                                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                dateResetButton.setText(String.format("%02d/%02d/%04d", dayOfMonth, monthOfYear + 1, year));
+                                dateResetButton.setVisibility(View.VISIBLE);
+                                aggiornaLista();
+                            }
+                        },
+                        year, month, dayOfMonth);
+                datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+                datePickerDialog.show();
+            }
         });
 
-        Button buttonPlus = findViewById(R.id.button3);
-        buttonPlus.setOnClickListener(v -> {
-            //TODO L'unico problema residuo ? che problemi correttamente segnalati con pi? di 24 ore di anticipo vengono visualizzati solo a meno di 24h
-            //Forse potrebbe essere risolto forzando un refresh quando si avanza di 24h rispetto all'orario corrente
-            analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Button +");
-            c.add(Calendar.MINUTE, 15);
-            setTxtOrario(c);
-            aggiornaLista();
+        timeResetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar currentCalendar = Calendar.getInstance();
+                c.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
+                c.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
+                timeResetButton.setVisibility(GONE);
+                aggiornaLista();
+            }
         });
 
-        Button buttonPlusPlus = findViewById(R.id.button4);
-        buttonPlusPlus.setOnClickListener(v -> {
-            analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Button ++");
-            c.add(Calendar.HOUR, 1);
-            setTxtOrario(c);
-            aggiornaLista();
+        dateResetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar currentCalendar = Calendar.getInstance();
+                c.set(Calendar.YEAR, currentCalendar.get(Calendar.YEAR));
+                c.set(Calendar.MONTH, currentCalendar.get(Calendar.MONTH));
+                c.set(Calendar.DAY_OF_MONTH, currentCalendar.get(Calendar.DAY_OF_MONTH));
+                dateResetButton.setVisibility(GONE);
+                aggiornaLista();
+            }
         });
 
-        // spostato in avanti setSpinner();
+        swipe_refresh_layout = findViewById(R.id.swipe_refresh_layout);
+        swipe_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //viene fatto ciò che fa Update Web in Menu
+                analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Update Orari da Web da Menu");
+                transportsDAO.requestUpdate();
 
+                swipe_refresh_layout.setRefreshing(false);
+            }
+        });
 
         transportList = new ArrayList<>();
         ListView lvMezzi = findViewById(R.id.listMezzi);
-        aalvMezzi = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+//        aalvMezzi = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        selectMezzi = new ArrayList<>();
+        aalvMezzi = new MezzoAdapter(this, selectMezzi);
+        Log.d("lvMezzi", "Adapter count: " + selectMezzi.size());
         lvMezzi.setAdapter(aalvMezzi);
 
         dettagliMezzoDialog = new DettagliMezzoDialog(alertsDAO, taxisDAO);
@@ -203,6 +304,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         segnalazioneDialog = new SegnalazioneDialog(alertsDAO);
         //listener sul click di un item della lista
         lvMezzi.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
+            Log.d("lvMezzi", "Clicked");
             analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Click Dettagli Mezzo");
             //aboutDialog.show();
 
@@ -249,6 +351,19 @@ public class OrariProcida2011Activity extends FragmentActivity {
             return true;
         });
 
+        lvMezzi.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                swipe_refresh_layout.setEnabled(firstVisibleItem == 0);
+            }
+        });
+
+
 
         //aggiungere onlongclick su lvMezzi che faccia partire il dialog di segnalazione
         //che ha due funzioni: segnala un cambiamento (interazione con mail)
@@ -260,7 +375,8 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         setSpinner();
 
-        if (!portoPartenza.equals(getString(R.string.tutti)))
+        aggiornaLista();
+        if (!portoPartenza.equals(getString(R.string.qualsiasi_porto)))
             Toast.makeText(this, (getString(R.string.secondoMeVuoiPartireDa) + " " + portoPartenza), Toast.LENGTH_LONG).show();
     }
 
@@ -312,18 +428,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         }
     }
 
-    private void setTxtOrario(Calendar c) {
-        String s = getString(R.string.dalle) + " ";
-        if (c.get(Calendar.HOUR_OF_DAY) < 10)
-            s += "0";
-        s += c.get(Calendar.HOUR_OF_DAY) + ":";
-        if (c.get(Calendar.MINUTE) < 10)
-            s += "0";
-        s += c.get(Calendar.MINUTE) + " " + getString(R.string.del) + " ";
-        s += c.get(Calendar.DAY_OF_MONTH) + "/";
-        s += (c.get(Calendar.MONTH) + 1) + "";
-        txtOrario.setText(s);
-    }
+
 
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -332,7 +437,9 @@ public class OrariProcida2011Activity extends FragmentActivity {
         return (netInfo != null && netInfo.isConnected());
     }
 
+
     private void aggiornaLista() {
+        progressBar.setVisibility(VISIBLE);
         if (!hasReceivedWeather || !hasReceivedTransports || !hasReceivedCompanies || !hasReceivedAlerts)
             return;
 
@@ -340,6 +447,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         selectMezzi = new ArrayList<>();
 
+        // Clear the previous data in the adapter
         aalvMezzi.clear();
 
         String expandedTransportName = espandiNave(nave);
@@ -379,16 +487,15 @@ public class OrariProcida2011Activity extends FragmentActivity {
             return 0;
         });
 
-        for (int i = 0; i < selectMezzi.size(); i++) {
-            Mezzo route = selectMezzi.get(i);
+        // Aggiungi i nuovi dati all'adapter
+        aalvMezzi.addAll(selectMezzi);
 
-            route.setOrderInList(i);
-
-            String s = formatMezzoInfo(route);
-            aalvMezzi.add(s);
-        }
+        // Notifica all'adapter che i dati sono cambiati
+        aalvMezzi.notifyDataSetChanged();
 
         reportFullyDrawn();
+
+        progressBar.setVisibility(GONE);
     }
 
     private String espandiNave(String nave) {
@@ -419,11 +526,11 @@ public class OrariProcida2011Activity extends FragmentActivity {
     }
 
     private boolean isNaveCompatibile(String naveEspanso, Mezzo mezzo) {
-        return naveEspanso.contains(mezzo.nave) || nave.equals(getString(R.string.tutti));
+        return naveEspanso.contains(mezzo.nave) || nave.equals(getString(R.string.qualsiasi_imbarcazione));
     }
 
     private boolean isPortoCompatibile(String porto, String portoEspanso, String portoMezzo) {
-        return portoMezzo.equals(porto) || portoEspanso.contains(portoMezzo) || porto.equals(getString(R.string.tutti));
+        return portoMezzo.equals(porto) || portoEspanso.contains(portoMezzo) || porto.equals(getString(R.string.qualsiasi_porto));
     }
 
     private String formatMezzoInfo(Mezzo route) {
@@ -460,9 +567,9 @@ public class OrariProcida2011Activity extends FragmentActivity {
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spnNave.setAdapter(adapter);
 
-        nave = getString(R.string.tutti);
-        portoPartenza = getString(R.string.tutti);
-        portoArrivo = getString(R.string.tutti);
+        nave = getString(R.string.qualsiasi_imbarcazione);
+        portoPartenza = getString(R.string.qualsiasi_porto);
+        portoArrivo = getString(R.string.qualsiasi_porto);
 
         spnNave.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -491,7 +598,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         adapter3.setDropDownViewResource(R.layout.spinner_item);
         spnPortoArrivo.setAdapter(adapter3);
 
-        if (!portoPartenza.contentEquals("Procida") || portoPartenza.contentEquals(getString(R.string.tutti))) {
+        if (!portoPartenza.contentEquals("Procida") || portoPartenza.contentEquals(getString(R.string.qualsiasi_porto))) {
             portoArrivo = "Procida";
             setSpnPortoArrivo(spnPortoArrivo, adapter3);
         }
@@ -500,10 +607,10 @@ public class OrariProcida2011Activity extends FragmentActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 portoPartenza = parent.getItemAtPosition(pos).toString();
                 if (portoPartenza.contentEquals("Procida") && portoArrivo.contentEquals("Procida")) {
-                    portoArrivo = getString(R.string.tutti);
+                    portoArrivo = getString(R.string.qualsiasi_porto);
                     setSpnPortoArrivo(spnPortoArrivo, adapter2);
                     setSpnPortoPartenza(spnPortoPartenza, adapter3);
-                } else if (!portoPartenza.contentEquals("Procida") || portoPartenza.contentEquals(getString(R.string.tutti))) {
+                } else if (!portoPartenza.contentEquals("Procida") || portoPartenza.contentEquals(getString(R.string.qualsiasi_porto))) {
                     portoArrivo = "Procida";
                     setSpnPortoArrivo(spnPortoArrivo, adapter2);
                     setSpnPortoPartenza(spnPortoPartenza, adapter3);
@@ -520,10 +627,10 @@ public class OrariProcida2011Activity extends FragmentActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 portoArrivo = parent.getItemAtPosition(pos).toString();
                 if (portoArrivo.contentEquals("Procida") && portoPartenza.contentEquals("Procida")) {
-                    portoPartenza = getString(R.string.tutti);
+                    portoPartenza = getString(R.string.qualsiasi_porto);
                     setSpnPortoPartenza(spnPortoPartenza, adapter2);
                     setSpnPortoArrivo(spnPortoArrivo, adapter3);
-                } else if (!portoArrivo.contentEquals("Procida") || portoArrivo.contentEquals(getString(R.string.tutti))) {
+                } else if (!portoArrivo.contentEquals("Procida") || portoArrivo.contentEquals(getString(R.string.qualsiasi_porto))) {
                     portoPartenza = "Procida";
                     setSpnPortoPartenza(spnPortoPartenza, adapter2);
                     setSpnPortoArrivo(spnPortoArrivo, adapter3);
@@ -559,7 +666,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         if (ActivityCompat.checkSelfPermission(OrariProcida2011Activity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(OrariProcida2011Activity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //System.exit(0);
-            return getString(R.string.tutti);
+            return getString(R.string.qualsiasi_porto);
         }
 
         // l'accesso al GPS potrebbe non essere garantito per ragioni legate a Google Play
@@ -571,7 +678,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
             Log.e("Activity", "GPS: ", e);
         }
         if (l == null)
-            return getString(R.string.tutti);
+            return getString(R.string.qualsiasi_porto);
         //Coordinate angoli Procida
         if ((l.getLatitude() > 40.7374) && (l.getLatitude() < 40.7733) && (l.getLongitude() > 13.9897) && (l.getLongitude() < 14.0325)) {
             analytics.send(ANALYTICS_CATEGORY_USER_EVENT, "From Procida");

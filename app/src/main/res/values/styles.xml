@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="UnoProcidaResidenteTheme" parent="@android:style/Theme.Holo">
+    <style name="UnoProcidaResidenteTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
 
-        <item name="android:actionMenuTextColor">@color/bianco</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+
+        <item name="android:textColorPrimary">@color/text_primary_color</item>
+
+        <item name="android:spinnerItemStyle">@style/MySpinnerTextStyle</item>
+        <item name="android:spinnerDropDownItemStyle">@style/MySpinnerDropDownTextStyle</item>
     </style>
 
-    <color name="bianco">#FFFFFF</color>
+    <style name="MySpinnerTextStyle" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:textColor">@color/text_primary_color</item>
+    </style>
+
+    <style name="MySpinnerDropDownTextStyle" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:textColor">@android:color/holo_red_dark</item>
+    </style>
+
 </resources>

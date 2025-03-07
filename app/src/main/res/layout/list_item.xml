@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_list_item"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="10dp"
+    android:background="@drawable/list_item_background"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="0.2"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:src="@drawable/background_icon_list_item"
+            android:padding="1dp"
+            /> <!-- Da gestire dinamicamente per impostare icona traghetto o aliscafo-->
+        <TextView
+            android:id="@+id/text_view_list_item_mezzo"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:text="Aliscafo"
+            android:textColor="@color/secondaryColor"
+            android:gravity="center"
+            />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="0.6"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        >
+        <TextView
+            android:id="@+id/text_view_list_item_Partenza_Arrivo"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.65"
+            android:text="Napoli Porto di massa-Procida"
+            android:textColor="@color/secondaryColor"
+            android:textStyle="bold"
+            android:lines="1"
+            android:autoSizeTextType="uniform"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/text_view_list_item_Orario"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.35"
+            android:text="10:15"
+            android:textColor="@color/secondaryColor"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/image_button_info"
+        android:layout_width="0dp"
+        android:layout_weight="0.2"
+        android:layout_height="match_parent"
+        android:src="@drawable/info_icon"
+        android:padding="10dp"
+        android:backgroundTint="@android:color/transparent"
+        android:contentDescription="Info"/>
+
+
+</LinearLayout>

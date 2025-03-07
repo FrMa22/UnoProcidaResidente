@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Uno Procida Residente</string>
     <string-array name="strMezzi">
-        <item>Tutti</item>
+        <item>Qualsiasi imbarcazione</item>
         <item>Traghetti</item>
         <item>Aliscafi</item>
         <item>Traghetto Caremar</item>
@@ -16,7 +16,7 @@
         <item>Traghetto LazioMar</item>
     </string-array>
     <string-array name="strPorti">
-        <item>Tutti</item>
+        <item>Qualsiasi porto</item>
         <item>Procida</item>
         <item>Napoli</item>
         <item>Pozzuoli</item>
@@ -77,8 +77,8 @@ Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativ
     <string name="circa">(circa) </string>
     <string name="residenteO">(residente) o </string>
     <string name="intero">(intero)</string>
-    <string name="trasportaSoloPasseggeri">Trasporta solo passeggeri</string>
-    <string name="trasportaAutoPasseggeri">Trasporta auto e passeggeri</string>
+    <string name="trasportaSoloPasseggeri">Veicoli non inclusi</string>
+    <string name="trasportaAutoPasseggeri">Veicoli inclusi</string>
     <string name="calma">Calma</string>
     <string name="bavaDiVento">Bava di vento</string>
     <string name="brezzaLeggera">Brezza leggera</string>
@@ -105,7 +105,8 @@ Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativ
     <string name="sudEst">Sud-Est</string>
     <string name="est">Est</string>
     <string name="nordEst">Nord-Est</string>
-    <string name="tutti">Tutti</string>
+    <string name="qualsiasi_porto">Qualsiasi porto</string>
+    <string name="qualsiasi_imbarcazione">Qualsiasi imbarcazione</string>
     <string name="traghetti">Traghetti</string>
     <string name="aliscafi">Aliscafi</string>
     <string name="traghetto">Traghetto</string>
@@ -144,4 +145,6 @@ Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativ
     <string name="error_update_alerts">Si è verificato un errore</string>
     <string name="error_update_transports">Si è verificato un errore</string>
     <string name="error_update_companies">Si è verificato un errore</string>
+    <string name="text_view_costo_intero">Intero</string>
+    <string name="text_view_costo_ridotto">Residenti</string>
 </resources>

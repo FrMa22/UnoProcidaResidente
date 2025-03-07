@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/txtPartenza"
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/txtArrivo"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/txtCosto"
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/txtAuto"
@@ -41,24 +41,22 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="@color/secondaryColor"
+        android:textColor="@color/primaryColor"
+        />
 
     <TextView
-        android:id="@+id/txtPeriodo"
+        android:id="@+id/txtAllertaMeteo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+        android:text="CondizioniMeteo o Allerta"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="@color/secondaryColor"
+        android:textColor="@color/primaryColor"
+        />
 
-    <TextView
-        android:id="@+id/txtGiorniSettimana"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:fitsSystemWindows="true"
-        android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
 
     <Button
         android:id="@+id/btnBiglietterie"
@@ -66,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:text="@string/numeriUtili"></Button>
+        android:text="@string/numeriUtili" />
 
     <Button
         android:id="@+id/btnTaxi"
@@ -74,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:text="@string/numeriTaxi"></Button>
+        android:text="@string/numeriTaxi" />
 
     <Button
         android:id="@+id/btnConfermaOSmentisci"
@@ -88,7 +86,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/esci"></Button>
+        android:text="@string/esci" />
     
     
 </LinearLayout>

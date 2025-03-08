@@ -13,9 +13,10 @@ import com.porfirio.orariprocida2011.entity.Compagnia;
 import com.porfirio.orariprocida2011.entity.Taxi;
 import com.porfirio.orariprocida2011.threads.companies.CompaniesUpdate;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class OnRequestTaxisDAO implements TaxisDAO {
+public class OnRequestTaxisDAO implements TaxisDAO, Serializable {
 
     private static final String DATABASE_TAG = "taxis";
 

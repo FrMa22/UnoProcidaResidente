@@ -9,29 +9,19 @@
     android:descendantFocusability="blocksDescendants"
     android:padding="5dp">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/text_view_list_item_mezzo"
         android:layout_width="0dp"
         android:layout_weight="0.2"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="0.6"
-            android:src="@drawable/background_icon_list_item"
-            android:padding="1dp"
-            /> <!-- Da gestire dinamicamente per impostare icona traghetto o aliscafo-->
-        <TextView
-            android:id="@+id/text_view_list_item_mezzo"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.4"
-            android:text="Aliscafo"
-            android:textColor="@color/secondaryColor"
-            android:gravity="center"
-            />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:text="Aliscafo"
+        android:textColor="@color/secondaryColor"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:drawableTop="@drawable/background_icon_list_item"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"/>
+
 
 
 
@@ -40,7 +30,8 @@
         android:layout_weight="0.6"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:padding="5dp"
         >
         <TextView
             android:id="@+id/text_view_list_item_Partenza_Arrivo"
@@ -58,23 +49,23 @@
         <TextView
             android:id="@+id/text_view_list_item_Orario"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="0.35"
+            android:layout_height="wrap_content"
             android:text="10:15"
             android:textColor="@color/secondaryColor"
             android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="14sp"
             android:gravity="center"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"/>
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/image_button_info"
+    <ImageView
+        android:id="@+id/image_view_warning"
         android:layout_width="0dp"
         android:layout_weight="0.2"
         android:layout_height="match_parent"
-        android:src="@drawable/info_icon"
+        android:src="@drawable/warning_icon"
         android:padding="10dp"
-        android:backgroundTint="@android:color/transparent"
         android:contentDescription="Info"/>
 
 

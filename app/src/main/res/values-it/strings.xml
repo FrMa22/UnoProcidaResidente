@@ -145,6 +145,9 @@ Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativ
     <string name="error_update_alerts">Si è verificato un errore</string>
     <string name="error_update_transports">Si è verificato un errore</string>
     <string name="error_update_companies">Si è verificato un errore</string>
-    <string name="text_view_costo_intero">Intero</string>
-    <string name="text_view_costo_ridotto">Residenti</string>
+    <string name="text_view_costo_intero">Intero:</string>
+    <string name="text_view_costo_ridotto">Residenti:</string>
+    <string name="text_view_partenza">Partenza:</string>
+    <string name="text_view_destinazione">Arrivo:</string>
+    <string name="text_view_trasporto_veicoli">Veicoli inclusi</string>
 </resources>

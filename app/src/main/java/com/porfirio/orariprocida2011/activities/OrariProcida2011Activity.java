@@ -9,29 +9,37 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -40,6 +48,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.porfirio.orariprocida2011.adapter.MezzoAdapter;
 import com.porfirio.orariprocida2011.threads.companies.CompaniesUpdate;
 import com.porfirio.orariprocida2011.threads.companies.OnRequestCompaniesDAO;
@@ -61,6 +70,9 @@ import com.porfirio.orariprocida2011.entity.Meteo;
 import com.porfirio.orariprocida2011.entity.Mezzo;
 import com.porfirio.orariprocida2011.entity.Osservazione;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -114,6 +126,8 @@ public class OrariProcida2011Activity extends FragmentActivity {
     private Button timeResetButton, dateResetButton;
     private ProgressBar progressBar;
     private SwipeRefreshLayout swipe_refresh_layout;
+    private LottieAnimationView lottieLoader;
+    private ImageView blurredBackground;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -177,7 +191,40 @@ public class OrariProcida2011Activity extends FragmentActivity {
         timeResetButton = findViewById(R.id.timeResetButton);
         dateResetButton = findViewById(R.id.dateResetButton);
 
-        progressBar = findViewById(R.id.progressBar);
+        blurredBackground = findViewById(R.id.blurredBackground);
+        // Verifica la versione di Android
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            RenderEffect blurEffect = RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.CLAMP);
+            blurredBackground.setRenderEffect(blurEffect);
+        } else {
+            // Per versioni precedenti (usa RenderScript per sfocatura)
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.background_main_title_text_view);
+
+            RenderScript rs = RenderScript.create(this);
+            Allocation input = Allocation.createFromBitmap(rs, bitmap);
+            Allocation output = Allocation.createTyped(rs, input.getType());
+
+            ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+            blur.setRadius(20f);
+            blur.setInput(input);
+            blur.forEach(output);
+
+            output.copyTo(bitmap);
+            blurredBackground.setBackground(new BitmapDrawable(getResources(), bitmap));
+
+            rs.destroy();
+        }
+        //progressBar = findViewById(R.id.progressBar);
+        lottieLoader = findViewById(R.id.lottieLoader);
+        InputStream inputStream = getResources().openRawResource(R.raw.loading_lottie);
+        String jsonString;
+        jsonString = new BufferedReader(new InputStreamReader(inputStream))
+                .lines()
+                .reduce("", (accumulator, actual) -> accumulator + actual);
+
+        LottieAnimationView lottieLoader = findViewById(R.id.lottieLoader);
+        lottieLoader.setAnimationFromJson(jsonString, "loading_animation");
+
 
         c = Calendar.getInstance(TimeZone.getDefault());
 
@@ -439,7 +486,10 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
 
     private void aggiornaLista() {
-        progressBar.setVisibility(VISIBLE);
+        //progressBar.setVisibility(VISIBLE);
+        blurredBackground.setVisibility(VISIBLE);
+        lottieLoader.setVisibility(VISIBLE);
+        lottieLoader.playAnimation();
         if (!hasReceivedWeather || !hasReceivedTransports || !hasReceivedCompanies || !hasReceivedAlerts)
             return;
 
@@ -495,7 +545,11 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         reportFullyDrawn();
 
-        progressBar.setVisibility(GONE);
+        blurredBackground.setVisibility(GONE);
+        lottieLoader.cancelAnimation();
+        lottieLoader.setVisibility(GONE);
+
+        //progressBar.setVisibility(GONE);
     }
 
     private String espandiNave(String nave) {

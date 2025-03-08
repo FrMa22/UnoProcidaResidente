@@ -144,7 +144,10 @@
     <string name="error_update_alerts">An error occurred</string>
     <string name="error_update_transports">An error occurred</string>
     <string name="error_update_companies">An error occurred</string>
-    <string name="text_view_costo_intero">Full</string>
-    <string name="text_view_costo_ridotto">Residents</string>
+    <string name="text_view_costo_intero">Full:</string>
+    <string name="text_view_costo_ridotto">Residents:</string>
+    <string name="text_view_partenza">Departure:</string>
+    <string name="text_view_destinazione">Destination:</string>
+    <string name="text_view_trasporto_veicoli">Vehicles included:</string>
 </resources>
 

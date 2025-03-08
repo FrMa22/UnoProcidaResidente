@@ -114,8 +114,13 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             }
         });
 
-        final String text = "    " + mezzo.nave + "    ";
-        txtMezzo.setText(text);
+        if (mezzo != null) {
+            final String text = "    " + mezzo.nave + "    ";
+            txtMezzo.setText(text);
+        } else {
+            Log.d("DettagliMezzoDialog", "Errore: oggetto Mezzo non esiste");
+        }
+
 
         LocalDate departureDate = LocalDateTime.ofInstant(callingActivity.c.toInstant(), callingActivity.c.getTimeZone().toZoneId()).toLocalDate();
         LocalDate arrivalDate = LocalDateTime.ofInstant(callingActivity.c.toInstant(), callingActivity.c.getTimeZone().toZoneId()).toLocalDate();

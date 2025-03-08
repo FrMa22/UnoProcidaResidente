@@ -1,5 +1,8 @@
 package com.porfirio.orariprocida2011.adapter;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -22,7 +25,7 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
 
     private Context context;
     private List<Mezzo> mezziList;
-    private ImageButton infoButton;
+    private ImageView infoImageView;
 
     public MezzoAdapter(Context context, List<Mezzo> mezziList) {
         super(context, R.layout.list_item, mezziList);
@@ -51,12 +54,12 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
 
 
         // Gestisci il bottone info
-        infoButton = convertView.findViewById(R.id.image_button_info);
+        infoImageView = convertView.findViewById(R.id.image_view_warning);
 
         if(mezzo.tot > 0){
-            infoButton.setImageResource(R.drawable.exclamation);
+            infoImageView.setVisibility(VISIBLE);
         }else{
-            infoButton.setImageResource(R.drawable.info_icon);
+            infoImageView.setVisibility(INVISIBLE);
         }
 
 //        infoButton.setOnClickListener(v -> {

@@ -9,6 +9,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -155,6 +156,13 @@ public class OrariProcida2011Activity extends FragmentActivity {
         // NOTE (2025-02-25):
         // these DAO calls are mixed here and there through the code because the UI is confusing to navigate at the moment
         // they should be moved
+
+        ImageView imageView = findViewById(R.id.info_icon);
+        imageView.setOnClickListener(v -> {
+            Intent intent = new Intent(OrariProcida2011Activity.this, InfoActivity.class);
+            startActivity(intent);
+        });
+
         analytics = new Analytics((AnalyticsApplication) getApplication());
 
         weatherDAO = new OnRequestWeatherDAO();

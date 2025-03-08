@@ -136,7 +136,7 @@
     <string name="hintDettagli">Insert details here …</string>
     <string name="timeTest">Dalle 88:88 del 88/88</string>
     <string name="NoBiglietterie">Tickets can be bought only on board</string>
-    <string name="disclaimer">Timetables are originally published by navigation companies. The author is not responsible for timetable variations.  This application collects some personal data of its users, such as their geographical position (not contnuously), saves some data on the internal storage (timetables and meteo infos), send some data to Google Analytics for statistical purposes. The complete GPDR is accessible at: http://unoprocidaresidente.altervista.org/PrivacyPolicyUnoProcidaResidente.htm  This application collects some personal data of its users, such as their geographical position (not contnuously), saves some data on the internal storage (timetables and meteo infos), send some data to Google Analytics for statistical purposes. The complete GPDR is accessible at: http://unoprocidaresidente.altervista.org/PrivacyPolicyUnoProcidaResidente.htm</string>
+    <string name="disclaimer">Timetables are originally published by navigation companies.\nThe author is not responsible for timetable variations.\n This application collects some personal data of its users, such as their geographical position (not contnuously), saves some data on the internal storage (timetables and meteo infos), send some data to Google Analytics for statistical purposes.\nThe complete GPDR is accessible at: http://unoprocidaresidente.altervista.org/PrivacyPolicyUnoProcidaResidente.htm  This application collects some personal data of its users, such as their geographical position (not contnuously), saves some data on the internal storage (timetables and meteo infos), send some data to Google Analytics for statistical purposes. The complete GPDR is accessible at:</string>
     <string name="alleOre">alle ore</string>
     <string name="previsioni">Forecasts:</string>
     <string name="pippo">Goofy</string>
@@ -149,5 +149,6 @@
     <string name="text_view_partenza">Departure:</string>
     <string name="text_view_destinazione">Destination:</string>
     <string name="text_view_trasporto_veicoli">Vehicles included:</string>
+    <string name="welcome_text"><b>Benvenuto</b> su UnoProcidaResidente!</string>
 </resources>
 

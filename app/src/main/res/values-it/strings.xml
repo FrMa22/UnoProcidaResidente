@@ -59,8 +59,8 @@
     <string name="updateWeb">Aggiorna orari da Web</string>
     <string name="numeriTaxi">Chiama un taxi</string>
     <string name="noUpdateWeb">Non aggiornare orari da Web</string>
-    <string name="disclaimer">"Gli orari sono quelli resi noti dalle compagnie di navigazione alle biglietterie o sui loro siti web. L'autore non e' in alcun modo responsabile di ogni eventuale loro cambiamento.
-Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativamente), salva dei dati (orari e informazioni meteo) sulla memoria interna del dispositivo, invia dati a Google Analytics a scopo statistico. La GPDR completa è accessibile all'indirizzo http://unoprocidaresidente.altervista.org/PrivacyPolicyUnoProcidaResidente.htm"</string>
+    <string name="disclaimer">"Gli orari sono quelli resi noti dalle compagnie di navigazione alle biglietterie o sui loro siti web.\nL'autore non e' in alcun modo responsabile di ogni eventuale loro cambiamento.\n
+Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativamente), salva dei dati (orari e informazioni meteo) sulla memoria interna del dispositivo, invia dati a Google Analytics a scopo statistico.\nLa GPDR completa è accessibile all'indirizzo: "</string>
     <string name="condimeteo">Condizioni meteo:</string>
     <string name="dalle">Dalle</string>
     <string name="orariAggiornatiAl">Orari aggiornati al </string>
@@ -150,4 +150,6 @@ Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativ
     <string name="text_view_partenza">Partenza:</string>
     <string name="text_view_destinazione">Arrivo:</string>
     <string name="text_view_trasporto_veicoli">Veicoli inclusi</string>
+    <string name="welcome_text"><b>Benvenuto</b> su UnoProcidaResidente!</string>
+
 </resources>

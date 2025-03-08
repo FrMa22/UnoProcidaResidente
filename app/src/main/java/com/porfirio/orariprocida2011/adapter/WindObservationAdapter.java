@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieDrawable;
 import com.porfirio.orariprocida2011.R;
 import com.porfirio.orariprocida2011.entity.Osservazione;
 
@@ -34,10 +36,11 @@ public class WindObservationAdapter extends ArrayAdapter<Osservazione> {
         }
 
         Osservazione observation = observations.get(position);
-        TextView textViewMezzo = convertView.findViewById(R.id.weather_list_item);
+        TextView textViewMezzo = convertView.findViewById(R.id.weather_item_text);
         String time = observation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"));
         String windSpeed = (int) Math.floor(observation.getWindSpeed()) + " Km/h";
         String formattedText = time + "\n" + windSpeed;
+
         Log.d("WindObservationAdapter", "Observation: " + formattedText);
         textViewMezzo.setText(formattedText);
 

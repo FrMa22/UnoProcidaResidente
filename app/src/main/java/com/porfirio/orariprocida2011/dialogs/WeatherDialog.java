@@ -2,11 +2,12 @@ package com.porfirio.orariprocida2011.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.view.Window;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieDrawable;
 import com.porfirio.orariprocida2011.R;
 import com.porfirio.orariprocida2011.adapter.WindObservationAdapter;
 import com.porfirio.orariprocida2011.entity.Meteo;
@@ -28,6 +29,11 @@ public class WeatherDialog extends Dialog {
 
         tvWindInfo.setText(windInfo);
         tvDateTime.setText(dateTime);
+
+        LottieAnimationView lottieAnimationView = findViewById(R.id.lottie_wind_view);
+        lottieAnimationView.setAnimation(R.raw.wind_animation);
+        lottieAnimationView.setRepeatCount(LottieDrawable.INFINITE);
+        lottieAnimationView.playAnimation();
 
         if (meteo.getForecasts() != null && !meteo.getForecasts().isEmpty()) {
             WindObservationAdapter adapter = new WindObservationAdapter(getContext(), meteo.getForecasts());

@@ -2,6 +2,7 @@
 <resources>
     <color name="primaryColor">#FFFFFF</color>
     <color name="secondaryColor">#20359A</color>
+    <color name="lightGray">#BEBDBF</color>
     <color name="text_primary_color">#20359A</color>
     <color name="border_spinner_color">#20359A</color>
     <color name="black">#000000</color>

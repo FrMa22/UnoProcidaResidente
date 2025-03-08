@@ -6,6 +6,7 @@ import static android.view.View.VISIBLE;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -14,6 +15,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.RenderEffect;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -30,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -49,7 +53,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.porfirio.orariprocida2011.adapter.MezzoAdapter;
+import com.porfirio.orariprocida2011.dialogs.WeatherDialog;
 import com.porfirio.orariprocida2011.threads.companies.CompaniesUpdate;
 import com.porfirio.orariprocida2011.threads.companies.OnRequestCompaniesDAO;
 import com.porfirio.orariprocida2011.threads.taxies.OnRequestTaxisDAO;
@@ -80,6 +86,7 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 public class OrariProcida2011Activity extends FragmentActivity {
@@ -93,7 +100,8 @@ public class OrariProcida2011Activity extends FragmentActivity {
     public Calendar c;
     public AlertDialog aboutDialog;
     public Meteo meteo;
-    //    public AlertDialog meteoDialog;
+
+    //    public AlertDialog weatherDialog;
     public ArrayList<Mezzo> transportList;
     private String[] ragioni = new String[100];
 
@@ -112,6 +120,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
     private LocationManager myManager;
     private String BestProvider;
     private SegnalazioneDialog segnalazioneDialog;
+    private FloatingActionButton weatherFab;
 
     private OnRequestCompaniesDAO companiesDAO;
     private OnRequestWeatherDAO weatherDAO;
@@ -190,6 +199,14 @@ public class OrariProcida2011Activity extends FragmentActivity {
         dateButton = findViewById(R.id.date_button);
         timeResetButton = findViewById(R.id.timeResetButton);
         dateResetButton = findViewById(R.id.dateResetButton);
+        weatherFab = findViewById(R.id.fabWeather);
+
+        weatherFab.setOnClickListener(v -> {
+            WeatherDialog weatherDialog = new WeatherDialog(this, "24/01/2025 - 18:00", "Brezza leggera da Nord-Ovest (8 Km/h)", meteo);
+
+            weatherDialog.show();
+        });
+
 
         blurredBackground = findViewById(R.id.blurredBackground);
         // Verifica la versione di Android
@@ -250,7 +267,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
                                     minute = currentCalendar.get(Calendar.MINUTE);
                                 }
 
-                                c.set(Calendar.HOUR,hourOfDay);
+                                c.set(Calendar.HOUR, hourOfDay);
                                 c.set(Calendar.MINUTE, minute);
                                 timeResetButton.setText(String.format("%02d:%02d", hourOfDay, minute));
                                 timeResetButton.setVisibility(VISIBLE);
@@ -411,7 +428,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
         });
 
 
-
         //aggiungere onlongclick su lvMezzi che faccia partire il dialog di segnalazione
         //che ha due funzioni: segnala un cambiamento (interazione con mail)
         //esegui un cambiamento (richiede una password che conosco solo io)
@@ -474,7 +490,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
     public boolean isOnline() {

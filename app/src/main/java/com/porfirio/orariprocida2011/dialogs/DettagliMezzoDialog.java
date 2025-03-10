@@ -238,12 +238,12 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
                 taxis=update.getData();
         });
 
-        segnalazioneDialog = new SegnalazioneDialog(alertsDAO);
-        segnalazioneDialog.setOrarioRef(calen);
-        segnalazioneDialog.setMezzo(mezzo);
-        segnalazioneDialog.setCallingContext(this.getContext());
-        segnalazioneDialog.setAnalytics(analytics);
-        segnalazioneDialog.setListCompagnia(lc);
+//        segnalazioneDialog = new SegnalazioneDialog(alertsDAO);
+//        segnalazioneDialog.setOrarioRef(calen);
+//        segnalazioneDialog.setMezzo(mezzo);
+//        segnalazioneDialog.setCallingContext(this.getContext());
+//        segnalazioneDialog.setAnalytics(analytics);
+//        segnalazioneDialog.setListCompagnia(lc);
         //segnalazioneDialog.fill(lc);
 
         ragioni = getResources().getStringArray(R.array.strRagioni);
@@ -408,6 +408,14 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         spnRagioni.setLayoutParams(spinnerParams);
         spnRagioni.setPadding(20,0,0,0);
         spnRagioni.setAdapter(adapter);
+        spnRagioni.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                ragione = pos;
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         linearLayout.addView(spnRagioni);
 
         EditText editTextDettagli = new EditText(callingContext);

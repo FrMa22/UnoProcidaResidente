@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColor">#000000</color>
-    <color name="secondaryColor">#FFFFFF</color>
+    <color name="primaryColor">#13122C</color>
+    <color name="secondaryColor">#AEB8E5</color>
     <color name="tertiaryColor">#1CA6EB</color>
     <color name="lightGray">#BEBDBF</color>
     <color name="text_primary_color">#FFFFFF</color>
-    <color name="border_spinner_color">#20359A</color>
-    <color name="list_item_background_color">#000000</color>
-    <color name="list_item_border_color">#FFFFFF</color>
-    <color name="spinner_text_color">#FFFFFF</color>
+    <color name="border_spinner_color">#AEB8E5</color>
+    <color name="list_item_background_color">#13122C</color>
+    <color name="list_item_border_color">#AEB8E5</color>
+    <color name="spinner_text_color">#13122C</color>
 
     <color name="button_reset_date_time">#20359A</color>
 </resources>

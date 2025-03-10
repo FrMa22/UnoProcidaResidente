@@ -18,7 +18,7 @@
         android:textColor="@color/secondaryColor"
         android:gravity="center"
         android:textSize="14sp"
-        android:drawableTop="@drawable/background_icon_list_item"
+        android:drawableTop="@drawable/background_icon_list_item_mezzo"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"/>
 

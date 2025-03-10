@@ -252,7 +252,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
 
         c = Calendar.getInstance(TimeZone.getDefault());
-
         timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -366,7 +365,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 //        aalvMezzi = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         selectMezzi = new ArrayList<>();
         aalvMezzi = new MezzoAdapter(this, selectMezzi);
-        Log.d("lvMezzi", "Adapter count: " + selectMezzi.size());
         lvMezzi.setAdapter(aalvMezzi);
 
         dettagliMezzoDialog = new DettagliMezzoDialog(alertsDAO, taxisDAO);
@@ -374,16 +372,13 @@ public class OrariProcida2011Activity extends FragmentActivity {
         dettagliMezzoDialog.setAnalytics(analytics);
 
         segnalazioneDialog = new SegnalazioneDialog(alertsDAO);
-        //listener sul click di un item della lista
+
         lvMezzi.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
-            Log.d("lvMezzi", "Clicked");
             analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Click Dettagli Mezzo");
             //aboutDialog.show();
 
-            for (int i = 0; i < aalvMezzi.getCount(); i++) {
-                if (selectMezzi.get(i).getOrderInList() == arg2)
-                    dettagliMezzoDialog.setMezzo(selectMezzi.get(i));
-            }
+            dettagliMezzoDialog.setMezzo(selectMezzi.get(arg2));
+
 
 
 //				problema: clicco sulla lista ma ho solo la stringa, non il mezzo corrispondente

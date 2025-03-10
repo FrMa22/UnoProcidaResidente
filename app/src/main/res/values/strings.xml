@@ -49,7 +49,7 @@
     <string name="about">Info</string>
     <string name="esci">Quit</string>
     <string name="backTimetable">Back to timetable</string>
-    <string name="numeriUtili">Call to ticket office</string>
+    <string name="numeriUtili">Ticket</string>
     <string name="tampone">12345678901234567890</string>
     <string name="labelBackground">labelBackground</string>
     <string name="back">Back</string>
@@ -57,7 +57,7 @@
     <string name="ok">OK</string>
     <string name="ventiquattro">24</string>
     <string name="updateWeb">Update timetable from Web</string>
-    <string name="numeriTaxi">Call for a taxi</string>
+    <string name="numeriTaxi">Taxi</string>
     <string name="noUpdateWeb">Don\'t update timetable from Web</string>
     <string name="condimeteo">Meteorological conditions:</string>
     <string name="dalle">As of </string>
@@ -118,7 +118,7 @@
     <string name="inviaSegnalazione">Do you want to report that this journey will not be made?</string>
     <string name="ragione">Reason:</string>
     <string name="altriDettagliRagione">"Other Details: "</string>
-    <string name="invia">Submit the Report</string>
+    <string name="invia">Submit</string>
     <string name="ringraziamentoSegnalazione">Thank you for your report: it will be shown starting from the next app opening!</string>
     <string name="textConferma">Or do you want to confirm the regularity of this journey?</string>
     <string name="Conferma">Confirm</string>
@@ -130,7 +130,7 @@
     <string name="utentiDicono">user say</string>
     <string name="cheLaCorsaERegolare">that the journey will take place</string>
     <string name="inParticolare">in particular</string>
-    <string name="confermaOSmentisci">Confirm that the journey will take place or report a problem </string>
+    <string name="confermaOSmentisci">Report</string>
     <string name="connessioneLenta">The connection is too slow: timetable updates have not been loaded</string>
     <string name="soloOnline">This function is accessible only when the device is connected to the Internet</string>
     <string name="hintDettagli">Insert details here …</string>

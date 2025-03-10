@@ -49,7 +49,7 @@
     <string name="about">Info</string>
     <string name="esci">Esci</string>
     <string name="backTimetable">Torna agli orari</string>
-    <string name="numeriUtili">Chiama la biglietteria</string>
+    <string name="numeriUtili">Biglietteria</string>
     <string name="tampone">1234567890123456789012345</string>
     <string name="labelBackground">labelBackground</string>
     <string name="back">Indietro</string>
@@ -57,7 +57,7 @@
     <string name="ok">OK</string>
     <string name="ventiquattro">24</string>
     <string name="updateWeb">Aggiorna orari da Web</string>
-    <string name="numeriTaxi">Chiama un taxi</string>
+    <string name="numeriTaxi">Taxi</string>
     <string name="noUpdateWeb">Non aggiornare orari da Web</string>
     <string name="disclaimer">"Gli orari sono quelli resi noti dalle compagnie di navigazione alle biglietterie o sui loro siti web.\nL'autore non e' in alcun modo responsabile di ogni eventuale loro cambiamento.\n
 Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativamente), salva dei dati (orari e informazioni meteo) sulla memoria interna del dispositivo, invia dati a Google Analytics a scopo statistico.\nLa GPDR completa è accessibile all'indirizzo: "</string>
@@ -132,7 +132,7 @@ Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativ
     <string name="utentiDicono">utenti dicono</string>
     <string name="cheLaCorsaERegolare">che la corsa e\' regolare</string>
     <string name="inParticolare">in particolare</string>
-    <string name="confermaOSmentisci">Conferma la regolarita\' o segnala un problema per questa corsa </string>
+    <string name="confermaOSmentisci">Segnala</string>
     <string name="connessioneLenta">La connessione e\' troppo lenta: gli ultimi aggiornamenti degli orari non sono stati caricati!</string>
     <string name="soloOnline">Funzionalita\' accessibile solo in presenza di connessione a Internet</string>
     <string name="hintDettagli">Inserisci qui i dettagli del problema, se noti</string>

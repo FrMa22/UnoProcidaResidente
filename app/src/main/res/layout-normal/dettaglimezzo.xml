@@ -1,210 +1,267 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/linear_layout_dettagli_mezzo"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primaryColor"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/spinner_dropdown_background"
+    android:padding="10dp">
 
-    <Toolbar
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
-        android:background="@drawable/background_main_title_text_view">
+        android:layout_height="wrap_content"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/background_icon_list_item"
+            android:layout_alignParentStart="true"
+            />
+        <TextView
+            android:id="@+id/txtPartenzaDestinazione"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="60dp"
+            android:autoSizeTextType="uniform"
+            android:lines="1"
+            android:text="@string/tampone"
+            android:textColor="@color/secondaryColor"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="6"
+        android:padding="8dp"
+        android:useDefaultMargins="true">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/text_view_partenza"
+            android:lines="1"
+            android:textSize="18sp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="end"/>
+
+        <TextView
+            android:id="@+id/txtPartenza"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:gravity="start"
+            android:lines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="11sp"
+            android:text="@string/tampone"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/grey"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/text_view_destinazione"
+            android:lines="1"
+            android:textSize="18sp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="end"
+            />
+
+        <TextView
+            android:id="@+id/txtArrivo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/tampone"
+            android:textSize="18sp"
+            android:lines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="11sp"
+            android:textColor="@color/grey"
             android:gravity="center"
-            android:text="UnoProcidaResidente"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-    </Toolbar>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/text_view_costo_intero"
+            android:textSize="18sp"
+            android:lines="1"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="end"
+            />
+
+        <TextView
+            android:id="@+id/txtCostoIntero"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/tampone"
+            android:lines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="18sp"
+            android:textColor="@color/grey"
+            android:gravity="start"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:layout_columnWeight="1"
+            android:text="@string/text_view_costo_ridotto"
+            android:textSize="18sp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="end"
+            />
+
+        <TextView
+            android:id="@+id/txtCostoRidotto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/tampone"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="18sp"
+            android:lines="1"
+            android:textColor="@color/grey"
+            android:gravity="start"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/mezzo"
+            android:textSize="18sp"
+            android:lines="1"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="end"
+            />
+
+        <TextView
+            android:id="@+id/txtMezzo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="Traghetto"
+            android:textSize="18sp"
+            android:lines="1"
+            android:textColor="@color/grey"
+            android:gravity="start"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/text_view_trasporto_veicoli"
+            android:textSize="18sp"
+            android:lines="1"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="end"
+            />
+
+        <TextView
+            android:id="@+id/txtAuto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/tampone"
+            android:lines="1"
+            android:textSize="18sp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/grey"
+            android:gravity="start"
+            />
+    </GridLayout>
+
+
+    <TextView
+        android:id="@+id/txtAllertaMeteo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginVertical="10dp"
+        android:visibility="gone"
+        android:text="CondizioniMeteo o Allerta"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/warning_text" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="20dp"
-        android:layout_weight="0.9"
-        android:background="@drawable/dropdown_background"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/background_icon_list_item" />
-
-            <TextView
-                android:id="@+id/txtMezzo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/tampone"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/secondaryColor" />
-        </RelativeLayout>
-
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="0.5"
-                android:gravity="end"
-                android:text="@string/text_view_partenza"
-                android:textColor="@color/grey"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtPartenza"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="0.5"
-                android:gravity="start"
-                android:text="@string/tampone"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/grey"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="0.5"
-                android:gravity="end"
-                android:text="@string/text_view_destinazione"
-                android:textColor="@color/grey"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtArrivo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="0.5"
-                android:gravity="center"
-                android:text="@string/tampone"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/grey"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="0.5"
-                android:gravity="end"
-                android:text="@string/text_view_costo_intero"
-                android:textColor="@color/grey"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtCostoIntero"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="0.5"
-                android:gravity="start"
-                android:text="@string/tampone"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/grey"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="0.5"
-                android:gravity="end"
-                android:text="@string/text_view_costo_ridotto"
-                android:textColor="@color/grey"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtCostoRidotto"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="0.5"
-                android:gravity="start"
-                android:text="@string/tampone"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/grey"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="0.5"
-                android:gravity="end"
-                android:text="@string/text_view_trasporto_veicoli"
-                android:textColor="@color/grey"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtAuto"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="0.5"
-                android:gravity="start"
-                android:text="@string/tampone"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/grey"
-                android:textSize="14sp" />
-        </GridLayout>
-
-
-        <TextView
-            android:id="@+id/txtAllertaMeteo"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/secondaryColor"
-            android:text="CondizioniMeteo o Allerta"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/primaryColor" />
-
-        <Button
-            android:id="@+id/btnBiglietterie"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:text="@string/numeriUtili" />
-
-        <Button
-            android:id="@+id/btnTaxi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:text="@string/numeriTaxi" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        >
 
         <Button
             android:id="@+id/btnConfermaOSmentisci"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
-            android:text="@string/confermaOSmentisci" />
-
+            android:background="@drawable/dialog_rounded_button"
+            android:drawableEnd="@drawable/button_report_icon"
+            android:drawablePadding="5dp"
+            android:minHeight="32dp"
+            android:text="@string/confermaOSmentisci"
+            android:textColor="@color/primaryColor"
+            android:textSize="11sp" />
         <Button
-            android:id="@+id/btnReturnToHome"
-            android:layout_width="fill_parent"
+            android:id="@+id/btnTaxi"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:drawableEnd="@drawable/button_taxi_icon"
+            android:drawablePadding="5dp"
             android:layout_weight="1"
-            android:text="@string/esci" />
-
+            android:background="@drawable/dialog_rounded_button"
+            android:text="@string/numeriTaxi"
+            android:textSize="11sp"
+            android:textColor="@color/primaryColor"
+            android:minHeight="32dp"
+            android:layout_marginHorizontal="5dp"/>
+        <Button
+            android:id="@+id/btnBiglietterie"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:drawableEnd="@drawable/button_ticker_office_icon"
+            android:drawablePadding="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/dialog_rounded_button"
+            android:text="@string/numeriUtili"
+            android:textSize="11sp"
+            android:textColor="@color/primaryColor"
+            android:minHeight="32dp"
+            android:layout_marginHorizontal="5dp"/>
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/view_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="5dp"
+        android:visibility="gone"
+        android:background="@color/secondaryColor"/>
+
+
+
+
 
 </LinearLayout>

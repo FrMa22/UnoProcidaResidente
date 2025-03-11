@@ -89,6 +89,5 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/rounded_button"
-        android:contentDescription="Torna indietro"
         android:src="@drawable/ic_arrow_back" />
 </FrameLayout>

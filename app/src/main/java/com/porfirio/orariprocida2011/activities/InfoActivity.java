@@ -10,6 +10,8 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -28,27 +30,31 @@ public class InfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_info);
-        LottieAnimationView lottieAnimationView = findViewById(R.id.lottie_ship);
-        lottieAnimationView.setAnimation(R.raw.ship_animation);
-        lottieAnimationView.setRepeatCount(LottieDrawable.INFINITE);
-        lottieAnimationView.playAnimation();
 
-        LottieAnimationView lottieAnimationView2 = findViewById(R.id.wave_top);
-        lottieAnimationView2.setAnimation(R.raw.wave_animation);
-        lottieAnimationView2.setRepeatCount(LottieDrawable.INFINITE);
-        lottieAnimationView2.playAnimation();
+        ImageButton backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
-        LottieAnimationView lottieAnimationView3 = findViewById(R.id.wave_bottom);
-        lottieAnimationView3.setAnimation(R.raw.wave_animation);
-        lottieAnimationView3.setRepeatCount(LottieDrawable.INFINITE);
-        lottieAnimationView3.playAnimation();
+        LottieAnimationView shipLottie = findViewById(R.id.lottie_ship);
+        shipLottie.setAnimation(R.raw.ship_animation);
+        shipLottie.setRepeatCount(LottieDrawable.INFINITE);
+        shipLottie.playAnimation();
+
+        LottieAnimationView lottieWaveTop = findViewById(R.id.wave_top);
+        lottieWaveTop.setAnimation(R.raw.wave_animation);
+        lottieWaveTop.setRepeatCount(LottieDrawable.INFINITE);
+        lottieWaveTop.playAnimation();
+
+        LottieAnimationView lottieWaveBottom = findViewById(R.id.wave_bottom);
+        lottieWaveBottom.setAnimation(R.raw.wave_animation);
+        lottieWaveBottom.setRepeatCount(LottieDrawable.INFINITE);
+        lottieWaveBottom.playAnimation();
 
 
-        TextView textView = findViewById(R.id.link_url);
+        TextView clickableLink = findViewById(R.id.link_url);
         SpannableString spannableString = getSpannableString();
 
-        textView.setText(spannableString);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        clickableLink.setText(spannableString);
+        clickableLink.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @NonNull

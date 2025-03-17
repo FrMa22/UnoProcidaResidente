@@ -75,8 +75,10 @@
     <string name="circa">(approximately) </string>
     <string name="residenteO">(reduced for islanders) or  </string>
     <string name="intero">(normal)</string>
-    <string name="trasportaSoloPasseggeri">Passengers only ship</string>
-    <string name="trasportaAutoPasseggeri">The ship carries both cars and passengers</string>
+<!--    <string name="trasportaSoloPasseggeri">Passengers only ship</string>-->
+    <string name="trasportaSoloPasseggeri">No</string>
+<!--    <string name="trasportaAutoPasseggeri">The ship carries both cars and passengers</string>-->
+    <string name="trasportaAutoPasseggeri">Yes</string>
     <string name="calma">Calm</string>
     <string name="bavaDiVento">Light air</string>
     <string name="brezzaLeggera">Light breeze</string>
@@ -148,7 +150,7 @@
     <string name="text_view_costo_ridotto">Residents:</string>
     <string name="text_view_partenza">Departure:</string>
     <string name="text_view_destinazione">Destination:</string>
-    <string name="text_view_trasporto_veicoli">Vehicles included:</string>
+    <string name="text_view_trasporto_veicoli">Vehicles loading:</string>
     <string name="welcome_text"><b>Benvenuto</b> su UnoProcidaResidente!</string>
 </resources>
 

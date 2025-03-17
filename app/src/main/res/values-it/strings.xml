@@ -77,8 +77,10 @@ Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativ
     <string name="circa">(circa) </string>
     <string name="residenteO">(residente) o </string>
     <string name="intero">(intero)</string>
-    <string name="trasportaSoloPasseggeri">Veicoli non inclusi</string>
-    <string name="trasportaAutoPasseggeri">Veicoli inclusi</string>
+<!--    <string name="trasportaSoloPasseggeri">Veicoli non inclusi</string>-->
+    <string name="trasportaSoloPasseggeri">No</string>
+<!--    <string name="trasportaAutoPasseggeri">Veicoli inclusi</string>-->
+    <string name="trasportaAutoPasseggeri">Si</string>
     <string name="calma">Calma</string>
     <string name="bavaDiVento">Bava di vento</string>
     <string name="brezzaLeggera">Brezza leggera</string>
@@ -149,7 +151,7 @@ Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativ
     <string name="text_view_costo_ridotto">Residenti:</string>
     <string name="text_view_partenza">Partenza:</string>
     <string name="text_view_destinazione">Arrivo:</string>
-    <string name="text_view_trasporto_veicoli">Veicoli inclusi</string>
+    <string name="text_view_trasporto_veicoli">Imbarco veicoli:</string>
     <string name="welcome_text"><b>Benvenuto</b> su UnoProcidaResidente!</string>
 
 </resources>

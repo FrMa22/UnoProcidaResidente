@@ -1,5 +1,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/button_dettagli_mezzo"/>
+    <solid android:color="#55FF55"/>
     <corners android:radius="8dp"/>
     <padding
         android:left="20dp"

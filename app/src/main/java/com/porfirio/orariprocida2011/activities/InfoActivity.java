@@ -10,9 +10,12 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.window.OnBackInvokedDispatcher;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -49,6 +52,25 @@ public class InfoActivity extends AppCompatActivity {
 
         textView.setText(spannableString);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
+
+        ImageButton back_button = findViewById(R.id.back_button);
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                overridePendingTransition(R.anim.enter_from_center, R.anim.exit_to_center);
+            }
+        });
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+                overridePendingTransition(R.anim.enter_from_center, R.anim.exit_to_center);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
     }
 
     @NonNull

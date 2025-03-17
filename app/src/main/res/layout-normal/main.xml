@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/primaryColor"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -49,7 +47,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/gradient_background"
+            android:background="@color/primaryColor"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,7 +62,7 @@
                     android:gravity="center"
                     android:paddingVertical="15dp"
                     android:text="UnoProcidaResidente"
-                    android:textColor="@color/primaryColor"
+                    android:textColor="@color/tertiaryColor"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -77,6 +75,7 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/baseline_info_24"
+                    android:backgroundTint="@color/tertiaryColor"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -93,7 +92,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/dropdown_background"
                 android:drawableRight="@drawable/ic_arrow_down"
-                android:dropDownVerticalOffset="8dp"
+                android:dropDownVerticalOffset="10dp"
                 android:paddingVertical="5dp"
                 android:paddingStart="10dp"
                 android:popupBackground="@drawable/spinner_dropdown_background"
@@ -106,7 +105,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginVertical="5dp"
-                android:background="@drawable/dropdown_background"                android:dropDownVerticalOffset="8dp"
+                android:background="@drawable/dropdown_background"
+                android:dropDownVerticalOffset="8dp"
                 android:paddingVertical="5dp"
                 android:paddingStart="10dp"
                 android:popupBackground="@drawable/spinner_dropdown_background"
@@ -125,7 +125,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.6"
-                    android:background="@drawable/dropdown_background"                    android:dropDownVerticalOffset="8dp"
+                    android:background="@drawable/dropdown_background"
+                    android:dropDownVerticalOffset="8dp"
                     android:paddingVertical="5dp"
                     android:paddingStart="10dp"
                     android:popupBackground="@drawable/spinner_dropdown_background"
@@ -155,7 +156,7 @@
                 android:layout_height="1dp"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/lightGray" />
+                android:background="@color/border_spinner_color" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -194,14 +195,14 @@
             </LinearLayout>
 
 
-            <ListView
+            <GridView
                 android:id="@+id/listMezzi"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="10dp"
+                android:verticalSpacing="10dp"
                 android:paddingHorizontal="15dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:numColumns="1"/>
 
         </LinearLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -211,11 +212,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:src="@drawable/cloudy_icon_fab"
-        android:backgroundTint="@color/secondaryColor"
+        android:src="@drawable/weather_icon"
+        android:backgroundTint="@color/fab_background_color"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        app:maxImageSize="32dp"
+        app:maxImageSize="40dp"
         app:tint="@null"
         />
 

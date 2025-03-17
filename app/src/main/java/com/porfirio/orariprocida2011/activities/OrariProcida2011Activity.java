@@ -6,7 +6,6 @@ import static android.view.View.VISIBLE;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +15,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.RenderEffect;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -34,12 +31,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -161,6 +158,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         imageView.setOnClickListener(v -> {
             Intent intent = new Intent(OrariProcida2011Activity.this, InfoActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.enter_from_center, R.anim.exit_to_center);
         });
 
         analytics = new Analytics((AnalyticsApplication) getApplication());
@@ -260,20 +258,19 @@ public class OrariProcida2011Activity extends FragmentActivity {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
 
-                // Mostra il TimePickerDialog
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
                         OrariProcida2011Activity.this,
+                        //R.style.MyTimePickerDialogTheme,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                // Impedire la selezione di orari antecedenti all'ora attuale
+                                // Gestisci la selezione dell'orario
                                 Calendar currentCalendar = Calendar.getInstance();
                                 if (hourOfDay < currentCalendar.get(Calendar.HOUR_OF_DAY) ||
                                         (hourOfDay == currentCalendar.get(Calendar.HOUR_OF_DAY) && minute < currentCalendar.get(Calendar.MINUTE))) {
                                     hourOfDay = currentCalendar.get(Calendar.HOUR_OF_DAY);
                                     minute = currentCalendar.get(Calendar.MINUTE);
                                 }
-
                                 c.set(Calendar.HOUR, hourOfDay);
                                 c.set(Calendar.MINUTE, minute);
                                 timeResetButton.setText(String.format("%02d:%02d", hourOfDay, minute));
@@ -283,6 +280,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
                         },
                         hour, minute, true);
                 timePickerDialog.show();
+
             }
         });
 
@@ -298,6 +296,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
                 // Mostra il DatePickerDialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         OrariProcida2011Activity.this,
+                        //R.style.MyTimePickerDialogTheme,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -361,7 +360,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         });
 
         transportList = new ArrayList<>();
-        ListView lvMezzi = findViewById(R.id.listMezzi);
+        GridView lvMezzi = findViewById(R.id.listMezzi);
 //        aalvMezzi = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         selectMezzi = new ArrayList<>();
         aalvMezzi = new MezzoAdapter(this, selectMezzi);
@@ -376,7 +375,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         lvMezzi.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
             analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Click Dettagli Mezzo");
             //aboutDialog.show();
-
+            Log.d("List_view" , selectMezzi.get(arg2).nave);
             dettagliMezzoDialog.setMezzo(selectMezzi.get(arg2));
 
 
@@ -982,7 +981,16 @@ public class OrariProcida2011Activity extends FragmentActivity {
         if (transport.getGiornoSeguente())
             transportDate = transportDate.plusDays(1);
 
-        return alert.getRouteId().equals(transport.getId()) && alert.getTransportDate().equals(transportDate);
+        String routeId = alert.getRouteId();
+        String transportId = transport.getId();
+        LocalDate alertDate = alert.getTransportDate();
+
+        if (routeId == null || transportId == null || alertDate == null) {
+            return false;
+        }
+
+        return routeId.equals(transportId) && alertDate.equals(transportDate);
     }
+
 
 }

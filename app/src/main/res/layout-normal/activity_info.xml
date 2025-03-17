@@ -4,79 +4,117 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
-    android:orientation="vertical">
+    android:background="@color/background_color_info_activity"
+    android:orientation="vertical"
+    tools:context=".InfoActivity">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/wave_top"
-        lottie_autoPlay="true"
-        lottie_loop="true"
+    <!-- Sezione superiore: Lottie wave top con bottone back -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="fitXY" />
+        android:layout_height="140dp">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_ship"
-        lottie_autoPlay="true"
-        lottie_loop="true"
-        android:layout_width="wrap_content"
-        android:layout_height="140dp"
-        android:layout_gravity="center" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/descriptionCardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp">
-
-        <LinearLayout
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/wave_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            lottie_autoPlay="true"
+            lottie_loop="true" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="UnoProcidaResidente"
-                android:textColor="@color/tertiaryColor"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="start|top"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="16dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Back button"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_back"
+            app:tint="@color/tertiaryColor" />
+    </FrameLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/secondaryColor"
-                android:lineSpacingExtra="4dp"
-                android:text="@string/disclaimer"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/link_url"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/secondaryColor"
-                android:lineSpacingExtra="4dp"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <View
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_ship"
+                android:layout_width="wrap_content"
+                android:layout_height="140dp"
+                android:layout_gravity="center_horizontal"
+                lottie_autoPlay="true"
+                lottie_loop="true" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/descriptionCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardBackgroundColor="@color/card_color_info_activity"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginBottom="8dp"
+                            android:text="UnoProcidaResidente"
+                            android:textColor="@color/tertiaryColor"
+                            android:textSize="22sp"
+                            android:gravity="center" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="4dp"
+                        android:text="@string/disclaimer"
+                        android:textColor="@color/card_text_color_info_activity"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/link_url"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="4dp"
+                        android:textSize="12sp"
+                        android:textColor="@color/card_text_color_info_activity" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Sezione inferiore: Lottie wave bottom rovesciata -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/wave_bottom"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="fitXY"
         android:rotation="180"
+        android:scaleType="fitXY"
         lottie_autoPlay="true"
         lottie_loop="true" />
-
-
 </LinearLayout>

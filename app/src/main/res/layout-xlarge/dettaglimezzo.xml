@@ -1,94 +1,282 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/linear_layout_dettagli_mezzo"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/spinner_dropdown_background"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="5dp"
+        >
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="0.1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/background_icon_list_item_mezzo"
+            />
+        <TextView
+            android:id="@+id/txtPartenzaDestinazione"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:gravity="center"
+            android:autoSizeTextType="uniform"
+            android:lines="1"
+            android:layout_gravity="center"
+            android:text="@string/tampone"
+            android:textColor="@color/tertiaryColor"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="0.1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/background_icon_list_item_conferma"
+            />
+    </LinearLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="6"
+        android:padding="8dp"
+        android:useDefaultMargins="true">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:gravity="end"
+            android:lines="1"
+            android:text="@string/text_view_partenza"
+            android:textColor="@color/grey"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtPartenza"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:gravity="start"
+            android:lines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="11sp"
+            android:text="@string/tampone"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/grey"
+            android:textSize="24sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/text_view_destinazione"
+            android:lines="1"
+            android:textSize="24sp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="end"
+            />
+
+        <TextView
+            android:id="@+id/txtArrivo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/tampone"
+            android:textSize="24sp"
+            android:lines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="11sp"
+            android:textColor="@color/grey"
+            android:gravity="start"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/text_view_costo_intero"
+            android:textSize="24sp"
+            android:lines="1"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="end"
+            />
+
+        <TextView
+            android:id="@+id/txtCostoIntero"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/tampone"
+            android:lines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="24sp"
+            android:textColor="@color/grey"
+            android:gravity="start"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:layout_columnWeight="1"
+            android:text="@string/text_view_costo_ridotto"
+            android:textSize="24sp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="end"
+            />
+
+        <TextView
+            android:id="@+id/txtCostoRidotto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/tampone"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="24sp"
+            android:lines="1"
+            android:textColor="@color/grey"
+            android:gravity="start"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/mezzo"
+            android:textSize="24sp"
+            android:lines="1"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="end"
+            />
+
+        <TextView
+            android:id="@+id/txtMezzo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="Traghetto"
+            android:textSize="24sp"
+            android:lines="1"
+            android:textColor="@color/grey"
+            android:gravity="start"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/text_view_trasporto_veicoli"
+            android:textSize="24sp"
+            android:lines="1"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="end"
+            />
+
+        <TextView
+            android:id="@+id/txtAuto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/tampone"
+            android:lines="1"
+            android:textSize="24sp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/grey"
+            android:gravity="start"
+            />
+    </GridLayout>
+
 
     <TextView
-        android:id="@+id/txtMezzo"
-        android:layout_width="wrap_content"
+        android:id="@+id/txtAllertaMeteo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+        android:gravity="center"
+        android:layout_marginVertical="10dp"
+        android:visibility="gone"
+        android:textColorHighlight="@color/warning_text"
+        android:text="CondizioniMeteo o Allerta"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/warning_text" />
 
-    <TextView
-        android:id="@+id/txtPartenza"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="5dp"
+        >
 
-    <TextView
-        android:id="@+id/txtArrivo"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+        <Button
+            android:id="@+id/btnConfermaOSmentisci"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/dialog_rounded_button"
+            android:drawableEnd="@drawable/button_report_icon"
+            android:drawablePadding="5dp"
+            android:minHeight="32dp"
+            android:text="@string/confermaOSmentisci"
+            android:textColor="@color/primaryColor"
+            android:textSize="11sp" />
+        <Button
+            android:id="@+id/btnTaxi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:drawableEnd="@drawable/button_taxi_icon"
+            android:drawablePadding="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/dialog_rounded_button"
+            android:text="@string/numeriTaxi"
+            android:textSize="11sp"
+            android:textColor="@color/primaryColor"
+            android:minHeight="32dp"
+            android:layout_marginHorizontal="5dp"/>
+        <Button
+            android:id="@+id/btnBiglietterie"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:drawableEnd="@drawable/button_ticker_office_icon"
+            android:drawablePadding="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/dialog_rounded_button"
+            android:text="@string/numeriUtili"
+            android:textSize="11sp"
+            android:textColor="@color/primaryColor"
+            android:minHeight="32dp"
+            android:layout_marginStart="5dp"/>
 
-    <TextView
-        android:id="@+id/txtCosto"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/txtAuto"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+    <View
+        android:id="@+id/view_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="5dp"
+        android:visibility="visible"
+        android:background="@color/tertiaryColor"/>
 
-    <TextView
-        android:id="@+id/txtPeriodo"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
 
-    <TextView
-        android:id="@+id/txtGiorniSettimana"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:fitsSystemWindows="true"
-        android:text="@string/tampone"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
 
-    <Button
-        android:id="@+id/btnBiglietterie"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:text="@string/numeriUtili"></Button>
 
-    <Button
-        android:id="@+id/btnTaxi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:text="@string/numeriTaxi"></Button>
 
-    <Button
-        android:id="@+id/btnConfermaOSmentisci"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/confermaOSmentisci" />
-
-    <Button
-        android:id="@+id/btnReturnToHome"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/esci"></Button>
-    
-    
 </LinearLayout>

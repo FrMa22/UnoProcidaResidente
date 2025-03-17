@@ -104,26 +104,22 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     public void setAnalytics(Analytics analytics) {
         this.analytics = analytics;
     }
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        // Ottieni l'altezza dello schermo
-//        int screenHeight = getResources().getDisplayMetrics().heightPixels;
-//        // Calcola il 60% dell'altezza dello schermo
-//        int dialogHeight = (int) (screenHeight * 0.6);
-//        // Imposta l'altezza del dialog
-//        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, dialogHeight);
-//    }
 
     @Override
     public void onStart() {
         super.onStart();
         if (getDialog() != null && getDialog().getWindow() != null) {
-            int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.9);
+            boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
+
+            // Se è un tablet, usa il 50%, altrimenti il 90%
+            float widthFactor = isTablet ? 0.5f : 0.9f;
+            int width = (int) (getResources().getDisplayMetrics().widthPixels * widthFactor);
+
             getDialog().getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -150,16 +146,16 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         btnTaxi.setOnClickListener(v -> {
             analytics.send("App Event", "Click Taxi Dialog");
 //            taxiDialog.show(fragmentManager, "fragment_edit_name");
-            toggleGrid("Taxi");
-            updateButtonStates("Taxi");
+            toggleGrid(callingActivity.getString(R.string.numeriTaxi));
+            updateButtonStates(callingActivity.getString(R.string.numeriTaxi));
         });
 
         btnBiglietterie = view.findViewById(R.id.btnBiglietterie);
         btnBiglietterie.setOnClickListener(v -> {
             analytics.send("App Event", "Click Biglietterie Dialog");
             //biglietterieDialog.show(fragmentManager, "fragment_edit_name");
-            toggleGrid("Biglietteria");
-            updateButtonStates("Biglietteria");
+            toggleGrid(callingActivity.getString(R.string.numeriUtili));
+            updateButtonStates(callingActivity.getString(R.string.numeriUtili));
         });
 
         btnConfermaOSmentisci = view.findViewById(R.id.btnConfermaOSmentisci);
@@ -170,7 +166,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
                 analytics.send("App Event", "Click Segnalazione Dialog");
                 //segnalazioneDialog.show(fragmentManager, "fragment_edit_name");
                 toggleReportGrid();
-                updateButtonStates("Report");
+                updateButtonStates(callingActivity.getString(R.string.confermaOSmentisci));
             }
         });
 
@@ -300,9 +296,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         view_separator.setVisibility(VISIBLE);
         linear_layout_dettagli_mezzo.addView(currentDynamicView);
     }
-
     private GridLayout createGridLayout(String type) {
-
         GridLayout gridLayout = new GridLayout(getContext());
         gridLayout.setTag(type);
         gridLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -310,11 +304,25 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         gridLayout.setColumnCount(2);
         gridLayout.setPadding(10, 10, 10, 10);
 
+        TextView labelView = new TextView(getContext());
+        labelView.setText(type);
+        labelView.setTextColor(getResources().getColor(R.color.button_dettagli_mezzo));
+        labelView.setTextSize(18);
+        labelView.setTypeface(null, Typeface.BOLD);
+        labelView.setGravity(Gravity.CENTER);
+        labelView.setPadding(0, 0, 0, 10);
 
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.rowSpec = GridLayout.spec(0); // Prima riga
+        params.columnSpec = GridLayout.spec(0, 2);
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
 
-        if (type.equals("Taxi")) {
+        labelView.setLayoutParams(params);
+
+        gridLayout.addView(labelView);
+
+        if (type.equals(callingActivity.getString(R.string.numeriTaxi))) {
             ArrayList<Taxi> taxiPortoList = new ArrayList<>();
-
 
             for (int i = 0; i < taxis.size(); i++)
                 if (porto.contains(taxis.get(i).getPorto()) && !(porto.contentEquals("Monte di Procida") && taxis.get(i).getPorto().contentEquals("Procida")))
@@ -325,12 +333,10 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
                     addGridItem(gridLayout, taxi.getCompagnia(), taxi.getNumero(), true);
                 }
             }
-        } else if (type.equals("Biglietteria")) {
+        } else if (type.equals(callingActivity.getString(R.string.numeriUtili))) {
             if (c == null) {
-                Log.d("createGridLayout","C è null");
                 addGridItem(gridLayout, getString(R.string.NoBiglietterie), "", false);
             } else {
-                Log.d("createGridLayout","C NON è null");
                 int contactsCount = c.getContactsCount();
                 for (int i = 0; i < contactsCount; i++) {
                     String contactName = c.getContactName(i);
@@ -345,10 +351,15 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
 
 
     private void addGridItem(GridLayout grid, String label, String value, boolean addLinkify) {
+        boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
+        int textsize = isTablet ? 28 : 14;
+
         TextView labelView = new TextView(getContext());
         labelView.setText(label + ":");
         labelView.setTypeface(null, Typeface.BOLD);
+        labelView.setTextColor(getResources().getColor(R. color. grey));
         labelView.setGravity(Gravity.END);
+        labelView.setTextSize(textsize);
 
         GridLayout.LayoutParams labelParams = new GridLayout.LayoutParams();
         labelParams.width = 0;
@@ -359,6 +370,8 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         TextView valueView = new TextView(getContext());
         valueView.setText(value);
         valueView.setGravity(Gravity.START);
+        valueView.setTextColor(getResources().getColor(R. color. tertiaryColor));
+        valueView.setTextSize(textsize);
 
         GridLayout.LayoutParams valueParams = new GridLayout.LayoutParams();
         valueParams.width = 0;
@@ -378,7 +391,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         if (currentDynamicView != null) {
             view_separator.setVisibility(GONE);
             linear_layout_dettagli_mezzo.removeView(currentDynamicView);
-            if ("Report".equals(currentDynamicView.getTag())) {
+            if (callingActivity.getString(R.string.confermaOSmentisci).equals(currentDynamicView.getTag())) {
                 currentDynamicView = null;
                 return;
             }
@@ -394,11 +407,11 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         linearLayout.setPadding(10, 10, 10, 10);
-        linearLayout.setTag("Report");
+        linearLayout.setTag(callingActivity.getString(R.string.confermaOSmentisci));
 
         Spinner spnRagioni = new Spinner(callingContext);
         spnRagioni.setPopupBackgroundResource(R.drawable.spinner_dropdown_background);
-        spnRagioni.setBackgroundResource(R.drawable.dropdown_background);
+        spnRagioni.setBackgroundResource(R.drawable.dropdown_background_report_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 callingContext, R.array.strRagioni, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_item);
@@ -426,7 +439,8 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         editTextDettagli.setLayoutParams(etParams);
         editTextDettagli.setBackgroundResource(R.drawable.edit_text_background);
         editTextDettagli.setHint(getString(R.string.hintDettagli));
-        editTextDettagli.setTextColor(getResources().getColor(R. color. secondaryColor));
+        editTextDettagli.setHintTextColor(getResources().getColor(R. color. grey));
+        editTextDettagli.setTextColor(getResources().getColor(R. color. tertiaryColor));
         editTextDettagli.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         linearLayout.addView(editTextDettagli);
 
@@ -444,7 +458,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             scriviSegnalazione(true, dettagli);
             Toast.makeText(v.getContext(), R.string.ringraziamentoSegnalazione, Toast.LENGTH_SHORT).show();
             toggleReportGrid();
-            updateButtonStates("Report");
+            updateButtonStates(callingActivity.getString(R.string.confermaOSmentisci));
         });
         linearLayout.addView(btnInvia);
 
@@ -468,20 +482,17 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     }
 
     private void updateButtonStates(String activeType) {
-        // Per Taxi:
-        if ("Taxi".equals(activeType) && currentDynamicView != null && "Taxi".equals(currentDynamicView.getTag())) {
-            btnTaxi.setAlpha(0.5f); // Bottone "schiarito"
+        if (callingActivity.getString(R.string.numeriTaxi).equals(activeType) && currentDynamicView != null && callingActivity.getString(R.string.numeriTaxi).equals(currentDynamicView.getTag())) {
+            btnTaxi.setAlpha(0.5f);
         } else {
-            btnTaxi.setAlpha(1.0f); // Stato originale
+            btnTaxi.setAlpha(1.0f);
         }
-        // Per Biglietteria:
-        if ("Biglietteria".equals(activeType) && currentDynamicView != null && "Biglietteria".equals(currentDynamicView.getTag())) {
+        if (callingActivity.getString(R.string.numeriUtili).equals(activeType) && currentDynamicView != null && callingActivity.getString(R.string.numeriUtili).equals(currentDynamicView.getTag())) {
             btnBiglietterie.setAlpha(0.5f);
         } else {
             btnBiglietterie.setAlpha(1.0f);
         }
-        // Per Report:
-        if ("Report".equals(activeType) && currentDynamicView != null && "Report".equals(currentDynamicView.getTag())) {
+        if (callingActivity.getString(R.string.confermaOSmentisci).equals(activeType) && currentDynamicView != null && callingActivity.getString(R.string.confermaOSmentisci).equals(currentDynamicView.getTag())) {
             btnConfermaOSmentisci.setAlpha(0.5f);
         } else {
             btnConfermaOSmentisci.setAlpha(1.0f);

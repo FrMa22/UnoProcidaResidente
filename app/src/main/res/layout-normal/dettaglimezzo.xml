@@ -5,7 +5,7 @@
     android:id="@+id/linear_layout_dettagli_mezzo"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/spinner_dropdown_background"
+    android:background="@drawable/dialog_background"
     android:padding="10dp">
 
     <LinearLayout
@@ -31,15 +31,15 @@
             android:lines="1"
             android:layout_gravity="center"
             android:text="@string/tampone"
-            android:textColor="@color/secondaryColor"
+            android:textColor="@color/tertiaryColor"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
-            android:layout_height="wrap_content"
-            android:src="@drawable/background_icon_list_item_conferma"
-            />
+<!--        <ImageView-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="0.1"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/background_icon_list_item_conferma"-->
+<!--            />-->
     </LinearLayout>
 
     <GridLayout
@@ -56,7 +56,7 @@
             android:layout_columnWeight="1"
             android:text="@string/text_view_partenza"
             android:lines="1"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"/>
@@ -72,8 +72,8 @@
             android:autoSizeMinTextSize="11sp"
             android:text="@string/tampone"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/grey"
-            android:textSize="14sp" />
+            android:textColor="@color/tertiaryColor"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="0dp"
@@ -81,7 +81,7 @@
             android:layout_columnWeight="1"
             android:text="@string/text_view_destinazione"
             android:lines="1"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -93,11 +93,11 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/tampone"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:lines="1"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="11sp"
-            android:textColor="@color/grey"
+            android:textColor="@color/tertiaryColor"
             android:gravity="start"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/text_view_costo_intero"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:lines="1"
             android:textColor="@color/grey"
             android:textStyle="bold"
@@ -121,8 +121,8 @@
             android:text="@string/tampone"
             android:lines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
-            android:textColor="@color/grey"
+            android:textSize="12sp"
+            android:textColor="@color/tertiaryColor"
             android:gravity="start"/>
 
         <TextView
@@ -131,7 +131,7 @@
             android:lines="1"
             android:layout_columnWeight="1"
             android:text="@string/text_view_costo_ridotto"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -144,9 +144,9 @@
             android:layout_columnWeight="1"
             android:text="@string/tampone"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:lines="1"
-            android:textColor="@color/grey"
+            android:textColor="@color/tertiaryColor"
             android:gravity="start"/>
 
         <TextView
@@ -154,7 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/mezzo"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:lines="1"
             android:textColor="@color/grey"
             android:textStyle="bold"
@@ -167,9 +167,9 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="Traghetto"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:lines="1"
-            android:textColor="@color/grey"
+            android:textColor="@color/tertiaryColor"
             android:gravity="start"/>
 
         <TextView
@@ -177,7 +177,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/text_view_trasporto_veicoli"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:lines="1"
             android:textColor="@color/grey"
             android:textStyle="bold"
@@ -191,9 +191,9 @@
             android:layout_columnWeight="1"
             android:text="@string/tampone"
             android:lines="1"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/grey"
+            android:textColor="@color/tertiaryColor"
             android:gravity="start"
             />
     </GridLayout>
@@ -206,10 +206,22 @@
         android:gravity="center"
         android:layout_marginVertical="10dp"
         android:visibility="gone"
+        android:textColorHighlight="@color/warning_text"
         android:text="CondizioniMeteo o Allerta"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/warning_text" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Conferma Regolarità Corsa"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/dialog_rounded_button_conferma"
+        android:textSize="11sp"
+        android:textColor="@color/black"
+        android:minHeight="32dp"
+        android:layout_marginHorizontal="5dp"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -221,12 +233,11 @@
         <Button
             android:id="@+id/btnConfermaOSmentisci"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
+            android:padding="0dp"
             android:background="@drawable/dialog_rounded_button"
-            android:drawableEnd="@drawable/button_report_icon"
-            android:drawablePadding="5dp"
             android:minHeight="32dp"
             android:text="@string/confermaOSmentisci"
             android:textColor="@color/primaryColor"
@@ -236,9 +247,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableEnd="@drawable/button_taxi_icon"
-            android:drawablePadding="5dp"
             android:layout_weight="1"
+            android:padding="0dp"
             android:background="@drawable/dialog_rounded_button"
             android:text="@string/numeriTaxi"
             android:textSize="11sp"
@@ -250,9 +260,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableEnd="@drawable/button_ticker_office_icon"
-            android:drawablePadding="10dp"
             android:layout_weight="1"
+            android:padding="0dp"
             android:background="@drawable/dialog_rounded_button"
             android:text="@string/numeriUtili"
             android:textSize="11sp"
@@ -270,7 +279,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginHorizontal="5dp"
         android:visibility="gone"
-        android:background="@color/secondaryColor"/>
+        android:background="@color/tertiaryColor"/>
 
 
 

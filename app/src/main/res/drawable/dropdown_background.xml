@@ -1,11 +1,11 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/primaryColor" />
-            <corners android:radius="8dp" />
+            <solid android:color="@color/list_item_spinner_background_color" />
+            <corners android:radius="32dp" />
             <stroke
-                android:width="2dp"
-                android:color="@color/secondaryColor" />
+                android:width="1dp"
+                android:color="@color/list_item_spinner_border_color" />
             <size android:height="48dp" />
         </shape>
     </item>
@@ -14,4 +14,5 @@
         android:drawable="@drawable/ic_arrow_drop_down"
         android:gravity="right|center_vertical"
         android:right="8dp" />
+
 </layer-list>

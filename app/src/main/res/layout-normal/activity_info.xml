@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color_info_activity"
-    android:orientation="vertical"
-    tools:context=".InfoActivity">
+    android:orientation="vertical">
 
     <!-- Sezione superiore: Lottie wave top con bottone back -->
     <FrameLayout
@@ -115,4 +114,4 @@
         android:scaleType="fitXY"
         lottie_autoPlay="true"
         lottie_loop="true" />
-</LinearLayout>
+</FrameLayout>

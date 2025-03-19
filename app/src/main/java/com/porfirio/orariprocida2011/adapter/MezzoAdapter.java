@@ -3,6 +3,8 @@ package com.porfirio.orariprocida2011.adapter;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import static androidx.appcompat.graphics.drawable.DrawableContainerCompat.Api21Impl.getResources;
+
 import android.content.Context;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -54,12 +57,17 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
 
 
         // Gestisci il bottone info
-        infoImageView = convertView.findViewById(R.id.image_view_warning);
+        //infoImageView = convertView.findViewById(R.id.image_view_warning);
+        LinearLayout layout_list_item = convertView.findViewById(R.id.layout_list_item);
 
         if(mezzo.tot > 0){
-            infoImageView.setVisibility(VISIBLE);
+            //infoImageView.setVisibility(VISIBLE);
+            layout_list_item.setBackgroundResource(R.drawable.list_item_background_warning);
+            textViewPartenzaArrivo.setTextColor(getResources().getColor(R. color. red);
         }else{
-            infoImageView.setVisibility(INVISIBLE);
+            //infoImageView.setVisibility(INVISIBLE);
+            layout_list_item.setBackgroundResource(R.drawable.list_item_background);
+            textViewPartenzaArrivo.setTextColor(getResources().getColor(R. color. tertiaryColor);
         }
 
 //        infoButton.setOnClickListener(v -> {

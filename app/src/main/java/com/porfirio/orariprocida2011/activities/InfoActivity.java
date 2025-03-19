@@ -54,8 +54,8 @@ public class InfoActivity extends AppCompatActivity {
         TextView clickableLink = findViewById(R.id.link_url);
         SpannableString spannableString = getSpannableString();
 
-        textView.setText(spannableString);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        clickableLink.setText(spannableString);
+        clickableLink.setMovementMethod(LinkMovementMethod.getInstance());
 
         ImageButton back_button = findViewById(R.id.back_button);
         back_button.setOnClickListener(new View.OnClickListener() {

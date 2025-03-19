@@ -37,6 +37,7 @@
     <color name="button_reset_date_time">#20359A</color>
     <color name="warning_text">#FF0000</color>
     <color name="red">#FF0000</color>
+    <color name="dark_red">#660000</color>
 
     <color name="button_dettagli_mezzo">#20359A</color>
     <color name="button_dettagli_mezzo_text_color">#FFFFFF</color>

@@ -48,7 +48,7 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
         textViewMezzo.setText(mezzo.nave);
 
         TextView textViewPartenzaArrivo = convertView.findViewById(R.id.text_view_list_item_Partenza_Arrivo);
-        textViewPartenzaArrivo.setText(mezzo.portoPartenza + " - " + mezzo.portoArrivo);
+        textViewPartenzaArrivo.setText(String.format("%s - %s", mezzo.portoPartenza, mezzo.portoArrivo));
 
         TextView textViewOrario = convertView.findViewById(R.id.text_view_list_item_Orario);
         textViewOrario.setText(mezzo.getDepartureTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));

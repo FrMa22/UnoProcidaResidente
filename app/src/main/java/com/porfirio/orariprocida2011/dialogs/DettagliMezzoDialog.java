@@ -342,7 +342,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         int textsize = isTablet ? 22 : 16;
 
         TextView labelView = new TextView(getContext());
-        labelView.setText(label + ":");
+        labelView.setText(String.format("%s:", label));
         labelView.setTypeface(null, Typeface.BOLD);
         labelView.setTextColor(getResources().getColor(R.color.grey));
         labelView.setGravity(Gravity.END);

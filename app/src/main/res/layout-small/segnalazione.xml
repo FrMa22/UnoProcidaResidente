@@ -9,21 +9,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/tampone"
-        android:textSize="10sp"></TextView>
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/txtPartenza"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/tampone"
-        android:textSize="10sp"></TextView>
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/txtArrivo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/tampone"
-        android:textSize="10sp"></TextView>
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/textView1"
@@ -74,7 +74,7 @@
         android:layout_width="fill_parent"
         android:layout_height="28dp"
         android:text="@string/invia"
-        android:textSize="10sp"></Button>
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/textView4"

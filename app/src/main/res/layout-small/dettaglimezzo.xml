@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/linear_layout_dettagli_mezzo"
@@ -17,7 +18,7 @@
             android:layout_weight="0.1"
             android:layout_height="wrap_content"
             android:src="@drawable/background_icon_list_item_mezzo"
-            />
+            tools:ignore="ContentDescription" />
         <TextView
             android:id="@+id/txtPartenzaDestinazione"
             android:layout_width="0dp"

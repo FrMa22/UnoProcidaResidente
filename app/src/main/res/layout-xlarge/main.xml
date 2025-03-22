@@ -4,13 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/primaryColor"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="app:tint=&quot;@color/COLOR_OF_ICON&quot;" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="Overdraw">
 
     <!--    <ProgressBar-->
     <!--        android:id="@+id/progressBar"-->
@@ -62,7 +57,7 @@
                     android:background="@drawable/background_main_title_text_view"
                     android:gravity="center"
                     android:paddingVertical="15dp"
-                    android:text="UnoProcidaResidente"
+                    android:text="@string/app_name"
                     android:textColor="@color/tertiaryColor"
                     android:textSize="30sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -80,7 +75,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.484" />
+                    app:layout_constraintVertical_bias="0.484"
+                    tools:ignore="ContentDescription" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -141,7 +137,8 @@
                     android:layout_marginHorizontal="10dp"
                     android:layout_weight="0.05"
                     android:background="@drawable/image_button_main_background"
-                    android:src="@drawable/baseline_clock_24" />
+                    android:src="@drawable/baseline_clock_24"
+                    tools:ignore="ContentDescription" />
 
                 <ImageButton
                     android:id="@+id/date_button"
@@ -149,7 +146,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.05"
                     android:background="@drawable/image_button_main_background"
-                    android:src="@drawable/baseline_calendar_month_24" />
+                    android:src="@drawable/baseline_calendar_month_24"
+                    tools:ignore="ContentDescription" />
 
             </LinearLayout>
 
@@ -175,7 +173,7 @@
                     android:drawableLeft="@drawable/cross"
                     android:drawablePadding="10dp"
                     android:minHeight="35dp"
-                    android:text="Dal 1/2/2020"
+                    android:text="@string/tampone"
                     android:textColor="@color/primaryColor"
                     android:textSize="16sp"
                     android:visibility="gone" />
@@ -189,7 +187,7 @@
                     android:drawableLeft="@drawable/cross"
                     android:drawablePadding="10dp"
                     android:minHeight="35dp"
-                    android:text="Dalle 00:30"
+                    android:text="@string/tampone"
                     android:textColor="@color/primaryColor"
                     android:textSize="16sp"
                     android:visibility="gone" />
@@ -220,7 +218,7 @@
         android:layout_alignParentEnd="true"
         app:maxImageSize="40dp"
         app:tint="@null"
-        />
+        tools:ignore="ContentDescription" />
 
 
 </RelativeLayout>

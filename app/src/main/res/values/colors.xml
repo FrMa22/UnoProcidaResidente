@@ -21,8 +21,6 @@
     <color name="secondaryColor">#FFFFFF</color>
     <color name="tertiaryColor">#20359A</color>
 
-    <color name="text_color_primary">#20359A</color>
-    <color name="lightGray">#BEBDBF</color>
     <color name="border_spinner_color">#20359A</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
@@ -34,17 +32,13 @@
 
     <color name="spinner_text_color">#20359A</color>
     <color name="grey">#6C6C6C</color>
-    <color name="button_reset_date_time">#20359A</color>
     <color name="warning_text">#FF0000</color>
     <color name="red">#FF0000</color>
-    <color name="dark_red">#660000</color>
 
     <color name="button_dettagli_mezzo">#20359A</color>
-    <color name="button_dettagli_mezzo_text_color">#FFFFFF</color>
     <color name="fab_background_color">#20359A</color>
 
     <color name="background_color_info_activity">#FFFFFF</color>
     <color name="card_color_info_activity">#E9E9F6</color>
     <color name="card_text_color_info_activity">#000000</color>
-    <color name="picker_dialog_background">#E9E9F6</color>
 </resources>

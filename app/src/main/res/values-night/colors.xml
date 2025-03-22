@@ -15,6 +15,14 @@
     <color name="secondaryColor">#0B192C</color>
     <color name="tertiaryColor">#FFFFFF</color>
 
+    <color name="titlePickerColor">#FFFFFF</color>
+    <color name="dayNamePickerColor">#FFFFFF</color>
+    <color name="yearPickerColor">#FFFFFF</color>
+    <color name="currentDayPickerColor">#FFFFFF</color>
+    <color name="mainColorPickerColor">#1D2653</color>
+    <color name="backgroundPickerColor">#0B192C</color>
+
+
     <color name="text_color_primary">#FFFFFF</color>
     <color name="lightGray">#BEBDBF</color>
     <color name="border_spinner_color">#FFFFFF</color>

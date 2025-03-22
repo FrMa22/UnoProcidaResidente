@@ -120,6 +120,8 @@ Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativ
     <string name="ore">ore </string>
     <string name="credits">By Porfirio Tramontana 2011,2012. Licenza GPL3. Si ringraziano il Prof.Tramontana per l\'algoritmo meteorologico, Maria per il nome Uno Procida Residente, l\'icona, la pubblicità a livello internazionale e le critiche sull\'interfaccia, Angela per il supporto linguistico, Gilda per le continue critiche, Google e Open Weather Map per i dati meteorologici, le compagnie di navigazione per i continui cambiamenti degli orari e i pendolari procidani per le continue segnalazioni di cambiamento.</string>
     <string name="inviaSegnalazione">Vuoi segnalare una avvenuta soppressione o modifica di questa corsa oggi?</string>
+    <string name="invioConfermaAvvenuto">Conferma inviata con successo.</string>
+    <string name="invioConfermaFallito">Errore nell\'invio della conferma. Riprova.</string>
     <string name="ragione">Motivo:</string>
     <string name="altriDettagliRagione">"Altri dettagli: "</string>
     <string name="invia">Invia</string>

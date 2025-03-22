@@ -32,7 +32,6 @@ public class WeatherDialog extends Dialog {
 
         tvWindInfo.setText(windInfo);
         tvDateTime.setText(dateTime);
-        Log.d("WeatherDialog", "datetime: " + dateTime);
 
         if (meteo.getForecasts() != null && !meteo.getForecasts().isEmpty()) {
             WindObservationAdapter adapter = new WindObservationAdapter(getContext(), meteo.getForecasts());

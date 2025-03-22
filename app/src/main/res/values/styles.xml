@@ -38,11 +38,13 @@
 
     <style name="TimePickerTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/mainColorPickerColor</item>
-        <item name="android:textColorPrimary">@color/titlePickerColor</item>
-        <item name="android:textColorSecondary">@color/dayNamePickerColor</item>
+        <item name="android:textColorPrimary">@color/grey</item>
+        <item name="android:textColorSecondary">@color/grey</item>
         <item name="android:textColorPrimaryInverse">@color/currentDayPickerColor</item>
         <item name="android:textColorSecondaryInverse">@color/yearPickerColor</item>
         <item name="android:windowBackground">@color/backgroundPickerColor</item>
+        <item name="android:textColor">@color/white_black</item>
+        <item name="android:textColorHint">#4E4E4E</item>
 
         <item name="android:buttonBarPositiveButtonStyle">@style/DialogButtonStyled</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/DialogButtonStyled</item>

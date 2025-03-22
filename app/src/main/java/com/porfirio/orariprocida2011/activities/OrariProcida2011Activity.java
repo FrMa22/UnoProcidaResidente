@@ -217,7 +217,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
                 Osservazione lastObservation = observations.get(observations.size() - 1);
                 String windDirection = getWindDirectionString(lastObservation.getWindDirection());
                 String dateTime = lastObservation.getTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
-                String windInfo = getWindBeaufortString(lastObservation) + " da " + windDirection + " (" + (int) Math.floor(lastObservation.getWindSpeed()) + "Km/h )";
+                String windInfo = getWindBeaufortString(lastObservation) + " da " + windDirection + " (" + (int) Math.floor(lastObservation.getWindSpeed()) + "Km/h)";
 
                 WeatherDialog weatherDialog = new WeatherDialog(this,
                         dateTime,

@@ -119,6 +119,8 @@
     <string name="ore">hour </string>
     <string name="credits">By Porfirio Tramontana 2011,2012. GPL3 license. Credits: Prof.Tramontana for the metheorological algorithm, Maria for the application name, for the icon, for the international publicity and for the usability discussions, Angela for english version support, Gilda for continuous criticism, Google and Weather Underground for meteo data, the navigation companies for the continuous timetable changes and the procidan voyagers for the broadcasting of timetable changes information.</string>
     <string name="inviaSegnalazione">Do you want to report that this journey will not be made?</string>
+    <string name="invioConfermaAvvenuto">Confirmation sent successfully.</string>
+    <string name="invioConfermaFallito">Error sending confirmation. Please try again.</string>
     <string name="ragione">Reason:</string>
     <string name="altriDettagliRagione">"Other Details: "</string>
     <string name="invia">Submit</string>

@@ -58,6 +58,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     Button btnTaxi;
     Button btnConfermaOSmentisci;
     Button btnBiglietterie;
+    Button buttonConferma;
     private Compagnia c;
     private final BiglietterieDialog biglietterieDialog = new BiglietterieDialog();
     private LinearLayout linear_layout_dettagli_mezzo;
@@ -248,6 +249,20 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             txtAllertaMeteo.setVisibility(VISIBLE);
             txtAllertaMeteo.setText(alert);
         }
+
+        buttonConferma = view.findViewById(R.id.buttonConferma);
+        buttonConferma.setOnClickListener(v -> {
+            if (!callingActivity.isOnline()) {
+                Toast.makeText(getContext(), callingActivity.getString(R.string.soloOnline), Toast.LENGTH_SHORT).show();
+            } else {
+                if(scriviSegnalazione(false,null)) {
+                    Toast.makeText(getContext(), R.string.invioConfermaAvvenuto, Toast.LENGTH_SHORT).show();
+                    dismiss();
+                }else{
+                    Toast.makeText(getContext(),R.string.invioConfermaFallito, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return view;
     }
@@ -462,20 +477,23 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     }
 
 
-    private String scriviSegnalazione(boolean problema, String dettagli) {
+    private boolean scriviSegnalazione(boolean problema, String dettagli) {
+        try {
+            int reason = problema ? ragione : Alert.REASON_NO_PROBLEM;
+            LocalDate transportDate = LocalDate.of(calen.get(Calendar.YEAR), calen.get(Calendar.MONTH) + 1, calen.get(Calendar.DAY_OF_MONTH));
 
+            if (mezzo.getGiornoSeguente())
+                transportDate = transportDate.plusDays(1);
 
-        int reason = problema ? ragione : Alert.REASON_NO_PROBLEM;
-        LocalDate transportDate = LocalDate.of(calen.get(Calendar.YEAR), calen.get(Calendar.MONTH) + 1, calen.get(Calendar.DAY_OF_MONTH));
+            Alert alert = new Alert(mezzo.getId(), reason, dettagli, transportDate);
+            alertsDAO.send(alert);
 
-        if (mezzo.getGiornoSeguente())
-            transportDate = transportDate.plusDays(1);
-
-        Alert alert = new Alert(mezzo.getId(), reason, dettagli, transportDate);
-        alertsDAO.send(alert);
-
-        return "ok";
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
+
 
     private void updateButtonStates(String activeType) {
         if (callingActivity.getString(R.string.numeriTaxi).equals(activeType) && currentDynamicView != null && callingActivity.getString(R.string.numeriTaxi).equals(currentDynamicView.getTag())) {

@@ -213,9 +213,21 @@ public class OrariProcida2011Activity extends FragmentActivity {
         weatherFab = findViewById(R.id.fabWeather);
 
         weatherFab.setOnClickListener(v -> {
-            WeatherDialog weatherDialog = new WeatherDialog(this, "24/01/2025 - 18:00", "Brezza leggera da Nord-Ovest (8 Km/h)", meteo);
+            List<Osservazione> observations = meteo.getForecasts();
+            if (!observations.isEmpty()) {
+                Osservazione lastObservation = observations.get(observations.size() - 1);
+                String windDirection = getWindDirectionString(lastObservation.getWindDirection());
+                String dateTime = lastObservation.getTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
+                String windInfo = getWindBeaufortString(lastObservation) + " da " + windDirection + " (" + (int) Math.floor(lastObservation.getWindSpeed()) + "Km/h )";
 
-            weatherDialog.show();
+                WeatherDialog weatherDialog = new WeatherDialog(this,
+                        dateTime,
+                        windInfo,
+                        meteo
+                );
+
+                weatherDialog.show();
+            }
         });
 
 
@@ -382,9 +394,8 @@ public class OrariProcida2011Activity extends FragmentActivity {
         lvMezzi.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
             analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Click Dettagli Mezzo");
             //aboutDialog.show();
-            Log.d("List_view" , selectMezzi.get(arg2).nave);
+            Log.d("List_view", selectMezzi.get(arg2).nave);
             dettagliMezzoDialog.setMezzo(selectMezzi.get(arg2));
-
 
 
 //				problema: clicco sulla lista ma ho solo la stringa, non il mezzo corrispondente

@@ -1,7 +1,9 @@
 package com.porfirio.orariprocida2011.dialogs;
 
+
 import android.app.Dialog;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Window;
 import android.widget.GridView;
@@ -30,7 +32,7 @@ public class WeatherDialog extends Dialog {
 
         tvWindInfo.setText(windInfo);
         tvDateTime.setText(dateTime);
-        Log.d("WeatherDialog","datetime: " + dateTime);
+        Log.d("WeatherDialog", "datetime: " + dateTime);
 
         LottieAnimationView lottieAnimationView = findViewById(R.id.lottie_wind_view);
         lottieAnimationView.setAnimation(R.raw.wind_animation);
@@ -41,5 +43,14 @@ public class WeatherDialog extends Dialog {
             WindObservationAdapter adapter = new WindObservationAdapter(getContext(), meteo.getForecasts());
             windTable.setAdapter(adapter);
         }
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindow().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        int width = (int) (metrics.widthPixels * 0.9);
+        int height = (int) (metrics.heightPixels * 0.4);
+
+        getWindow().setLayout(width, height);
     }
 }
+

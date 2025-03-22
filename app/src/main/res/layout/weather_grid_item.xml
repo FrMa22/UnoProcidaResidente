@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView android:id="@+id/weather_item_text"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/weather_item_text"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:drawableBottom="@drawable/white_rounded_container"
@@ -8,8 +9,7 @@
     android:padding="8dp"
     android:text="9:00\n18 Km/h"
     android:textColor="@color/white"
-    android:textSize="12sp"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    android:textSize="14sp" />
 
 
 

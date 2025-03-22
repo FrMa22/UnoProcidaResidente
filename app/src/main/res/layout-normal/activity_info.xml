@@ -15,8 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
-            lottie_autoPlay="true"
-            lottie_loop="true" />
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
 
         <ImageButton
             android:id="@+id/back_button"
@@ -47,8 +47,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="140dp"
                 android:layout_gravity="center_horizontal"
-                lottie_autoPlay="true"
-                lottie_loop="true" />
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true" />
 
             <View
                 android:layout_width="match_parent"
@@ -110,7 +110,7 @@
         android:layout_height="200dp"
         android:rotation="180"
         android:scaleType="fitXY"
-        lottie_autoPlay="true"
-        lottie_loop="true"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
         app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

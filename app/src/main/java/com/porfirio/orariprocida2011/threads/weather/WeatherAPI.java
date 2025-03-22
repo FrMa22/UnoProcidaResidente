@@ -48,7 +48,7 @@ public final class WeatherAPI {
 
                 JSONArray list = jsonObject.getJSONArray("list");
 
-                // 8 observations, one every three hours
+                // 9 observations, one every three hours
 
                 for (int i = 0; i < 9; i++) {
                     JSONObject cond = list.getJSONObject(i);

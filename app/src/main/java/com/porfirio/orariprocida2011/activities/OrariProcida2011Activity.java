@@ -265,73 +265,69 @@ public class OrariProcida2011Activity extends FragmentActivity {
         c = Calendar.getInstance(TimeZone.getDefault());
 
 
-        timeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                int minute = calendar.get(Calendar.MINUTE);
+        timeButton.setOnClickListener(v -> {
+            // Ottieni l'ora corrente
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
 
-                TimePickerDialog timePickerDialog = new TimePickerDialog(
-                        OrariProcida2011Activity.this,
-                        new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                Calendar currentCalendar = Calendar.getInstance();
-                                if (hourOfDay < currentCalendar.get(Calendar.HOUR_OF_DAY) ||
-                                        (hourOfDay == currentCalendar.get(Calendar.HOUR_OF_DAY) && minute < currentCalendar.get(Calendar.MINUTE))) {
-                                    hourOfDay = currentCalendar.get(Calendar.HOUR_OF_DAY);
-                                    minute = currentCalendar.get(Calendar.MINUTE);
-                                }
-                                c.set(Calendar.HOUR, hourOfDay);
-                                c.set(Calendar.MINUTE, minute);
-                                timeResetButton.setText(String.format("%02d:%02d", hourOfDay, minute));
-                                timeResetButton.setVisibility(VISIBLE);
-                                aggiornaLista();
-                            }
-                        },
-                        hour, minute, true);
-                timePickerDialog.show();
+            TimePickerDialog timePickerDialog = new TimePickerDialog(
+                    OrariProcida2011Activity.this,
+                    R.style.TimePickerTheme,
+                    (view, hourOfDay, minute1) -> {
+                        // Gestisci la selezione dell'orario
+                        Calendar currentCalendar = Calendar.getInstance();
+                        if (hourOfDay < currentCalendar.get(Calendar.HOUR_OF_DAY) ||
+                                (hourOfDay == currentCalendar.get(Calendar.HOUR_OF_DAY) && minute1 < currentCalendar.get(Calendar.MINUTE))) {
+                            hourOfDay = currentCalendar.get(Calendar.HOUR_OF_DAY);
+                            minute1 = currentCalendar.get(Calendar.MINUTE);
+                        }
+                        c.set(Calendar.HOUR, hourOfDay);
+                        c.set(Calendar.MINUTE, minute1);
+                        timeResetButton.setText(String.format("%02d:%02d", hourOfDay, minute1));
+                        timeResetButton.setVisibility(VISIBLE);
+                        aggiornaLista();
+                    },
+                    hour, minute, true);
+            timePickerDialog.show();
 
-            }
         });
 
-        dateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        dateButton.setOnClickListener(v -> {
+            // Ottieni la data corrente
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        OrariProcida2011Activity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                // Impedire la selezione di date antecedenti alla data attuale
-                                Calendar currentCalendar = Calendar.getInstance();
-                                if (year < currentCalendar.get(Calendar.YEAR) ||
-                                        (year == currentCalendar.get(Calendar.YEAR) && monthOfYear < currentCalendar.get(Calendar.MONTH)) ||
-                                        (year == currentCalendar.get(Calendar.YEAR) && monthOfYear == currentCalendar.get(Calendar.MONTH) && dayOfMonth < currentCalendar.get(Calendar.DAY_OF_MONTH))) {
-                                    year = currentCalendar.get(Calendar.YEAR);
-                                    monthOfYear = currentCalendar.get(Calendar.MONTH);
-                                    dayOfMonth = currentCalendar.get(Calendar.DAY_OF_MONTH);
-                                }
+            // Mostra il DatePickerDialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    OrariProcida2011Activity.this,
+                    R.style.DatePickerTheme,
+                    (view, year1, monthOfYear, dayOfMonth1) -> {
+                        // Impedire la selezione di date antecedenti alla data attuale
+                        Calendar currentCalendar = Calendar.getInstance();
+                        if (year1 < currentCalendar.get(Calendar.YEAR) ||
+                                (year1 == currentCalendar.get(Calendar.YEAR) && monthOfYear < currentCalendar.get(Calendar.MONTH)) ||
+                                (year1 == currentCalendar.get(Calendar.YEAR) && monthOfYear == currentCalendar.get(Calendar.MONTH) && dayOfMonth1 < currentCalendar.get(Calendar.DAY_OF_MONTH))) {
+                            year1 = currentCalendar.get(Calendar.YEAR);
+                            monthOfYear = currentCalendar.get(Calendar.MONTH);
+                            dayOfMonth1 = currentCalendar.get(Calendar.DAY_OF_MONTH);
+                        }
 
-                                c.set(Calendar.YEAR, year);
-                                c.set(Calendar.MONTH, monthOfYear);
-                                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                dateResetButton.setText(String.format("%02d/%02d/%04d", dayOfMonth, monthOfYear + 1, year));
-                                dateResetButton.setVisibility(View.VISIBLE);
-                                aggiornaLista();
-                            }
-                        },
-                        year, month, dayOfMonth);
-                datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
-                datePickerDialog.show();
-            }
+                        c.set(Calendar.YEAR, year1);
+                        c.set(Calendar.MONTH, monthOfYear);
+                        c.set(Calendar.DAY_OF_MONTH, dayOfMonth1);
+                        dateResetButton.setText(String.format("%02d/%02d/%04d", dayOfMonth1, monthOfYear + 1, year1));
+                        dateResetButton.setVisibility(View.VISIBLE);
+                        aggiornaLista();
+                    },
+                    year, month, dayOfMonth);
+
+            datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+            datePickerDialog.show();
         });
+
 
         timeResetButton.setOnClickListener(new View.OnClickListener() {
             @Override

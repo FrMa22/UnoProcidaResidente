@@ -2,6 +2,7 @@ package com.porfirio.orariprocida2011.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.Window;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class WeatherDialog extends Dialog {
 
         tvWindInfo.setText(windInfo);
         tvDateTime.setText(dateTime);
+        Log.d("WeatherDialog","datetime: " + dateTime);
 
         LottieAnimationView lottieAnimationView = findViewById(R.id.lottie_wind_view);
         lottieAnimationView.setAnimation(R.raw.wind_animation);

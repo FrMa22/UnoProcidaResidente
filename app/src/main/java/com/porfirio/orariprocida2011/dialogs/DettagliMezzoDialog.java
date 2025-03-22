@@ -2,11 +2,11 @@ package com.porfirio.orariprocida2011.dialogs;
 
 
 import static android.view.Gravity.END;
-import static android.view.Gravity.START;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -23,14 +23,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -352,7 +350,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
 
     private void addGridItem(GridLayout grid, String label, String value, boolean addLinkify) {
         boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
-        int textsize = isTablet ? 28 : 14;
+        int textsize = isTablet ? 34 : 18;
 
         TextView labelView = new TextView(getContext());
         labelView.setText(label + ":");
@@ -434,7 +432,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         EditText editTextDettagli = new EditText(callingContext);
         LinearLayout.LayoutParams etParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        etParams.topMargin =20;
+        etParams.topMargin =30;
         etParams.bottomMargin = 20;
         editTextDettagli.setLayoutParams(etParams);
         editTextDettagli.setBackgroundResource(R.drawable.edit_text_background);
@@ -450,6 +448,10 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         btnParams.gravity = END;
         btnInvia.setLayoutParams(btnParams);
+        btnInvia.setTextSize(11);
+        btnInvia.setPadding(btnInvia.getPaddingLeft(), 0, btnInvia.getPaddingRight(), 0);
+        btnInvia.setMinimumHeight((int) (32 * Resources.getSystem().getDisplayMetrics().density));
+        btnInvia.setMinHeight((int) (32 * Resources.getSystem().getDisplayMetrics().density));
         btnInvia.setTextColor(getResources().getColor(R. color. red));
         btnInvia.setBackgroundResource(R.drawable.background_button_report);
         btnInvia.setOnClickListener(v -> {
@@ -460,6 +462,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             toggleReportGrid();
             updateButtonStates(callingActivity.getString(R.string.confermaOSmentisci));
         });
+
         linearLayout.addView(btnInvia);
 
         return linearLayout;

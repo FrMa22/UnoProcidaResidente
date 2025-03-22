@@ -39,7 +39,7 @@
         <item>Changed Timetable</item>
         <item>Delay</item>
     </string-array>
-    <string name="mezzo">"Ship: "</string>
+    <string name="mezzo">"Ship:"</string>
     <string name="portoPartenza">"From: "</string>
     <string name="portoArrivo">"To: "</string>
     <string name="minusminus">&lt;&lt;</string>

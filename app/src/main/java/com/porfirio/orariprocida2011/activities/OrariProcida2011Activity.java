@@ -51,7 +51,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.porfirio.orariprocida2011.adapter.MezzoAdapter;
 import com.porfirio.orariprocida2011.dialogs.WeatherDialog;
 import com.porfirio.orariprocida2011.threads.companies.CompaniesUpdate;
@@ -250,6 +255,8 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
 
         c = Calendar.getInstance(TimeZone.getDefault());
+
+
         timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

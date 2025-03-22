@@ -39,7 +39,7 @@
         <item>Cambio di orario o soppressione</item>
         <item>In Ritardo</item>
     </string-array>
-    <string name="mezzo">"Mezzo: "</string>
+    <string name="mezzo">"Mezzo:"</string>
     <string name="portoPartenza">"Da: "</string>
     <string name="portoArrivo">"A: "</string>
     <string name="minusminus">&lt;&lt;</string>

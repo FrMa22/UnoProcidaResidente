@@ -3,10 +3,10 @@ package com.porfirio.orariprocida2011.adapter;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-import static androidx.appcompat.graphics.drawable.DrawableContainerCompat.Api21Impl.getResources;
-
 import android.content.Context;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 
 import com.porfirio.orariprocida2011.R;
@@ -18,7 +18,6 @@ import java.util.List;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,8 +27,8 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
 
     private Context context;
     private List<Mezzo> mezziList;
-    private ImageView infoImageView;
-
+    private ImageView iconLogo;
+    private TextView textViewWarning;
     public MezzoAdapter(Context context, List<Mezzo> mezziList) {
         super(context, R.layout.list_item, mezziList);
         this.context = context;
@@ -53,21 +52,19 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
         TextView textViewOrario = convertView.findViewById(R.id.text_view_list_item_Orario);
         textViewOrario.setText(mezzo.getDepartureTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
 
-
+        iconLogo = convertView.findViewById(R.id.image_view_icon_logo);
+        iconLogo.setImageResource(getIconForCompany(mezzo.nave));
 
 
         // Gestisci il bottone info
-        //infoImageView = convertView.findViewById(R.id.image_view_warning);
-        LinearLayout layout_list_item = convertView.findViewById(R.id.layout_list_item);
-
+        textViewWarning = convertView.findViewById(R.id.text_view_warning);
+        Animation blinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.blink);
         if(mezzo.tot > 0){
-            //infoImageView.setVisibility(VISIBLE);
-            layout_list_item.setBackgroundResource(R.drawable.list_item_background_warning);
-            textViewPartenzaArrivo.setTextColor(getResources().getColor(R. color. red);
+            textViewWarning.setVisibility(VISIBLE);
+            textViewWarning.startAnimation(blinkAnimation);
         }else{
-            //infoImageView.setVisibility(INVISIBLE);
-            layout_list_item.setBackgroundResource(R.drawable.list_item_background);
-            textViewPartenzaArrivo.setTextColor(getResources().getColor(R. color. tertiaryColor);
+            textViewWarning.setVisibility(INVISIBLE);
+            textViewWarning.clearAnimation();
         }
 
 //        infoButton.setOnClickListener(v -> {
@@ -76,5 +73,24 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
 //        });
 
         return convertView;
+    }
+    private int getIconForCompany(String mezzoNome) {
+        // Lista delle aziende supportate
+        String[] aziende = {"Caremar", "SNAV", "Medmar", "Ippocampo", "Scotto Line", "Alilauro", "LazioMar","Gestur"};
+
+        for (String azienda : aziende) {
+            if (mezzoNome.contains(azienda)) {
+                // Genera dinamicamente il nome della risorsa
+                String iconName = "icon_" + azienda.toLowerCase().replace(" ", "");
+                int resId = context.getResources().getIdentifier(iconName, "drawable", context.getPackageName());
+
+                if (resId != 0) {
+                    return resId;
+                }
+            }
+        }
+
+        // Se nessuna azienda è trovata, restituisce l'icona di default
+        return R.drawable.traghetto_icon;
     }
 }

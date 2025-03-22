@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 
 import com.porfirio.orariprocida2011.R;
+import com.porfirio.orariprocida2011.entity.CompanyEnum;
 import com.porfirio.orariprocida2011.entity.Mezzo;
 
 import java.time.format.DateTimeFormatter;
@@ -28,6 +29,7 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
     private List<Mezzo> mezziList;
     private ImageView iconLogo;
     private TextView textViewWarning;
+
     public MezzoAdapter(Context context, List<Mezzo> mezziList) {
         super(context, R.layout.list_item, mezziList);
         this.context = context;
@@ -57,10 +59,10 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
 
         textViewWarning = convertView.findViewById(R.id.text_view_warning);
         Animation blinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.blink);
-        if(mezzo.tot > 0){
+        if (mezzo.tot > 0) {
             textViewWarning.setVisibility(VISIBLE);
             textViewWarning.startAnimation(blinkAnimation);
-        }else{
+        } else {
             textViewWarning.setVisibility(INVISIBLE);
             textViewWarning.clearAnimation();
         }
@@ -68,21 +70,9 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
 
         return convertView;
     }
+
+
     private int getIconForCompany(String mezzoNome) {
-        // Lista delle aziende supportate
-        String[] aziende = {"Caremar", "SNAV", "Medmar", "Ippocampo", "Scotto Line", "Alilauro", "LazioMar","Gestur"};
-
-        for (String azienda : aziende) {
-            if (mezzoNome.contains(azienda)) {
-                String iconName = "icon_" + azienda.toLowerCase().replace(" ", "");
-                int resId = context.getResources().getIdentifier(iconName, "drawable", context.getPackageName());
-
-                if (resId != 0) {
-                    return resId;
-                }
-            }
-        }
-
-        return R.drawable.traghetto_icon;
+        return CompanyEnum.findDrawByName(mezzoNome.toLowerCase().trim());
     }
 }

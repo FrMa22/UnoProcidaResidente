@@ -183,8 +183,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         txtArrivo.setText(s);
 
 
-
-        if (mezzo.getReducedPrice() > 0){
+        if (mezzo.getReducedPrice() > 0) {
             String ridotto = String.format(Locale.getDefault(), "%.2f", mezzo.getReducedPrice()) + " € ";
             txtCostoRidotto.setText(ridotto);
         }
@@ -218,11 +217,11 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         this.porto = mezzo.portoPartenza;
 
         taxisDAO.getUpdates().observe(this, update -> {
-            if (update.isValid())
+            if (update.isValid()) {
                 taxiDialog.setTaxis(update.getData());
-                taxis=update.getData();
+            }
+            taxis = update.getData();
         });
-
 
 
         ragioni = getResources().getStringArray(R.array.strRagioni);
@@ -265,6 +264,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     public void setListCompagnia(ArrayList<Compagnia> listCompagnia) {
         lc = listCompagnia;
     }
+
     private void toggleGrid(String type) {
         if (currentDynamicView != null) {
             view_separator.setVisibility(GONE);
@@ -279,6 +279,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         view_separator.setVisibility(VISIBLE);
         linear_layout_dettagli_mezzo.addView(currentDynamicView);
     }
+
     private GridLayout createGridLayout(String type) {
         boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
         int textsize = isTablet ? 26 : 20;
@@ -343,7 +344,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         TextView labelView = new TextView(getContext());
         labelView.setText(label + ":");
         labelView.setTypeface(null, Typeface.BOLD);
-        labelView.setTextColor(getResources().getColor(R. color. grey));
+        labelView.setTextColor(getResources().getColor(R.color.grey));
         labelView.setGravity(Gravity.END);
         labelView.setTextSize(textsize);
 
@@ -356,7 +357,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         TextView valueView = new TextView(getContext());
         valueView.setText(value);
         valueView.setGravity(Gravity.START);
-        valueView.setTextColor(getResources().getColor(R. color. tertiaryColor));
+        valueView.setTextColor(getResources().getColor(R.color.tertiaryColor));
         valueView.setTextSize(textsize);
 
         GridLayout.LayoutParams valueParams = new GridLayout.LayoutParams();
@@ -405,7 +406,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         spnRagioni.setLayoutParams(spinnerParams);
-        spnRagioni.setPadding(20,0,0,0);
+        spnRagioni.setPadding(20, 0, 0, 0);
         spnRagioni.setAdapter(adapter);
         spnRagioni.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -420,7 +421,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         EditText editTextDettagli = new EditText(callingContext);
         LinearLayout.LayoutParams etParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        etParams.topMargin =30;
+        etParams.topMargin = 30;
         etParams.bottomMargin = 20;
         editTextDettagli.setLayoutParams(etParams);
         editTextDettagli.setBackgroundResource(R.drawable.edit_text_background);
@@ -429,8 +430,8 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         editTextDettagli.setGravity(Gravity.TOP | Gravity.START);
         editTextDettagli.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
         editTextDettagli.setPadding(16, 16, 16, 16);
-        editTextDettagli.setHintTextColor(getResources().getColor(R. color. grey));
-        editTextDettagli.setTextColor(getResources().getColor(R. color. tertiaryColor));
+        editTextDettagli.setHintTextColor(getResources().getColor(R.color.grey));
+        editTextDettagli.setTextColor(getResources().getColor(R.color.tertiaryColor));
         editTextDettagli.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         linearLayout.addView(editTextDettagli);
 
@@ -444,7 +445,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         btnInvia.setPadding(btnInvia.getPaddingLeft(), 0, btnInvia.getPaddingRight(), 0);
         btnInvia.setMinimumHeight((int) (32 * Resources.getSystem().getDisplayMetrics().density));
         btnInvia.setMinHeight((int) (32 * Resources.getSystem().getDisplayMetrics().density));
-        btnInvia.setTextColor(getResources().getColor(R. color. red));
+        btnInvia.setTextColor(getResources().getColor(R.color.red));
         btnInvia.setBackgroundResource(R.drawable.background_button_report);
         btnInvia.setOnClickListener(v -> {
             analytics.send("App Event", "Segnala Avaria");

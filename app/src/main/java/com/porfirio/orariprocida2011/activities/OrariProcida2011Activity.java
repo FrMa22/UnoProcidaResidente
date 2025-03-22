@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -301,7 +302,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
             // Mostra il DatePickerDialog
-            DatePickerDialog datePickerDialog = new DatePickerDialog(
+            @SuppressLint("DefaultLocale") DatePickerDialog datePickerDialog = new DatePickerDialog(
                     OrariProcida2011Activity.this,
                     R.style.DatePickerTheme,
                     (view, year1, monthOfYear, dayOfMonth1) -> {

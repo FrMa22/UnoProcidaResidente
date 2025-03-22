@@ -64,7 +64,7 @@
                     android:paddingVertical="15dp"
                     android:text="UnoProcidaResidente"
                     android:textColor="@color/tertiaryColor"
-                    android:textSize="20sp"
+                    android:textSize="30sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -72,10 +72,11 @@
 
                 <ImageView
                     android:id="@+id/info_icon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/baseline_info_24"
+                    android:backgroundTint="@color/tertiaryColor"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

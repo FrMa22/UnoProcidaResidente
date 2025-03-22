@@ -8,39 +8,21 @@
     android:background="@drawable/spinner_dropdown_background"
     android:padding="10dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginHorizontal="5dp"
-        >
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
-            android:layout_height="wrap_content"
-            android:src="@drawable/background_icon_list_item_mezzo"
-            />
-        <TextView
-            android:id="@+id/txtPartenzaDestinazione"
-            android:layout_width="0dp"
-            android:layout_weight="0.8"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:gravity="center"
-            android:autoSizeTextType="uniform"
-            android:lines="1"
-            android:layout_gravity="center"
-            android:text="@string/tampone"
-            android:textColor="@color/tertiaryColor"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
-            android:layout_height="wrap_content"
-            android:src="@drawable/background_icon_list_item_conferma"
-            />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/txtPartenzaDestinazione"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="10dp"
+        android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:lines="1"
+        android:text="@string/tampone"
+        android:textSize="30sp"
+        android:textColor="@color/tertiaryColor"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
 
     <GridLayout
         android:layout_width="match_parent"
@@ -69,9 +51,6 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:gravity="start"
-            android:lines="1"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="11sp"
             android:text="@string/tampone"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/grey"
@@ -209,9 +188,23 @@
         android:layout_marginVertical="10dp"
         android:visibility="gone"
         android:textColorHighlight="@color/warning_text"
-        android:text="CondizioniMeteo o Allerta"
+        android:text="@string/tampone"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/warning_text" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/textConferma"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/dialog_rounded_button_conferma"
+        android:textSize="11sp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="8dp"
+        android:paddingVertical="0dp"
+        android:textColor="@color/black"
+        android:minHeight="32dp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -228,8 +221,6 @@
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:background="@drawable/dialog_rounded_button"
-            android:drawableEnd="@drawable/button_report_icon"
-            android:drawablePadding="5dp"
             android:minHeight="32dp"
             android:text="@string/confermaOSmentisci"
             android:textColor="@color/primaryColor"
@@ -239,8 +230,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableEnd="@drawable/button_taxi_icon"
-            android:drawablePadding="5dp"
             android:layout_weight="1"
             android:background="@drawable/dialog_rounded_button"
             android:text="@string/numeriTaxi"
@@ -253,8 +242,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableEnd="@drawable/button_ticker_office_icon"
-            android:drawablePadding="10dp"
             android:layout_weight="1"
             android:background="@drawable/dialog_rounded_button"
             android:text="@string/numeriUtili"

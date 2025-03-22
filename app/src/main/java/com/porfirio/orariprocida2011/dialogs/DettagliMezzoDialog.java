@@ -64,7 +64,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     private Mezzo mezzo;
     private Context callingContext;
     private TaxiDialog taxiDialog;
-    private SegnalazioneDialog segnalazioneDialog;
     private Calendar calen;
     private OrariProcida2011Activity callingActivity;
     private FragmentManager fragmentManager;
@@ -109,7 +108,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         if (getDialog() != null && getDialog().getWindow() != null) {
             boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
 
-            // Se è un tablet, usa il 50%, altrimenti il 90%
             float widthFactor = isTablet ? 0.5f : 0.9f;
             int width = (int) (getResources().getDisplayMetrics().widthPixels * widthFactor);
 
@@ -124,7 +122,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
 
 
         View view = inflater.inflate(R.layout.dettaglimezzo, container);
-        //setContentView(R.layout.dettaglimezzo);
         linear_layout_dettagli_mezzo = view.findViewById(R.id.linear_layout_dettagli_mezzo);
 
         txtPartenzaDestinazione = view.findViewById(R.id.txtPartenzaDestinazione);
@@ -137,8 +134,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         txtAllertaMeteo = view.findViewById(R.id.txtAllertaMeteo);
         view_separator = view.findViewById(R.id.view_separator);
 
-//        Button btnReturnToHome = view.findViewById(R.id.btnReturnToHome);
-//        btnReturnToHome.setOnClickListener(v -> dismiss());
 
         btnTaxi = view.findViewById(R.id.btnTaxi);
         btnTaxi.setOnClickListener(v -> {
@@ -178,10 +173,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         LocalDate departureDate = LocalDateTime.ofInstant(callingActivity.c.toInstant(), callingActivity.c.getTimeZone().toZoneId()).toLocalDate();
         LocalDate arrivalDate = LocalDateTime.ofInstant(callingActivity.c.toInstant(), callingActivity.c.getTimeZone().toZoneId()).toLocalDate();
 
-        if (mezzo.getGiornoSeguente()) {
-            departureDate = departureDate.plusDays(1);
-            arrivalDate = arrivalDate.plusDays(1);
-        }
         String s = mezzo.portoPartenza + " - " + mezzo.portoArrivo;
         txtPartenzaDestinazione.setText(s);
 
@@ -194,7 +185,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
 
 
         if (mezzo.getReducedPrice() > 0){
-            String ridotto = mezzo.getReducedPrice() + " € ";
+            String ridotto = String.format(Locale.getDefault(), "%.2f", mezzo.getReducedPrice()) + " € ";
             txtCostoRidotto.setText(ridotto);
         }
 
@@ -221,7 +212,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
 
             biglietterieDialog.setCompagnia(c);
         } else
-            txtAuto.setText("");
+            txtAuto.setText(R.string.nessunaInfoTrasportoVeicoli);
         taxiDialog = new TaxiDialog();
         taxiDialog.setPorto(mezzo.portoPartenza);
         this.porto = mezzo.portoPartenza;
@@ -232,13 +223,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
                 taxis=update.getData();
         });
 
-//        segnalazioneDialog = new SegnalazioneDialog(alertsDAO);
-//        segnalazioneDialog.setOrarioRef(calen);
-//        segnalazioneDialog.setMezzo(mezzo);
-//        segnalazioneDialog.setCallingContext(this.getContext());
-//        segnalazioneDialog.setAnalytics(analytics);
-//        segnalazioneDialog.setListCompagnia(lc);
-        //segnalazioneDialog.fill(lc);
+
 
         ragioni = getResources().getStringArray(R.array.strRagioni);
         String spc = "";
@@ -249,16 +234,16 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             StringBuilder alert = new StringBuilder();
             if (mezzo.tot > 0) {
                 if (mezzo.conc) {
-                    alert.append(" - ").append(mezzo.tot).append(mezzo.tot == 1 ? " " + getString(R.string.segnalazione) : " " + getString(R.string.segnalazioni));
+                    alert.append(mezzo.tot).append(mezzo.tot == 1 ? " " + getString(R.string.segnalazione) : " " + getString(R.string.segnalazioni));
                     alert.append(" ").append(getString(R.string.diProblemi)).append(" (").append(spc).append(")");
                 } else {
-                    alert.append(" - ").append(getString(R.string.possibiliProblemi)).append(" (").append(mezzo.tot);
+                    alert.append(getString(R.string.possibiliProblemi)).append(" (").append(mezzo.tot);
                     alert.append(mezzo.tot == 1 ? " " + getString(R.string.segnalazione) + ")" : " " + getString(R.string.segnalazioni) + ")");
                     alert.append(", ").append(getString(R.string.inParticolare)).append(" ").append(spc);
                 }
             }
             if (mezzo.conferme > 0) {
-                alert.append(" - ").append(mezzo.conferme).append(mezzo.conferme == 1 ? " " + getString(R.string.utenteDice) : " " + getString(R.string.utentiDicono));
+                alert.append(mezzo.conferme).append(mezzo.conferme == 1 ? " " + getString(R.string.utenteDice) : " " + getString(R.string.utentiDicono));
                 alert.append(" ").append(getString(R.string.cheLaCorsaERegolare));
             }
             txtAllertaMeteo.setVisibility(VISIBLE);
@@ -295,6 +280,9 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         linear_layout_dettagli_mezzo.addView(currentDynamicView);
     }
     private GridLayout createGridLayout(String type) {
+        boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
+        int textsize = isTablet ? 26 : 20;
+
         GridLayout gridLayout = new GridLayout(getContext());
         gridLayout.setTag(type);
         gridLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -305,13 +293,13 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         TextView labelView = new TextView(getContext());
         labelView.setText(type);
         labelView.setTextColor(getResources().getColor(R.color.button_dettagli_mezzo));
-        labelView.setTextSize(18);
+        labelView.setTextSize(textsize);
         labelView.setTypeface(null, Typeface.BOLD);
         labelView.setGravity(Gravity.CENTER);
         labelView.setPadding(0, 0, 0, 10);
 
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.rowSpec = GridLayout.spec(0); // Prima riga
+        params.rowSpec = GridLayout.spec(0);
         params.columnSpec = GridLayout.spec(0, 2);
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -350,7 +338,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
 
     private void addGridItem(GridLayout grid, String label, String value, boolean addLinkify) {
         boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
-        int textsize = isTablet ? 34 : 18;
+        int textsize = isTablet ? 22 : 16;
 
         TextView labelView = new TextView(getContext());
         labelView.setText(label + ":");
@@ -437,6 +425,10 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         editTextDettagli.setLayoutParams(etParams);
         editTextDettagli.setBackgroundResource(R.drawable.edit_text_background);
         editTextDettagli.setHint(getString(R.string.hintDettagli));
+        editTextDettagli.setLines(4);
+        editTextDettagli.setGravity(Gravity.TOP | Gravity.START);
+        editTextDettagli.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+        editTextDettagli.setPadding(16, 16, 16, 16);
         editTextDettagli.setHintTextColor(getResources().getColor(R. color. grey));
         editTextDettagli.setTextColor(getResources().getColor(R. color. tertiaryColor));
         editTextDettagli.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);

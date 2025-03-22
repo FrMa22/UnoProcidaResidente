@@ -136,7 +136,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
     private ImageButton timeButton, dateButton;
     private Button timeResetButton, dateResetButton;
-    private ProgressBar progressBar;
     private SwipeRefreshLayout swipe_refresh_layout;
     private LottieAnimationView lottieLoader;
     private ImageView blurredBackground;
@@ -186,7 +185,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         taxisDAO = new OnRequestTaxisDAO();
         taxisDAO.requestUpdate();
-        // taxis data are observed by DettagliMezzoDialog because they were hardcoded in there before and it's useless to fix something that will be refactored in the future
 
         fm = getSupportFragmentManager();
         myManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -232,12 +230,10 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
 
         blurredBackground = findViewById(R.id.blurredBackground);
-        // Verifica la versione di Android
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             RenderEffect blurEffect = RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.CLAMP);
             blurredBackground.setRenderEffect(blurEffect);
         } else {
-            // Per versioni precedenti (usa RenderScript per sfocatura)
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.background_main_title_text_view);
 
             RenderScript rs = RenderScript.create(this);
@@ -272,18 +268,15 @@ public class OrariProcida2011Activity extends FragmentActivity {
         timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Ottieni l'ora corrente
                 Calendar calendar = Calendar.getInstance();
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
                         OrariProcida2011Activity.this,
-                        //R.style.MyTimePickerDialogTheme,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                // Gestisci la selezione dell'orario
                                 Calendar currentCalendar = Calendar.getInstance();
                                 if (hourOfDay < currentCalendar.get(Calendar.HOUR_OF_DAY) ||
                                         (hourOfDay == currentCalendar.get(Calendar.HOUR_OF_DAY) && minute < currentCalendar.get(Calendar.MINUTE))) {
@@ -306,16 +299,13 @@ public class OrariProcida2011Activity extends FragmentActivity {
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Ottieni la data corrente
                 Calendar calendar = Calendar.getInstance();
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH);
                 int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-                // Mostra il DatePickerDialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         OrariProcida2011Activity.this,
-                        //R.style.MyTimePickerDialogTheme,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -380,7 +370,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         transportList = new ArrayList<>();
         GridView lvMezzi = findViewById(R.id.listMezzi);
-//        aalvMezzi = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         selectMezzi = new ArrayList<>();
         aalvMezzi = new MezzoAdapter(this, selectMezzi);
         lvMezzi.setAdapter(aalvMezzi);
@@ -877,7 +866,8 @@ public class OrariProcida2011Activity extends FragmentActivity {
             alertsDAO.requestUpdate();
 
             if (showToast)
-                Toast.makeText(this, getString(R.string.orariAggiornatiAl) + " " + DateTimeFormatter.ISO_LOCAL_DATE.format(update.getUpdateTime()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.orariAggiornatiAl) + " " +DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(update.getUpdateTime()),Toast.LENGTH_SHORT).show();
+
         } else {
             // TODO: handle exception
             Log.e("MainActivity", "OnTransportsUpdate: ", update.getError());

@@ -34,10 +34,6 @@ public class WeatherDialog extends Dialog {
         tvDateTime.setText(dateTime);
         Log.d("WeatherDialog", "datetime: " + dateTime);
 
-        LottieAnimationView lottieAnimationView = findViewById(R.id.lottie_wind_view);
-        lottieAnimationView.setAnimation(R.raw.wind_animation);
-        lottieAnimationView.setRepeatCount(LottieDrawable.INFINITE);
-        lottieAnimationView.playAnimation();
 
         if (meteo.getForecasts() != null && !meteo.getForecasts().isEmpty()) {
             WindObservationAdapter adapter = new WindObservationAdapter(getContext(), meteo.getForecasts());

@@ -21,19 +21,9 @@
             android:layout_marginBottom="4dp"
             android:gravity="center"
             android:text=""
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textColor="@color/tertiaryColor"
+            android:textSize="24sp"
             android:textStyle="bold" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottie_wind_view"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginStart="8dp"
-            android:layout_gravity="center"
-            lottie_autoPlay="true"
-            lottie_loop="true" />
     </LinearLayout>
 
 
@@ -44,8 +34,8 @@
         android:layout_marginBottom="8dp"
         android:gravity="center"
         android:text=""
-        android:textColor="@android:color/white"
-        android:textSize="14sp" />
+        android:textColor="@color/tertiaryColor"
+        android:textSize="18sp" />
 
     <GridView
         android:id="@+id/windTable"

@@ -19,7 +19,6 @@ import java.util.List;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -56,7 +55,6 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
         iconLogo.setImageResource(getIconForCompany(mezzo.nave));
 
 
-        // Gestisci il bottone info
         textViewWarning = convertView.findViewById(R.id.text_view_warning);
         Animation blinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.blink);
         if(mezzo.tot > 0){
@@ -67,10 +65,6 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
             textViewWarning.clearAnimation();
         }
 
-//        infoButton.setOnClickListener(v -> {
-//            // Logica per l'azione sul bottone info, se necessario
-//            // Puoi aprire un dialog o eseguire altre azioni qui
-//        });
 
         return convertView;
     }
@@ -80,7 +74,6 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
 
         for (String azienda : aziende) {
             if (mezzoNome.contains(azienda)) {
-                // Genera dinamicamente il nome della risorsa
                 String iconName = "icon_" + azienda.toLowerCase().replace(" ", "");
                 int resId = context.getResources().getIdentifier(iconName, "drawable", context.getPackageName());
 
@@ -90,7 +83,6 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
             }
         }
 
-        // Se nessuna azienda è trovata, restituisce l'icona di default
         return R.drawable.traghetto_icon;
     }
 }

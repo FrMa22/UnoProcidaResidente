@@ -32,9 +32,6 @@ public class InfoActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_info);
 
-        ImageButton backButton = findViewById(R.id.back_button);
-        backButton.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
-
         LottieAnimationView shipLottie = findViewById(R.id.lottie_ship);
         shipLottie.setAnimation(R.raw.ship_animation);
         shipLottie.setRepeatCount(LottieDrawable.INFINITE);

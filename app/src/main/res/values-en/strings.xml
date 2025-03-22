@@ -50,7 +50,7 @@
     <string name="esci">Quit</string>
     <string name="backTimetable">Back to timetable</string>
     <string name="numeriUtili">Ticket</string>
-    <string name="tampone">1234567890123456789012345</string>
+    <string name="tampone">Not available</string>
     <string name="labelBackground">labelBackground</string>
     <string name="back">Back</string>
     <string name="inserisciFinestra">Size of time window</string>
@@ -122,8 +122,8 @@
     <string name="ragione">Reason:</string>
     <string name="altriDettagliRagione">"Other Details: "</string>
     <string name="invia">Submit</string>
-    <string name="ringraziamentoSegnalazione">Thank you for your report: it will be shown starting from the next app opening!</string>
-    <string name="textConferma">Or do you want to confirm the regularity of this journey?</string>
+    <string name="ringraziamentoSegnalazione">Thank you for your report!</string>
+    <string name="textConferma">Confirm journey\'s regularity</string>
     <string name="Conferma">Confirm</string>
     <string name="segnalazione">warning</string>
     <string name="segnalazioni">warnings</string>
@@ -152,6 +152,7 @@
     <string name="text_view_destinazione">Destination:</string>
     <string name="text_view_trasporto_veicoli">Vehicles loading:</string>
     <string name="welcome_text"><b>Welcome</b> on UnoProcidaResidente!</string>
+    <string name="nessunaInfoTrasportoVeicoli">Not specified</string>
 
 </resources>
 

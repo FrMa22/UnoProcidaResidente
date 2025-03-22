@@ -50,7 +50,7 @@ public final class WeatherAPI {
 
                 // 8 observations, one every three hours
 
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < 9; i++) {
                     JSONObject cond = list.getJSONObject(i);
 
                     double windDir = cond.getJSONObject("wind").getDouble("deg");

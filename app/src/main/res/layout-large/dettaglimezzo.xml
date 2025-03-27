@@ -18,10 +18,16 @@
         android:autoSizeTextType="uniform"
         android:lines="1"
         android:text="@string/tampone"
+        android:textSize="26sp"
         android:textColor="@color/tertiaryColor"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/border_spinner_color" />
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,7 +42,7 @@
             android:layout_columnWeight="1"
             android:text="@string/text_view_partenza"
 
-            android:textSize="14sp"
+            android:textSize="20sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"/>
@@ -48,12 +54,10 @@
             android:layout_columnWeight="1"
             android:gravity="start"
 
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="11sp"
             android:text="@string/tampone"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/grey"
-            android:textSize="14sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="0dp"
@@ -61,7 +65,7 @@
             android:layout_columnWeight="1"
             android:text="@string/text_view_destinazione"
 
-            android:textSize="14sp"
+            android:textSize="20sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -73,10 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/tampone"
-            android:textSize="14sp"
+            android:textSize="20sp"
 
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="11sp"
             android:textColor="@color/grey"
             android:gravity="start"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -86,8 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/text_view_costo_intero"
-            android:textSize="14sp"
-
+            android:textSize="20sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -101,7 +102,7 @@
             android:text="@string/tampone"
 
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
+            android:textSize="20sp"
             android:textColor="@color/grey"
             android:gravity="start"/>
 
@@ -111,7 +112,7 @@
 
             android:layout_columnWeight="1"
             android:text="@string/text_view_costo_ridotto"
-            android:textSize="14sp"
+            android:textSize="20sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -124,7 +125,7 @@
             android:layout_columnWeight="1"
             android:text="@string/tampone"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
+            android:textSize="20sp"
 
             android:textColor="@color/grey"
             android:gravity="start"/>
@@ -134,7 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/mezzo"
-            android:textSize="14sp"
+            android:textSize="20sp"
 
             android:textColor="@color/grey"
             android:textStyle="bold"
@@ -147,8 +148,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/tampone"
-            android:textSize="14sp"
-
+            android:textSize="20sp"
             android:textColor="@color/grey"
             android:gravity="start"/>
 
@@ -157,7 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/text_view_trasporto_veicoli"
-            android:textSize="14sp"
+            android:textSize="20sp"
 
             android:textColor="@color/grey"
             android:textStyle="bold"
@@ -171,20 +171,24 @@
             android:layout_columnWeight="1"
             android:text="@string/tampone"
 
-            android:textSize="14sp"
+            android:textSize="20sp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/grey"
             android:gravity="start"
             />
     </GridLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/border_spinner_color" />
 
     <TextView
         android:id="@+id/txtAllertaMeteo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginVertical="10dp"
         android:visibility="gone"
         android:textColorHighlight="@color/warning_text"
         android:text="@string/tampone"
@@ -192,6 +196,7 @@
         android:textColor="@color/warning_text" />
 
     <Button
+        android:id="@+id/buttonConferma"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/textConferma"
@@ -217,26 +222,23 @@
             android:id="@+id/btnConfermaOSmentisci"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginEnd="5dp"
+            android:padding="0dp"
             android:layout_weight="1"
             android:background="@drawable/dialog_rounded_button"
-            android:drawableEnd="@drawable/button_report_icon"
-            android:drawablePadding="5dp"
             android:minHeight="32dp"
             android:text="@string/confermaOSmentisci"
             android:textColor="@color/primaryColor"
-            android:textSize="11sp" />
+            android:textSize="13sp" />
         <Button
             android:id="@+id/btnTaxi"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:padding="0dp"
             android:layout_gravity="center_horizontal"
-            android:drawableEnd="@drawable/button_taxi_icon"
-            android:drawablePadding="5dp"
             android:layout_weight="1"
             android:background="@drawable/dialog_rounded_button"
             android:text="@string/numeriTaxi"
-            android:textSize="11sp"
+            android:textSize="13sp"
             android:textColor="@color/primaryColor"
             android:minHeight="32dp"
             android:layout_marginHorizontal="5dp"/>
@@ -245,15 +247,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableEnd="@drawable/button_ticker_office_icon"
-            android:drawablePadding="10dp"
+            android:padding="0dp"
             android:layout_weight="1"
             android:background="@drawable/dialog_rounded_button"
             android:text="@string/numeriUtili"
-            android:textSize="11sp"
+            android:textSize="13sp"
             android:textColor="@color/primaryColor"
-            android:minHeight="32dp"
-            android:layout_marginStart="5dp"/>
+            android:minHeight="32dp"/>
 
     </LinearLayout>
 
@@ -264,7 +264,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
         android:layout_marginHorizontal="5dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@color/tertiaryColor"/>
 
 

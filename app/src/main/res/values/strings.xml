@@ -105,11 +105,11 @@
     <string name="segnalazione">warning</string>
     <string name="segnalazioni">warnings</string>
     <string name="diProblemi">for problems</string>
-    <string name="possibiliProblemi">possible problems</string>
+    <string name="possibiliProblemi">Possible problems</string>
     <string name="utenteDice">user says</string>
     <string name="utentiDicono">user say</string>
     <string name="cheLaCorsaERegolare">that the journey will take place</string>
-    <string name="inParticolare">in particular</string>
+    <string name="inParticolare">in particular:</string>
     <string name="confermaOSmentisci">Report</string>
     <string name="soloOnline">This function is accessible only when the device is connected to the Internet</string>
     <string name="hintDettagli">Insert details here …</string>
@@ -125,5 +125,6 @@
     <string name="text_view_destinazione">Destination:</string>
     <string name="text_view_trasporto_veicoli">Vehicles loading:</string>
     <string name="nessunaInfoTrasportoVeicoli">Not specified</string>
+    <string name="attenzione_lampeggiante">WARNING</string>
 </resources>
 

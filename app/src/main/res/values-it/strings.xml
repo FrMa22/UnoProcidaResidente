@@ -131,11 +131,11 @@ Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativ
     <string name="segnalazione">segnalazione</string>
     <string name="segnalazioni">segnalazioni</string>
     <string name="diProblemi">di problemi</string>
-    <string name="possibiliProblemi">possibili problemi</string>
+    <string name="possibiliProblemi">Possibili problemi</string>
     <string name="utenteDice">utente dice</string>
     <string name="utentiDicono">utenti dicono</string>
     <string name="cheLaCorsaERegolare">che la corsa è regolare</string>
-    <string name="inParticolare">in particolare</string>
+    <string name="inParticolare">in particolare:</string>
     <string name="confermaOSmentisci">Segnala</string>
     <string name="connessioneLenta">La connessione è troppo lenta: gli ultimi aggiornamenti degli orari non sono stati caricati!</string>
     <string name="soloOnline">Funzionalità accessibile solo in presenza di connessione a Internet</string>
@@ -156,5 +156,6 @@ Questa Applicazione raccoglie la geolocalizzazione degli utenti (non continuativ
     <string name="text_view_trasporto_veicoli">Imbarco veicoli:</string>
     <string name="welcome_text"><b>Benvenuto</b> su UnoProcidaResidente!</string>
     <string name="nessunaInfoTrasportoVeicoli">Non specificato</string>
+    <string name="attenzione_lampeggiante">ATTENZIONE</string>
 
 </resources>

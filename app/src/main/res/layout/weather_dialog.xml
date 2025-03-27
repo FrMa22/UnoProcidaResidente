@@ -1,51 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/backgroud_weather_dialog"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="16dp">
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="15dp"
+    >
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/tvDateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:layout_gravity="center">
-
-        <TextView
-            android:id="@+id/tvDateTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:gravity="center"
-            android:text=""
-            android:textColor="@color/tertiaryColor"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+        android:text="@string/tampone"
+        android:textColor="@color/tertiaryColor"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
 
     <TextView
         android:id="@+id/tvWindInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="12dp"
         android:gravity="center"
-        android:text=""
+        android:text="@string/tampone"
         android:textColor="@color/tertiaryColor"
         android:textSize="18sp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginHorizontal="5dp"
+        android:visibility="visible"
+        android:background="@color/tertiaryColor"/>
     <GridView
         android:id="@+id/windTable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:horizontalSpacing="8dp"
         android:numColumns="3"
         android:padding="8dp"
-        android:horizontalSpacing="8dp"
-        android:verticalSpacing="8dp"
         android:stretchMode="columnWidth"
-        android:gravity="center"/>
+        android:verticalSpacing="8dp" />
 
 </LinearLayout>

@@ -1,16 +1,12 @@
 package com.porfirio.orariprocida2011.dialogs;
 
-
 import android.app.Dialog;
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Window;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
-import com.airbnb.lottie.LottieDrawable;
 import com.porfirio.orariprocida2011.R;
 import com.porfirio.orariprocida2011.adapter.WindObservationAdapter;
 import com.porfirio.orariprocida2011.entity.Meteo;
@@ -41,10 +37,14 @@ public class WeatherDialog extends Dialog {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindow().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        int width = (int) (metrics.widthPixels * 0.9);
+        boolean isTablet = context.getResources().getConfiguration().smallestScreenWidthDp >= 600;
+        float widthFactor = isTablet ? 0.5f : 0.9f;
+
+        int width = (int) (metrics.widthPixels * widthFactor);
         int height = (int) (metrics.heightPixels * 0.4);
 
         getWindow().setLayout(width, height);
+
     }
 }
 

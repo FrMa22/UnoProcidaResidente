@@ -108,8 +108,9 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         super.onStart();
         if (getDialog() != null && getDialog().getWindow() != null) {
             boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
+            boolean isSplitScreen = getActivity().isInMultiWindowMode();
 
-            float widthFactor = isTablet ? 0.5f : 0.9f;
+            float widthFactor = (isTablet && !isSplitScreen) ? 0.5f : 0.9f;
             int width = (int) (getResources().getDisplayMetrics().widthPixels * widthFactor);
 
             getDialog().getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -235,7 +236,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             if (mezzo.tot > 0) {
                 if (mezzo.conc) {
                     alert.append(mezzo.tot).append(mezzo.tot == 1 ? " " + getString(R.string.segnalazione) : " " + getString(R.string.segnalazioni));
-                    alert.append(" ").append(getString(R.string.diProblemi)).append(" (").append(spc).append(")");
+                    alert.append(" ").append(getString(R.string.diProblemi)).append(" : ").append(spc);
                 } else {
                     alert.append(getString(R.string.possibiliProblemi)).append(" (").append(mezzo.tot);
                     alert.append(mezzo.tot == 1 ? " " + getString(R.string.segnalazione) + ")" : " " + getString(R.string.segnalazioni) + ")");
@@ -297,7 +298,16 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
 
     private GridLayout createGridLayout(String type) {
         boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
-        int textsize = isTablet ? 26 : 20;
+        boolean isSplitScreen = getActivity().isInMultiWindowMode();
+
+        int textsize;
+        if (isTablet) {
+            textsize = 28;
+        } else if (isSplitScreen) {
+            textsize = 24;
+        } else {
+            textsize = 20;
+        }
 
         GridLayout gridLayout = new GridLayout(getContext());
         gridLayout.setTag(type);
@@ -310,7 +320,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         labelView.setText(type);
         labelView.setTextColor(getResources().getColor(R.color.button_dettagli_mezzo));
         labelView.setTextSize(textsize);
-        labelView.setTypeface(null, Typeface.BOLD);
         labelView.setGravity(Gravity.CENTER);
         labelView.setPadding(0, 0, 0, 10);
 
@@ -354,7 +363,18 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
 
     private void addGridItem(GridLayout grid, String label, String value, boolean addLinkify) {
         boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
-        int textsize = isTablet ? 22 : 16;
+        boolean isSplitScreen = getActivity().isInMultiWindowMode(); // Accedi all'Activity
+
+        int textsize;
+        if (isTablet) {
+            textsize = 24;
+        } else if (isSplitScreen) {
+            textsize = 20;
+        } else {
+            textsize = 16;
+        }
+
+
 
         TextView labelView = new TextView(getContext());
         labelView.setText(String.format("%s:", label));
@@ -404,12 +424,24 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     }
 
     private LinearLayout createReportLinearLayout() {
+        int marginHorizontal = 15 , marginVertical = 8;
+        float scale = getContext().getResources().getDisplayMetrics().density;
+        int marginHorizontalPx = (int) (marginHorizontal * scale + 0.5f);
+        int marginVerticalPx = (int) (marginVertical * scale + 0.5f);
+
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(marginHorizontalPx, marginVerticalPx, marginHorizontalPx, marginVerticalPx);
+
+        linearLayout.setLayoutParams(layoutParams);
         linearLayout.setPadding(10, 10, 10, 10);
         linearLayout.setTag(callingActivity.getString(R.string.confermaOSmentisci));
+
 
         Spinner spnRagioni = new Spinner(callingContext);
         spnRagioni.setPopupBackgroundResource(R.drawable.spinner_dropdown_background);

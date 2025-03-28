@@ -42,7 +42,7 @@
             android:layout_columnWeight="1"
             android:text="@string/text_view_partenza"
 
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"/>
@@ -57,7 +57,7 @@
             android:text="@string/tampone"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/grey"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="0dp"
@@ -65,7 +65,7 @@
             android:layout_columnWeight="1"
             android:text="@string/text_view_destinazione"
 
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/tampone"
-            android:textSize="20sp"
+            android:textSize="18sp"
 
             android:textColor="@color/grey"
             android:gravity="start"
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/text_view_costo_intero"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -102,7 +102,7 @@
             android:text="@string/tampone"
 
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/grey"
             android:gravity="start"/>
 
@@ -112,7 +112,7 @@
 
             android:layout_columnWeight="1"
             android:text="@string/text_view_costo_ridotto"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -125,7 +125,7 @@
             android:layout_columnWeight="1"
             android:text="@string/tampone"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="20sp"
+            android:textSize="18sp"
 
             android:textColor="@color/grey"
             android:gravity="start"/>
@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/mezzo"
-            android:textSize="20sp"
+            android:textSize="18sp"
 
             android:textColor="@color/grey"
             android:textStyle="bold"
@@ -148,7 +148,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/tampone"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/grey"
             android:gravity="start"/>
 
@@ -157,7 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/text_view_trasporto_veicoli"
-            android:textSize="20sp"
+            android:textSize="18sp"
 
             android:textColor="@color/grey"
             android:textStyle="bold"
@@ -171,7 +171,7 @@
             android:layout_columnWeight="1"
             android:text="@string/tampone"
 
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/grey"
             android:gravity="start"

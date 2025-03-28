@@ -267,7 +267,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
 
         timeButton.setOnClickListener(v -> {
-            // Ottieni l'ora corrente
             Calendar calendar = Calendar.getInstance();
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
             int minute = calendar.get(Calendar.MINUTE);
@@ -276,14 +275,13 @@ public class OrariProcida2011Activity extends FragmentActivity {
                     OrariProcida2011Activity.this,
                     R.style.TimePickerTheme,
                     (view, hourOfDay, minute1) -> {
-                        // Gestisci la selezione dell'orario
                         Calendar currentCalendar = Calendar.getInstance();
                         if (hourOfDay < currentCalendar.get(Calendar.HOUR_OF_DAY) ||
                                 (hourOfDay == currentCalendar.get(Calendar.HOUR_OF_DAY) && minute1 < currentCalendar.get(Calendar.MINUTE))) {
                             hourOfDay = currentCalendar.get(Calendar.HOUR_OF_DAY);
                             minute1 = currentCalendar.get(Calendar.MINUTE);
                         }
-                        c.set(Calendar.HOUR, hourOfDay);
+                        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         c.set(Calendar.MINUTE, minute1);
                         timeResetButton.setText(String.format("%02d:%02d", hourOfDay, minute1));
                         timeResetButton.setVisibility(VISIBLE);

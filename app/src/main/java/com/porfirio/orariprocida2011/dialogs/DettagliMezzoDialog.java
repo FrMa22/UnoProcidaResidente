@@ -367,9 +367,9 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
 
         int textsize;
         if (isTablet) {
-            textsize = 24;
-        } else if (isSplitScreen) {
             textsize = 20;
+        } else if (isSplitScreen) {
+            textsize = 18;
         } else {
             textsize = 16;
         }

@@ -9,7 +9,7 @@
         android:id="@+id/blurredBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#AA000000"
+        android:background="#55FFFFFF"
         android:translationZ="1dp"
         android:scaleType="centerCrop"
         android:visibility="gone"/>

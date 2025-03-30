@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RenderEffect;
 import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Criteria;
 import android.location.Location;
@@ -36,28 +37,22 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TimePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.DateValidatorPointForward;
-import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.timepicker.MaterialTimePicker;
-import com.google.android.material.timepicker.TimeFormat;
+import com.google.android.material.snackbar.Snackbar;
 import com.porfirio.orariprocida2011.adapter.MezzoAdapter;
 import com.porfirio.orariprocida2011.dialogs.WeatherDialog;
 import com.porfirio.orariprocida2011.threads.companies.CompaniesUpdate;
@@ -90,7 +85,6 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 import java.util.TimeZone;
 
 public class OrariProcida2011Activity extends FragmentActivity {
@@ -443,8 +437,29 @@ public class OrariProcida2011Activity extends FragmentActivity {
         setSpinner();
 
         aggiornaLista();
-        if (!portoPartenza.equals(getString(R.string.qualsiasi_porto)))
-            Toast.makeText(this, (getString(R.string.secondoMeVuoiPartireDa) + " " + portoPartenza), Toast.LENGTH_LONG).show();
+        if (!portoPartenza.equals(getString(R.string.qualsiasi_porto))) {
+            showSnackBar();
+        }
+
+    }
+
+    private void showSnackBar() {
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
+                getString(R.string.secondoMeVuoiPartireDa) + " " + portoPartenza,
+                Snackbar.LENGTH_LONG);
+
+        snackbar.setAction("OK", v -> {
+
+        }).setActionTextColor(ContextCompat.getColor(this, R.color.primaryColor));
+
+        View snackbarView = snackbar.getView();
+        TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+        textView.setTextSize(14);
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+        textView.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+        snackbarView.setBackgroundColor(ContextCompat.getColor(this, R.color.tertiaryColor));
+
+        snackbar.show();
     }
 
     @Override
@@ -861,7 +876,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
             alertsDAO.requestUpdate();
 
             if (showToast)
-                Toast.makeText(this, getString(R.string.orariAggiornatiAl) + " " +DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(update.getUpdateTime()),Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.orariAggiornatiAl) + " " + DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(update.getUpdateTime()), Toast.LENGTH_SHORT).show();
 
         } else {
             // TODO: handle exception

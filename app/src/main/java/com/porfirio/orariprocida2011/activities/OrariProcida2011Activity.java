@@ -438,19 +438,15 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         aggiornaLista();
         if (!portoPartenza.equals(getString(R.string.qualsiasi_porto))) {
-            showSnackBar();
+            showSnackBar(getString(R.string.secondoMeVuoiPartireDa) + " " + portoPartenza);
         }
 
     }
 
-    private void showSnackBar() {
+    private void showSnackBar(String text) {
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
-                getString(R.string.secondoMeVuoiPartireDa) + " " + portoPartenza,
+                text,
                 Snackbar.LENGTH_LONG);
-
-        snackbar.setAction("OK", v -> {
-
-        }).setActionTextColor(ContextCompat.getColor(this, R.color.primaryColor));
 
         View snackbarView = snackbar.getView();
         TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
@@ -876,7 +872,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
             alertsDAO.requestUpdate();
 
             if (showToast)
-                Toast.makeText(this, getString(R.string.orariAggiornatiAl) + " " + DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(update.getUpdateTime()), Toast.LENGTH_SHORT).show();
+                showSnackBar(getString(R.string.orariAggiornatiAl) + " " + DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(update.getUpdateTime()));
 
         } else {
             // TODO: handle exception
@@ -897,8 +893,15 @@ public class OrariProcida2011Activity extends FragmentActivity {
             aggiornaLista();
 
             // NOTE: before it would show a complete dialog, as of now I changed it to just display a toast
-            if (showToast)
-                showWeatherUpdateMessage(meteo.getForecasts().get(0));
+            if (showToast) {
+                Osservazione forecast = meteo.getForecasts().get(0);
+                String message = getString(R.string.updated) + " " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(forecast.getTime()) + "\n" +
+                        getString(R.string.condimeteo) + " " + getWindBeaufortString(forecast) +
+                        " (" + (int) forecast.getWindSpeed() + " km/h) " + getString(R.string.da) + " " + getWindDirectionString(forecast);
+
+                showSnackBar(message);
+            }
+
         } else {
             // TODO: handle exception
             Log.e("MainActivity", "OnWeatherUpdate: ", update.getError());
@@ -906,13 +909,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
         }
     }
 
-    private void showWeatherUpdateMessage(Osservazione forecast) {
-        String message = getString(R.string.updated) + " " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(forecast.getTime()) + "\n" +
-                getString(R.string.condimeteo) + " " + getWindBeaufortString(forecast) +
-                " (" + (int) forecast.getWindSpeed() + " km/h) " + getString(R.string.da) + " " + getWindDirectionString(forecast);
-
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
 
     private String getWindBeaufortString(Osservazione forecast) {
         return getWindBeaufortString((int) forecast.getWindBeaufort());

@@ -215,7 +215,7 @@
         android:layout_marginHorizontal="5dp">
 
         <Button
-            android:id="@+id/btnConfermaOSmentisci"
+            android:id="@+id/btnSegnala"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"

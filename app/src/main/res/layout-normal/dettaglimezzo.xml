@@ -210,7 +210,7 @@
         >
 
         <Button
-            android:id="@+id/btnConfermaOSmentisci"
+            android:id="@+id/btnSegnala"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

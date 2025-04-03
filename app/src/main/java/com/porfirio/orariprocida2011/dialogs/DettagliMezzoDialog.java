@@ -44,7 +44,6 @@ import com.porfirio.orariprocida2011.utils.Analytics;
 
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
@@ -56,18 +55,16 @@ import java.util.Objects;
 public class DettagliMezzoDialog extends DialogFragment implements OnClickListener {
     TextView txtPartenzaDestinazione;
     Button btnTaxi;
-    Button btnConfermaOSmentisci;
+    Button buttonSegnala;
     Button btnBiglietterie;
     Button buttonConferma;
     private Compagnia c;
-    private final BiglietterieDialog biglietterieDialog = new BiglietterieDialog();
+    private FragmentManager fragmentManager;
     private LinearLayout linear_layout_dettagli_mezzo;
     private Mezzo mezzo;
     private Context callingContext;
-    private TaxiDialog taxiDialog;
     private Calendar calen;
     private OrariProcida2011Activity callingActivity;
-    private FragmentManager fragmentManager;
     private ArrayList<Compagnia> lc;
     private String[] ragioni;
 
@@ -86,6 +83,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     private List<Taxi> taxis;
     private View view_separator;
     private int ragione;
+    private boolean reportShortcut = false;
 
     public DettagliMezzoDialog(AlertsDAO alertsDAO, TaxisDAO taxisDAO) {
         this.alertsDAO = Objects.requireNonNull(alertsDAO);
@@ -103,10 +101,15 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         this.analytics = analytics;
     }
 
+    public void setReportShortcut(boolean reportShortcut) {
+        this.reportShortcut = reportShortcut;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         if (getDialog() != null && getDialog().getWindow() != null) {
+            //this makes dialog's width 90% on phone and 50% on tablet
             boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
             boolean isSplitScreen = getActivity().isInMultiWindowMode();
 
@@ -140,7 +143,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         btnTaxi = view.findViewById(R.id.btnTaxi);
         btnTaxi.setOnClickListener(v -> {
             analytics.send("App Event", "Click Taxi Dialog");
-//            taxiDialog.show(fragmentManager, "fragment_edit_name");
             toggleGrid(callingActivity.getString(R.string.numeriTaxi));
             updateButtonStates(callingActivity.getString(R.string.numeriTaxi));
         });
@@ -148,18 +150,16 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         btnBiglietterie = view.findViewById(R.id.btnBiglietterie);
         btnBiglietterie.setOnClickListener(v -> {
             analytics.send("App Event", "Click Biglietterie Dialog");
-            //biglietterieDialog.show(fragmentManager, "fragment_edit_name");
             toggleGrid(callingActivity.getString(R.string.numeriUtili));
             updateButtonStates(callingActivity.getString(R.string.numeriUtili));
         });
 
-        btnConfermaOSmentisci = view.findViewById(R.id.btnConfermaOSmentisci);
-        btnConfermaOSmentisci.setOnClickListener(v -> {
+        buttonSegnala = view.findViewById(R.id.btnSegnala);
+        buttonSegnala.setOnClickListener(v -> {
             if (!callingActivity.isOnline())
                 Toast.makeText(getContext(), callingActivity.getString(R.string.soloOnline), Toast.LENGTH_SHORT).show();
             else {
                 analytics.send("App Event", "Click Segnalazione Dialog");
-                //segnalazioneDialog.show(fragmentManager, "fragment_edit_name");
                 toggleReportGrid();
                 updateButtonStates(callingActivity.getString(R.string.confermaOSmentisci));
             }
@@ -171,9 +171,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             Log.d("DettagliMezzoDialog", "Errore: oggetto Mezzo non esiste");
         }
 
-
-        LocalDate departureDate = LocalDateTime.ofInstant(callingActivity.c.toInstant(), callingActivity.c.getTimeZone().toZoneId()).toLocalDate();
-        LocalDate arrivalDate = LocalDateTime.ofInstant(callingActivity.c.toInstant(), callingActivity.c.getTimeZone().toZoneId()).toLocalDate();
 
         String s = mezzo.portoPartenza + " - " + mezzo.portoArrivo;
         txtPartenzaDestinazione.setText(s);
@@ -211,17 +208,11 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             else
                 txtAuto.setText(callingContext.getString(R.string.trasportaAutoPasseggeri));
 
-            biglietterieDialog.setCompagnia(c);
         } else
             txtAuto.setText(R.string.nessunaInfoTrasportoVeicoli);
-        taxiDialog = new TaxiDialog();
-        taxiDialog.setPorto(mezzo.portoPartenza);
         this.porto = mezzo.portoPartenza;
 
         taxisDAO.getUpdates().observe(this, update -> {
-            if (update.isValid()) {
-                taxiDialog.setTaxis(update.getData());
-            }
             taxis = update.getData();
         });
 
@@ -265,6 +256,10 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             }
         });
 
+        if (reportShortcut){
+            buttonSegnala.callOnClick();
+        }
+
         return view;
     }
 
@@ -296,6 +291,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         linear_layout_dettagli_mezzo.addView(currentDynamicView);
     }
 
+    //dynamically creates a grid layout for taxi or ticket
     private GridLayout createGridLayout(String type) {
         boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
         boolean isSplitScreen = getActivity().isInMultiWindowMode();
@@ -360,10 +356,10 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         return gridLayout;
     }
 
-
+    //dynamically creates a label:value item for taxi or ticket
     private void addGridItem(GridLayout grid, String label, String value, boolean addLinkify) {
         boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
-        boolean isSplitScreen = getActivity().isInMultiWindowMode(); // Accedi all'Activity
+        boolean isSplitScreen = getActivity().isInMultiWindowMode();
 
         int textsize;
         if (isTablet) {
@@ -373,8 +369,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         } else {
             textsize = 16;
         }
-
-
 
         TextView labelView = new TextView(getContext());
         labelView.setText(String.format("%s:", label));
@@ -408,7 +402,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         grid.addView(labelView);
         grid.addView(valueView);
     }
-
+//dynamically shows or hides report layout and a separator line
     private void toggleReportGrid() {
         if (currentDynamicView != null) {
             view_separator.setVisibility(GONE);
@@ -422,7 +416,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         view_separator.setVisibility(VISIBLE);
         linear_layout_dettagli_mezzo.addView(currentDynamicView);
     }
-
+//dynamically creates a linear layout for report
     private LinearLayout createReportLinearLayout() {
         int marginHorizontal = 15 , marginVertical = 8;
         float scale = getContext().getResources().getDisplayMetrics().density;
@@ -526,7 +520,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         }
     }
 
-
+    // Dynamically changes the color of the selected button among report, ticket, and taxi; only one can be selected at a time.
     private void updateButtonStates(String activeType) {
         if (callingActivity.getString(R.string.numeriTaxi).equals(activeType) && currentDynamicView != null && callingActivity.getString(R.string.numeriTaxi).equals(currentDynamicView.getTag())) {
             btnTaxi.setAlpha(0.5f);
@@ -539,9 +533,9 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             btnBiglietterie.setAlpha(1.0f);
         }
         if (callingActivity.getString(R.string.confermaOSmentisci).equals(activeType) && currentDynamicView != null && callingActivity.getString(R.string.confermaOSmentisci).equals(currentDynamicView.getTag())) {
-            btnConfermaOSmentisci.setAlpha(0.5f);
+            buttonSegnala.setAlpha(0.5f);
         } else {
-            btnConfermaOSmentisci.setAlpha(1.0f);
+            buttonSegnala.setAlpha(1.0f);
         }
     }
 

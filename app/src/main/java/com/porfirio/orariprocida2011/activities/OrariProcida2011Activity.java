@@ -4,9 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -29,9 +27,6 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -69,7 +64,6 @@ import com.porfirio.orariprocida2011.R;
 import com.porfirio.orariprocida2011.threads.weather.OnRequestWeatherDAO;
 import com.porfirio.orariprocida2011.threads.weather.WeatherUpdate;
 import com.porfirio.orariprocida2011.dialogs.DettagliMezzoDialog;
-import com.porfirio.orariprocida2011.dialogs.SegnalazioneDialog;
 import com.porfirio.orariprocida2011.entity.Compagnia;
 import com.porfirio.orariprocida2011.entity.Meteo;
 import com.porfirio.orariprocida2011.entity.Mezzo;
@@ -99,25 +93,18 @@ public class OrariProcida2011Activity extends FragmentActivity {
     public AlertDialog aboutDialog;
     public Meteo meteo;
 
-    //    public AlertDialog weatherDialog;
     public ArrayList<Mezzo> transportList;
     private String[] ragioni = new String[100];
 
     private String nave;
     private String portoPartenza;
     private String portoArrivo;
-    //Custom list item usage
-//    private ArrayAdapter<String> aalvMezzi;
     private MezzoAdapter aalvMezzi;
     private List<Mezzo> selectMezzi;
-    //end
-
-    //public AlertDialog novitaDialog;
     private DettagliMezzoDialog dettagliMezzoDialog;
     private final ArrayList<Compagnia> listCompagnia = new ArrayList<>();
     private LocationManager myManager;
     private String BestProvider;
-    private SegnalazioneDialog segnalazioneDialog;
     private FloatingActionButton weatherFab;
 
     private OnRequestCompaniesDAO companiesDAO;
@@ -129,7 +116,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
     private boolean hasReceivedWeather, hasReceivedCompanies, hasReceivedTransports, hasReceivedAlerts;
 
-    private ImageButton timeButton, dateButton;
+    private ImageButton timeButton;
     private Button timeResetButton, dateResetButton;
     private SwipeRefreshLayout swipe_refresh_layout;
     private LottieAnimationView lottieLoader;
@@ -149,9 +136,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 //            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 534534);
 //        }
 
-        // NOTE (2025-02-25):
-        // these DAO calls are mixed here and there through the code because the UI is confusing to navigate at the moment
-        // they should be moved
 
         ImageView imageView = findViewById(R.id.info_icon);
         imageView.setOnClickListener(v -> {
@@ -172,7 +156,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         alertsDAO = new OnRequestAlertsDAO();
         alertsDAO.getUpdates().observe(this, this::onAlertsUpdate);
-        // alerts are requested after transports data is received
 
         companiesDAO = new OnRequestCompaniesDAO();
         companiesDAO.getUpdates().observe(this, this::onCompaniesUpdate);
@@ -200,7 +183,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
         meteo = new Meteo();
 
         timeButton = findViewById(R.id.time_button);
-        dateButton = findViewById(R.id.date_button);
         timeResetButton = findViewById(R.id.timeResetButton);
         dateResetButton = findViewById(R.id.dateResetButton);
         weatherFab = findViewById(R.id.fabWeather);
@@ -218,7 +200,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
                         windInfo,
                         meteo
                 );
-
+                Log.d("WeatherDialog","Cliccato");
                 weatherDialog.show();
             }
         });
@@ -245,7 +227,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
             rs.destroy();
         }
-        //progressBar = findViewById(R.id.progressBar);
         lottieLoader = findViewById(R.id.lottieLoader);
         InputStream inputStream = getResources().openRawResource(R.raw.loading_lottie);
         String jsonString;
@@ -286,40 +267,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         });
 
-        dateButton.setOnClickListener(v -> {
-            // Ottieni la data corrente
-            Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-            // Mostra il DatePickerDialog
-            @SuppressLint("DefaultLocale") DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    OrariProcida2011Activity.this,
-                    R.style.DatePickerTheme,
-                    (view, year1, monthOfYear, dayOfMonth1) -> {
-                        // Impedire la selezione di date antecedenti alla data attuale
-                        Calendar currentCalendar = Calendar.getInstance();
-                        if (year1 < currentCalendar.get(Calendar.YEAR) ||
-                                (year1 == currentCalendar.get(Calendar.YEAR) && monthOfYear < currentCalendar.get(Calendar.MONTH)) ||
-                                (year1 == currentCalendar.get(Calendar.YEAR) && monthOfYear == currentCalendar.get(Calendar.MONTH) && dayOfMonth1 < currentCalendar.get(Calendar.DAY_OF_MONTH))) {
-                            year1 = currentCalendar.get(Calendar.YEAR);
-                            monthOfYear = currentCalendar.get(Calendar.MONTH);
-                            dayOfMonth1 = currentCalendar.get(Calendar.DAY_OF_MONTH);
-                        }
-
-                        c.set(Calendar.YEAR, year1);
-                        c.set(Calendar.MONTH, monthOfYear);
-                        c.set(Calendar.DAY_OF_MONTH, dayOfMonth1);
-                        dateResetButton.setText(String.format("%02d/%02d/%04d", dayOfMonth1, monthOfYear + 1, year1));
-                        dateResetButton.setVisibility(View.VISIBLE);
-                        aggiornaLista();
-                    },
-                    year, month, dayOfMonth);
-
-            datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
-            datePickerDialog.show();
-        });
 
 
         timeResetButton.setOnClickListener(new View.OnClickListener() {
@@ -349,7 +296,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
         swipe_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //viene fatto ciò che fa Update Web in Menu
                 analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Update Orari da Web da Menu");
                 transportsDAO.requestUpdate();
 
@@ -367,19 +313,10 @@ public class OrariProcida2011Activity extends FragmentActivity {
         dettagliMezzoDialog.setDettagliMezzoDialog(fm, this, this, c);
         dettagliMezzoDialog.setAnalytics(analytics);
 
-        segnalazioneDialog = new SegnalazioneDialog(alertsDAO);
 
         lvMezzi.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
             analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Click Dettagli Mezzo");
-            //aboutDialog.show();
-            Log.d("List_view", selectMezzi.get(arg2).nave);
             dettagliMezzoDialog.setMezzo(selectMezzi.get(arg2));
-
-
-//				problema: clicco sulla lista ma ho solo la stringa, non il mezzo corrispondente
-//				soluzione: mantenere una variabile ordine che abbini lvMezzi con Mezzi
-//				altra soluzione: trovare il mezzo dalla stringa
-            //dettagliMezzoDialog.fill(listCompagnia);
             dettagliMezzoDialog.setListCompagnia(listCompagnia);
             dettagliMezzoDialog.show(fm, "fragment_edit_name");
 
@@ -391,24 +328,11 @@ public class OrariProcida2011Activity extends FragmentActivity {
             if (!isOnline())
                 Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.soloOnline), Toast.LENGTH_SHORT).show();
             else {
-                for (int i = 0; i < aalvMezzi.getCount(); i++) {
-                    if (selectMezzi.get(i).getOrderInList() == arg2)
-                        segnalazioneDialog.setMezzo(selectMezzi.get(i));
-                }
-
-
-                // problema: clicco sulla lista ma ho solo la stringa, non il mezzo corrispondente
-                // soluzione: mantenere una variabile ordine che abbini lvMezzi con Mezzi
-                // altra soluzione: trovare il mezzo dalla stringa
-                segnalazioneDialog.setOrarioRef(c);
-                segnalazioneDialog.setCallingContext(getApplicationContext());
-                segnalazioneDialog.setAnalytics(analytics);
-                segnalazioneDialog.setListCompagnia(listCompagnia);
-
-                //segnalazioneDialog.fill(listCompagnia);
-                segnalazioneDialog.show(fm, "fragment_edit_name");
-                //segnalazioneDialog.show();
-                aggiornaLista(); //TODO Capire come si fa ad aggiornare dopo una segnalazione (oppure scrivere che prossimamente verr? aggiunta)
+                dettagliMezzoDialog.setMezzo(selectMezzi.get(arg2));
+                dettagliMezzoDialog.setListCompagnia(listCompagnia);
+                dettagliMezzoDialog.setReportShortcut(true);
+                dettagliMezzoDialog.show(fm, "fragment_edit_name");
+                aggiornaLista();
             }
             return true;
         });
@@ -452,7 +376,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
         textView.setTextSize(14);
         textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-        textView.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+        textView.setTextColor(ContextCompat.getColor(this, R.color.secondaryColor));
         snackbarView.setBackgroundColor(ContextCompat.getColor(this, R.color.tertiaryColor));
 
         snackbar.show();
@@ -471,40 +395,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
         weatherDAO.close();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Open Menu");
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case (R.id.about):
-                analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "About");
-                aboutDialog.show();
-                return true;
-            // cambiata semantica pulsante: se scelgo, allora carico esplicitamente da web
-            case (R.id.updateWeb):
-                analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Update Orari da Web da Menu");
-                transportsDAO.requestUpdate();
-                return true;
-            case (R.id.meteo):
-                analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Update Meteo da Menu");
-                weatherDAO.requestUpdate();
-                return true;
-            case (R.id.esci):
-                analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Exit da Menu");
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
 
     public boolean isOnline() {
@@ -516,7 +406,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
 
     private void aggiornaLista() {
-        //progressBar.setVisibility(VISIBLE);
         blurredBackground.setVisibility(VISIBLE);
         lottieLoader.setVisibility(VISIBLE);
         lottieLoader.playAnimation();
@@ -527,7 +416,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         selectMezzi = new ArrayList<>();
 
-        // Clear the previous data in the adapter
         aalvMezzi.clear();
 
         String expandedTransportName = espandiNave(nave);
@@ -567,10 +455,8 @@ public class OrariProcida2011Activity extends FragmentActivity {
             return 0;
         });
 
-        // Aggiungi i nuovi dati all'adapter
         aalvMezzi.addAll(selectMezzi);
 
-        // Notifica all'adapter che i dati sono cambiati
         aalvMezzi.notifyDataSetChanged();
 
         reportFullyDrawn();
@@ -579,7 +465,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
         lottieLoader.cancelAnimation();
         lottieLoader.setVisibility(GONE);
 
-        //progressBar.setVisibility(GONE);
     }
 
     private String espandiNave(String nave) {
@@ -615,33 +500,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
     private boolean isPortoCompatibile(String porto, String portoEspanso, String portoMezzo) {
         return portoMezzo.equals(porto) || portoEspanso.contains(portoMezzo) || porto.equals(getString(R.string.qualsiasi_porto));
-    }
-
-    private String formatMezzoInfo(Mezzo route) {
-        StringBuilder s = new StringBuilder(route.nave + " - " + route.portoPartenza + " - " + route.portoArrivo + " - ");
-        s.append(route.getDepartureTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
-
-        String spc = "";
-        if (route.segnalazionePiuComune() > -1)
-            spc = ragioni[route.segnalazionePiuComune()];
-        if (route.tot > 0 || route.conferme > 0) {
-            if (route.tot > 0) {
-                if (route.conc) {
-                    s.append(" - ").append(route.tot).append(route.tot == 1 ? " " + getString(R.string.segnalazione) : " " + getString(R.string.segnalazioni));
-                    s.append(" ").append(getString(R.string.diProblemi)).append(" (").append(spc).append(")");
-                } else {
-                    s.append(" - ").append(getString(R.string.possibiliProblemi)).append(" (").append(route.tot);
-                    s.append(route.tot == 1 ? " " + getString(R.string.segnalazione) + ")" : " " + getString(R.string.segnalazioni) + ")");
-                    s.append(", ").append(getString(R.string.inParticolare)).append(" ").append(spc);
-                }
-            }
-            if (route.conferme > 0) {
-                s.append(" - ").append(route.conferme).append(route.conferme == 1 ? " " + getString(R.string.utenteDice) : " " + getString(R.string.utentiDicono));
-                s.append(" ").append(getString(R.string.cheLaCorsaERegolare));
-            }
-        }
-
-        return s.toString();
     }
 
     private void setSpinner() {
@@ -974,20 +832,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
         }
     }
 
-    private String getWeatherConditionsString(Context context, Mezzo route) {
-        double extraWind = meteo.getForecast(context, route);
-
-        if (extraWind <= 0)
-            return "";
-        else if (extraWind <= 1)
-            return " - " + getString(R.string.pocoProbabile);
-        else if (extraWind <= 2)
-            return " - " + getString(R.string.aRischio);
-        else if (extraWind <= 3)
-            return " - " + getString(R.string.corsaQuasi);
-        else
-            return " - " + getString(R.string.corsaImpossibile);
-    }
 
     private boolean sameTransport(Mezzo transport, Alert alert) {
         LocalDate transportDate = LocalDate.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));

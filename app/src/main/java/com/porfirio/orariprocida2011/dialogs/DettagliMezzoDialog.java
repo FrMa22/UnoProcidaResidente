@@ -6,6 +6,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -29,6 +30,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -207,7 +209,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
                 txtAuto.setText(callingContext.getString(R.string.trasportaSoloPasseggeri));
             else
                 txtAuto.setText(callingContext.getString(R.string.trasportaAutoPasseggeri));
-
         } else
             txtAuto.setText(R.string.nessunaInfoTrasportoVeicoli);
         this.porto = mezzo.portoPartenza;
@@ -257,6 +258,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         });
 
         if (reportShortcut){
+            Log.d("DettagliMezzoDialog", "Entrato in reportShortcut");
             buttonSegnala.callOnClick();
         }
 
@@ -371,6 +373,25 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         }
 
         TextView labelView = new TextView(getContext());
+
+        // If the label is "NoBiglietteria", create only the label without ":" and without a value
+        if (label.equals(getString(R.string.NoBiglietterie))) {
+            labelView.setText(label);
+            labelView.setTypeface(null, Typeface.BOLD);
+            labelView.setTextColor(getResources().getColor(R.color.grey));
+            labelView.setGravity(Gravity.START);
+            labelView.setTextSize(textsize);
+
+            GridLayout.LayoutParams labelParams = new GridLayout.LayoutParams();
+            labelParams.width = GridLayout.LayoutParams.WRAP_CONTENT;
+            labelParams.height = GridLayout.LayoutParams.WRAP_CONTENT;
+            labelParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2); // Occupies both columns
+            labelView.setLayoutParams(labelParams);
+
+            grid.addView(labelView);
+            return;
+        }
+
         labelView.setText(String.format("%s:", label));
         labelView.setTypeface(null, Typeface.BOLD);
         labelView.setTextColor(getResources().getColor(R.color.grey));
@@ -406,12 +427,15 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     private void toggleReportGrid() {
         if (currentDynamicView != null) {
             view_separator.setVisibility(GONE);
+            Log.d("DettagliMezzoDialog", "Removing currentDynamicView: " + currentDynamicView.getTag());
             linear_layout_dettagli_mezzo.removeView(currentDynamicView);
             if (callingActivity.getString(R.string.confermaOSmentisci).equals(currentDynamicView.getTag())) {
+                Log.d("DettagliMezzoDialog", "Current dynamic view is already the report grid. Hiding it.");
                 currentDynamicView = null;
                 return;
             }
         }
+        Log.d("DettagliMezzoDialog", "Creating new report grid");
         currentDynamicView = createReportLinearLayout();
         view_separator.setVisibility(VISIBLE);
         linear_layout_dettagli_mezzo.addView(currentDynamicView);
@@ -537,6 +561,21 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         } else {
             buttonSegnala.setAlpha(1.0f);
         }
+    }
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        // Imposta reportShortcut a false
+        reportShortcut = false;
+
+        // Distrugge il report grid se esiste
+        if (currentDynamicView != null) {
+            linear_layout_dettagli_mezzo.removeView(currentDynamicView);
+            currentDynamicView = null;
+        }
+
+        Log.d("DettagliMezzoDialog", "Dialog chiuso: reportShortcut resettato e report grid distrutto");
     }
 
 }

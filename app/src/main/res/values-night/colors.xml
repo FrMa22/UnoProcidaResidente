@@ -25,7 +25,7 @@
     <color name="spinner_text_color">#FFFFFF</color>
     <color name="grey">#9C9C9C</color>
     <color name="button_reset_date_time">#20359A</color>
-    <color name="warning_text">#FF0000</color>
+    <color name="warning_text">#FF3333</color>
 
     <color name="button_dettagli_mezzo">#FFFFFF</color>
     <color name="button_dettagli_mezzo_text_color">#1D2653</color>

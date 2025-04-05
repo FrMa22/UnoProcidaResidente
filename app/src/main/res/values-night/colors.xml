@@ -26,5 +26,6 @@
     <color name="card_color_info_activity">#1D2653</color>
     <color name="card_text_color_info_activity">#FFFFFF</color>
 
+    <color name="blurred_background_color">#55000000</color>
     <color name="white_black">#FFFFFF</color>
 </resources>

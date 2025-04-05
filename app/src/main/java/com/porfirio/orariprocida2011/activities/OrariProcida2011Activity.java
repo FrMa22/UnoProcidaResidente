@@ -207,26 +207,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
 
         blurredBackground = findViewById(R.id.blurredBackground);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            RenderEffect blurEffect = RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.CLAMP);
-            blurredBackground.setRenderEffect(blurEffect);
-        } else {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.background_main_title_text_view);
 
-            RenderScript rs = RenderScript.create(this);
-            Allocation input = Allocation.createFromBitmap(rs, bitmap);
-            Allocation output = Allocation.createTyped(rs, input.getType());
-
-            ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-            blur.setRadius(20f);
-            blur.setInput(input);
-            blur.forEach(output);
-
-            output.copyTo(bitmap);
-            blurredBackground.setBackground(new BitmapDrawable(getResources(), bitmap));
-
-            rs.destroy();
-        }
         lottieLoader = findViewById(R.id.lottieLoader);
         InputStream inputStream = getResources().openRawResource(R.raw.loading_lottie);
         String jsonString;

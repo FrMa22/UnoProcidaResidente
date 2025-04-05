@@ -30,5 +30,6 @@
     <color name="card_color_info_activity">#E9E9F6</color>
     <color name="card_text_color_info_activity">#000000</color>
 
+    <color name="blurred_background_color">#55FFFFFF</color>
     <color name="white_black">#20359A</color>
 </resources>

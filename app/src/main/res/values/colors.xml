@@ -6,8 +6,6 @@
     <color name="secondaryColor">#FFFFFF</color>
     <color name="tertiaryColor">#20359A</color>
 
-    <color name="titlePickerColor">#20359A</color>
-    <color name="dayNamePickerColor">#20359A</color>
     <color name="yearPickerColor">#FFFFFF</color>
     <color name="currentDayPickerColor">#FFFFFF</color>
     <color name="mainColorPickerColor">#20359A</color>
@@ -19,8 +17,6 @@
 
     <color name="list_item_spinner_background_color">#FFFFFF</color>
     <color name="list_item_spinner_border_color">#FFFFFF</color>
-
-
 
     <color name="spinner_text_color">#20359A</color>
     <color name="grey">#6C6C6C</color>

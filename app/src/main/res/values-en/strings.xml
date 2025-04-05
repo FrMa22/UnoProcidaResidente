@@ -76,9 +76,7 @@
     <string name="circa">(approximately) </string>
     <string name="residenteO">(reduced for islanders) or  </string>
     <string name="intero">(normal)</string>
-<!--    <string name="trasportaSoloPasseggeri">Vehicles not included</string>-->
     <string name="trasportaSoloPasseggeri">No</string>
-<!--    <string name="trasportaAutoPasseggeri">Vehicles included</string>-->
     <string name="trasportaAutoPasseggeri">Yes</string>
     <string name="calma">Calm</string>
     <string name="bavaDiVento">Light air</string>

@@ -4,25 +4,30 @@
     android:layout_height="wrap_content"
     android:id="@+id/linear_layout_dettagli_mezzo"
     android:orientation="vertical"
-    android:background="@drawable/spinner_dropdown_background"
+    android:background="@drawable/dialog_background"
     android:padding="10dp">
 
 
     <TextView
         android:id="@+id/txtPartenzaDestinazione"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginHorizontal="10dp"
-        android:layout_weight="0.8"
         android:autoSizeTextType="uniform"
         android:gravity="center"
-        android:lines="1"
+
         android:text="@string/tampone"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/tertiaryColor" />
+        android:textColor="@color/tertiaryColor"
+        android:textSize="22sp" />
 
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/border_spinner_color" />
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,8 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/text_view_partenza"
-            android:lines="1"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"/>
@@ -48,21 +52,17 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:gravity="start"
-            android:lines="1"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="11sp"
             android:text="@string/tampone"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/grey"
-            android:textSize="14sp" />
+            android:textColor="@color/tertiaryColor"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/text_view_destinazione"
-            android:lines="1"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -74,11 +74,8 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/tampone"
-            android:textSize="14sp"
-            android:lines="1"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="11sp"
-            android:textColor="@color/grey"
+            android:textSize="16sp"
+            android:textColor="@color/tertiaryColor"
             android:gravity="start"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -87,8 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/text_view_costo_intero"
-            android:textSize="14sp"
-            android:lines="1"
+            android:textSize="16sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -100,19 +96,17 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/tampone"
-            android:lines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
-            android:textColor="@color/grey"
+            android:textSize="16sp"
+            android:textColor="@color/tertiaryColor"
             android:gravity="start"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:lines="1"
             android:layout_columnWeight="1"
             android:text="@string/text_view_costo_ridotto"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -125,9 +119,8 @@
             android:layout_columnWeight="1"
             android:text="@string/tampone"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
-            android:lines="1"
-            android:textColor="@color/grey"
+            android:textSize="16sp"
+            android:textColor="@color/tertiaryColor"
             android:gravity="start"/>
 
         <TextView
@@ -135,8 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/mezzo"
-            android:textSize="14sp"
-            android:lines="1"
+            android:textSize="16sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -148,9 +140,8 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/tampone"
-            android:textSize="14sp"
-            android:lines="1"
-            android:textColor="@color/grey"
+            android:textSize="16sp"
+            android:textColor="@color/tertiaryColor"
             android:gravity="start"/>
 
         <TextView
@@ -158,8 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/text_view_trasporto_veicoli"
-            android:textSize="14sp"
-            android:lines="1"
+            android:textSize="16sp"
             android:textColor="@color/grey"
             android:textStyle="bold"
             android:gravity="end"
@@ -171,21 +161,25 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/tampone"
-            android:lines="1"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/grey"
+            android:textColor="@color/tertiaryColor"
             android:gravity="start"
             />
     </GridLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="8dp"
+        android:background="@color/border_spinner_color" />
 
     <TextView
         android:id="@+id/txtAllertaMeteo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginVertical="10dp"
         android:visibility="gone"
         android:textColorHighlight="@color/warning_text"
         android:text="@string/tampone"
@@ -193,6 +187,7 @@
         android:textColor="@color/warning_text" />
 
     <Button
+        android:id="@+id/buttonConferma"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/textConferma"
@@ -205,72 +200,62 @@
         android:textColor="@color/black"
         android:minHeight="32dp"
         />
-
     <LinearLayout
-        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="5dp">
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="5dp"
+        >
 
         <Button
             android:id="@+id/btnSegnala"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="5dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:padding="0dp"
             android:background="@drawable/dialog_rounded_button"
-            android:drawableEnd="@drawable/button_report_icon"
-            android:drawablePadding="5dp"
             android:minHeight="32dp"
             android:text="@string/confermaOSmentisci"
             android:textColor="@color/primaryColor"
             android:textSize="11sp" />
-
         <Button
             android:id="@+id/btnTaxi"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableEnd="@drawable/button_taxi_icon"
-            android:drawablePadding="5dp"
             android:layout_weight="1"
+            android:padding="0dp"
             android:background="@drawable/dialog_rounded_button"
             android:text="@string/numeriTaxi"
             android:textSize="11sp"
             android:textColor="@color/primaryColor"
             android:minHeight="32dp"
-            android:layout_marginHorizontal="5dp" />
-
+            android:layout_marginHorizontal="5dp"/>
         <Button
             android:id="@+id/btnBiglietterie"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableEnd="@drawable/button_ticker_office_icon"
-            android:drawablePadding="10dp"
             android:layout_weight="1"
+            android:padding="0dp"
             android:background="@drawable/dialog_rounded_button"
             android:text="@string/numeriUtili"
             android:textSize="11sp"
             android:textColor="@color/primaryColor"
-            android:minHeight="32dp"
-            android:layout_marginStart="5dp"/>
+            android:minHeight="32dp"/>
 
     </LinearLayout>
 
     <View
         android:id="@+id/view_separator"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginHorizontal="5dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@color/tertiaryColor"/>
 
 

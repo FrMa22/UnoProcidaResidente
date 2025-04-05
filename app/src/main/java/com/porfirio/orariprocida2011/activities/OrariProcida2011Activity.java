@@ -278,6 +278,9 @@ public class OrariProcida2011Activity extends FragmentActivity {
             @Override
             public void onRefresh() {
                 analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Update Orari da Web da Menu");
+
+                lottieLoader.setVisibility(VISIBLE);
+                blurredBackground.setVisibility(VISIBLE);
                 transportsDAO.requestUpdate();
 
                 swipe_refresh_layout.setRefreshing(false);
@@ -718,6 +721,9 @@ public class OrariProcida2011Activity extends FragmentActivity {
             Log.e("MainActivity", "OnTransportsUpdate: ", update.getError());
             Toast.makeText(this, getString(R.string.error_update_transports), Toast.LENGTH_SHORT).show();
         }
+        lottieLoader.setVisibility(GONE);
+        lottieLoader.cancelAnimation();
+        blurredBackground.setVisibility(GONE);
     }
 
     private void onWeatherUpdate(WeatherUpdate update) {

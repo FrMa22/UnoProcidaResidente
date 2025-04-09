@@ -258,7 +258,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         });
 
         if (reportShortcut){
-            Log.d("DettagliMezzoDialog", "Entrato in reportShortcut");
             buttonSegnala.callOnClick();
         }
 
@@ -427,15 +426,12 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     private void toggleReportGrid() {
         if (currentDynamicView != null) {
             view_separator.setVisibility(GONE);
-            Log.d("DettagliMezzoDialog", "Removing currentDynamicView: " + currentDynamicView.getTag());
             linear_layout_dettagli_mezzo.removeView(currentDynamicView);
             if (callingActivity.getString(R.string.confermaOSmentisci).equals(currentDynamicView.getTag())) {
-                Log.d("DettagliMezzoDialog", "Current dynamic view is already the report grid. Hiding it.");
                 currentDynamicView = null;
                 return;
             }
         }
-        Log.d("DettagliMezzoDialog", "Creating new report grid");
         currentDynamicView = createReportLinearLayout();
         view_separator.setVisibility(VISIBLE);
         linear_layout_dettagli_mezzo.addView(currentDynamicView);
@@ -574,8 +570,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             linear_layout_dettagli_mezzo.removeView(currentDynamicView);
             currentDynamicView = null;
         }
-
-        Log.d("DettagliMezzoDialog", "Dialog chiuso: reportShortcut resettato e report grid distrutto");
     }
 
 }

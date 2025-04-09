@@ -1,51 +1,91 @@
 package com.porfirio.orariprocida2011.dialogs;
 
 
+import static android.view.Gravity.END;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.util.Linkify;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.porfirio.orariprocida2011.R;
 import com.porfirio.orariprocida2011.activities.OrariProcida2011Activity;
+import com.porfirio.orariprocida2011.entity.Alert;
 import com.porfirio.orariprocida2011.entity.Compagnia;
 import com.porfirio.orariprocida2011.entity.Mezzo;
+import com.porfirio.orariprocida2011.entity.Taxi;
 import com.porfirio.orariprocida2011.threads.alerts.AlertsDAO;
 import com.porfirio.orariprocida2011.threads.taxies.TaxisDAO;
 import com.porfirio.orariprocida2011.utils.Analytics;
 
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
 public class DettagliMezzoDialog extends DialogFragment implements OnClickListener {
-
-    private final BiglietterieDialog biglietterieDialog = new BiglietterieDialog();
+    TextView txtPartenzaDestinazione;
+    Button btnTaxi;
+    Button buttonSegnala;
+    Button btnBiglietterie;
+    Button buttonConferma;
+    private Compagnia c;
+    private FragmentManager fragmentManager;
+    private LinearLayout linear_layout_dettagli_mezzo;
     private Mezzo mezzo;
     private Context callingContext;
-    private TaxiDialog taxiDialog;
-    private SegnalazioneDialog segnalazioneDialog;
     private Calendar calen;
     private OrariProcida2011Activity callingActivity;
-    private FragmentManager fragmentManager;
     private ArrayList<Compagnia> lc;
+    private String[] ragioni;
 
     private final AlertsDAO alertsDAO;
     private final TaxisDAO taxisDAO;
     private Analytics analytics;
+    private TextView txtMezzo;
+    private TextView txtPartenza;
+    private TextView txtArrivo;
+    private TextView txtCostoIntero;
+    private TextView txtCostoRidotto;
+    private TextView txtAuto;
+    private TextView txtAllertaMeteo;
+    private View currentDynamicView = null;
+    private String porto;
+    private List<Taxi> taxis;
+    private View view_separator;
+    private int ragione;
+    private boolean reportShortcut = false;
 
     public DettagliMezzoDialog(AlertsDAO alertsDAO, TaxisDAO taxisDAO) {
         this.alertsDAO = Objects.requireNonNull(alertsDAO);
@@ -63,98 +103,101 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         this.analytics = analytics;
     }
 
+    public void setReportShortcut(boolean reportShortcut) {
+        this.reportShortcut = reportShortcut;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            //this makes dialog's width 90% on phone and 50% on tablet
+            boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
+            boolean isSplitScreen = getActivity().isInMultiWindowMode();
+
+            float widthFactor = (isTablet && !isSplitScreen) ? 0.5f : 0.9f;
+            int width = (int) (getResources().getDisplayMetrics().widthPixels * widthFactor);
+
+            getDialog().getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
         View view = inflater.inflate(R.layout.dettaglimezzo, container);
-        //setContentView(R.layout.dettaglimezzo);
+        linear_layout_dettagli_mezzo = view.findViewById(R.id.linear_layout_dettagli_mezzo);
 
-        TextView txtMezzo = view.findViewById(R.id.txtMezzo);
-        TextView txtPartenza = view.findViewById(R.id.txtPartenza);
-        TextView txtArrivo = view.findViewById(R.id.txtArrivo);
-//		txtOrario = (TextView) findViewById(R.id.txtOrario);
-//		txtOraPartenza = (TextView) findViewById(R.id.txtOraPartenza);
-//		txtOraArrivo = (TextView) findViewById(R.id.txtOraArrivo);
-//		txtPortoPartenza = (TextView) findViewById(R.id.txtPortoPartenza);
-//		txtPortoArrivo = (TextView) findViewById(R.id.txtPortoArrivo);
-        TextView txtPeriodo = view.findViewById(R.id.txtPeriodo);
-        txtPeriodo.setText("");
-        TextView txtGiorniSettimana = view.findViewById(R.id.txtGiorniSettimana);
-        txtGiorniSettimana.setText("");
-//		txtNomeCompagnia = (TextView) findViewById(R.id.txtNomeCompagnia);
-//		txtTelefonoCompagnia = (TextView) findViewById(R.id.txtTelefonoCompagnia);
-        TextView txtCosto = view.findViewById(R.id.txtCosto);
-        TextView txtAuto = view.findViewById(R.id.txtAuto);
+        txtPartenzaDestinazione = view.findViewById(R.id.txtPartenzaDestinazione);
+        txtMezzo = view.findViewById(R.id.txtMezzo);
+        txtPartenza = view.findViewById(R.id.txtPartenza);
+        txtArrivo = view.findViewById(R.id.txtArrivo);
+        txtCostoIntero = view.findViewById(R.id.txtCostoIntero);
+        txtCostoRidotto = view.findViewById(R.id.txtCostoRidotto);
+        txtAuto = view.findViewById(R.id.txtAuto);
+        txtAllertaMeteo = view.findViewById(R.id.txtAllertaMeteo);
+        view_separator = view.findViewById(R.id.view_separator);
 
-        Button btnReturnToHome = view.findViewById(R.id.btnReturnToHome);
-        btnReturnToHome.setOnClickListener(v -> dismiss());
 
-        Button btnTaxi = view.findViewById(R.id.btnTaxi);
+        btnTaxi = view.findViewById(R.id.btnTaxi);
         btnTaxi.setOnClickListener(v -> {
             analytics.send("App Event", "Click Taxi Dialog");
-            taxiDialog.show(fragmentManager, "fragment_edit_name");
+            toggleGrid(callingActivity.getString(R.string.numeriTaxi));
+            updateButtonStates(callingActivity.getString(R.string.numeriTaxi));
         });
 
-        Button btnBiglietterie = view.findViewById(R.id.btnBiglietterie);
+        btnBiglietterie = view.findViewById(R.id.btnBiglietterie);
         btnBiglietterie.setOnClickListener(v -> {
             analytics.send("App Event", "Click Biglietterie Dialog");
-            biglietterieDialog.show(fragmentManager, "fragment_edit_name");
+            toggleGrid(callingActivity.getString(R.string.numeriUtili));
+            updateButtonStates(callingActivity.getString(R.string.numeriUtili));
         });
 
-        Button btnConfermaOSmentisci = view.findViewById(R.id.btnConfermaOSmentisci);
-        btnConfermaOSmentisci.setOnClickListener(v -> {
+        buttonSegnala = view.findViewById(R.id.btnSegnala);
+        buttonSegnala.setOnClickListener(v -> {
             if (!callingActivity.isOnline())
                 Toast.makeText(getContext(), callingActivity.getString(R.string.soloOnline), Toast.LENGTH_SHORT).show();
             else {
                 analytics.send("App Event", "Click Segnalazione Dialog");
-                segnalazioneDialog.show(fragmentManager, "fragment_edit_name");
+                toggleReportGrid();
+                updateButtonStates(callingActivity.getString(R.string.confermaOSmentisci));
             }
         });
 
-        final String text = "    " + mezzo.nave + "    ";
-        txtMezzo.setText(text);
-
-        LocalDate departureDate = LocalDateTime.ofInstant(callingActivity.c.toInstant(), callingActivity.c.getTimeZone().toZoneId()).toLocalDate();
-        LocalDate arrivalDate = LocalDateTime.ofInstant(callingActivity.c.toInstant(), callingActivity.c.getTimeZone().toZoneId()).toLocalDate();
-
-        if (mezzo.getGiornoSeguente()) {
-            departureDate = departureDate.plusDays(1);
-            arrivalDate = arrivalDate.plusDays(1);
+        if (mezzo != null) {
+            txtMezzo.setText(mezzo.nave);
+        } else {
+            Log.d("DettagliMezzoDialog", "Errore: oggetto Mezzo non esiste");
         }
 
-        String s = callingContext.getString(R.string.parteAlle) + " " + DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(mezzo.getDepartureTime());
-        s += " " + callingContext.getString(R.string.del) + " " + DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(departureDate);
-        s += " " + callingContext.getString(R.string.da) + " " + mezzo.portoPartenza;
+
+        String s = mezzo.portoPartenza + " - " + mezzo.portoArrivo;
+        txtPartenzaDestinazione.setText(s);
+
+        s = mezzo.portoPartenza + " - " + DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(mezzo.getDepartureTime());
         txtPartenza.setText(s);
-        //s=new String();
-        s = callingContext.getString(R.string.arrivaAlle) + " " + DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(mezzo.getArrivalTime());
-        s += " " + callingContext.getString(R.string.del) + " " + DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(arrivalDate);
-        s += " " + callingContext.getString(R.string.a) + " " + mezzo.portoArrivo;
+
+        s = mezzo.portoArrivo + " - " + DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(mezzo.getArrivalTime());
         txtArrivo.setText(s);
 
 
-//		if (mezzo.isEsclusione())
-//			txtPeriodo.setText(mezzo.inizioEsclusione.get(Calendar.DAY_OF_MONTH));
-//		txtGiorniSettimana.setText(mezzo.giorniSettimana);
+        if (mezzo.getReducedPrice() > 0) {
+            String ridotto = String.format(Locale.getDefault(), "%.2f", mezzo.getReducedPrice()) + " € ";
+            txtCostoRidotto.setText(ridotto);
+        }
 
-//        listNumeri = new ArrayList <String>();
-//        lvNumeri=(ListView)findViewById(R.id.listViewNumeri);
-//        aalvNumeri = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_list_item_1);
-//        lvNumeri.setAdapter(aalvNumeri);
-//
-        s = "";
 
-        if (mezzo.getReducedPrice() > 0)
-            s += callingContext.getString(R.string.costo) + " " + String.format(Locale.getDefault(), "%.2f", mezzo.getReducedPrice()) + " € ";
+        if (mezzo.getFullPrice() > 0) {
+            String intero = String.format(Locale.getDefault(), "%.2f", mezzo.getFullPrice()) + " € ";
+            txtCostoIntero.setText(intero);
+        }
 
-        if (mezzo.getFullPrice() > 0)
-            s += callingContext.getString(R.string.residenteO) + " " + String.format(Locale.getDefault(), "%.2f", mezzo.getFullPrice()) + " € " + callingContext.getString(R.string.intero);
-
-        txtCosto.setText(s);
 
         //trova compagnia c
-        Compagnia c = null;
+        c = null;
         for (int i = 0; i < lc.size(); i++) {
             if (mezzo.nave.contains(lc.get(i).getName()))
                 c = lc.get(i);
@@ -166,29 +209,57 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
                 txtAuto.setText(callingContext.getString(R.string.trasportaSoloPasseggeri));
             else
                 txtAuto.setText(callingContext.getString(R.string.trasportaAutoPasseggeri));
-
-            //biglietterieDialog = new BiglietterieDialog(this.getContext());
-            //FragmentManager fm = callingContext.getSupportFragmentManager();
-            //BiglietterieDialog biglietterieDialog = new BiglietterieDialog();
-            biglietterieDialog.setCompagnia(c);
         } else
-            txtAuto.setText("");
-        taxiDialog = new TaxiDialog();
-        taxiDialog.setPorto(mezzo.portoPartenza);
+            txtAuto.setText(R.string.nessunaInfoTrasportoVeicoli);
+        this.porto = mezzo.portoPartenza;
 
         taxisDAO.getUpdates().observe(this, update -> {
-            if (update.isValid())
-                taxiDialog.setTaxis(update.getData());
+            taxis = update.getData();
         });
 
-        segnalazioneDialog = new SegnalazioneDialog(alertsDAO);
-        segnalazioneDialog.setOrarioRef(calen);
-        segnalazioneDialog.setMezzo(mezzo);
-        segnalazioneDialog.setCallingContext(this.getContext());
-        segnalazioneDialog.setAnalytics(analytics);
-        segnalazioneDialog.setListCompagnia(lc);
-        //segnalazioneDialog.fill(lc);
 
+        ragioni = getResources().getStringArray(R.array.strRagioni);
+        String spc = "";
+        if (mezzo.segnalazionePiuComune() > -1) {
+            spc = ragioni[mezzo.segnalazionePiuComune()];
+        }
+        if (mezzo.tot > 0 || mezzo.conferme > 0) {
+            StringBuilder alert = new StringBuilder();
+            if (mezzo.tot > 0) {
+                if (mezzo.conc) {
+                    alert.append(mezzo.tot).append(mezzo.tot == 1 ? " " + getString(R.string.segnalazione) : " " + getString(R.string.segnalazioni));
+                    alert.append(" ").append(getString(R.string.diProblemi)).append(" : ").append(spc);
+                } else {
+                    alert.append(getString(R.string.possibiliProblemi)).append(" (").append(mezzo.tot);
+                    alert.append(mezzo.tot == 1 ? " " + getString(R.string.segnalazione) + ")" : " " + getString(R.string.segnalazioni) + ")");
+                    alert.append(", ").append(getString(R.string.inParticolare)).append(" ").append(spc);
+                }
+            }
+            if (mezzo.conferme > 0) {
+                alert.append(mezzo.conferme).append(mezzo.conferme == 1 ? " " + getString(R.string.utenteDice) : " " + getString(R.string.utentiDicono));
+                alert.append(" ").append(getString(R.string.cheLaCorsaERegolare));
+            }
+            txtAllertaMeteo.setVisibility(VISIBLE);
+            txtAllertaMeteo.setText(alert);
+        }
+
+        buttonConferma = view.findViewById(R.id.buttonConferma);
+        buttonConferma.setOnClickListener(v -> {
+            if (!callingActivity.isOnline()) {
+                Toast.makeText(getContext(), callingActivity.getString(R.string.soloOnline), Toast.LENGTH_SHORT).show();
+            } else {
+                if(scriviSegnalazione(false,null)) {
+                    Toast.makeText(getContext(), R.string.invioConfermaAvvenuto, Toast.LENGTH_SHORT).show();
+                    dismiss();
+                }else{
+                    Toast.makeText(getContext(),R.string.invioConfermaFallito, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        if (reportShortcut){
+            buttonSegnala.callOnClick();
+        }
 
         return view;
     }
@@ -204,6 +275,301 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
 
     public void setListCompagnia(ArrayList<Compagnia> listCompagnia) {
         lc = listCompagnia;
+    }
+
+    private void toggleGrid(String type) {
+        if (currentDynamicView != null) {
+            view_separator.setVisibility(GONE);
+            linear_layout_dettagli_mezzo.removeView(currentDynamicView);
+            if (currentDynamicView.getTag().equals(type)) {
+                currentDynamicView = null;
+                return;
+            }
+        }
+
+        currentDynamicView = createGridLayout(type);
+        view_separator.setVisibility(VISIBLE);
+        linear_layout_dettagli_mezzo.addView(currentDynamicView);
+    }
+
+    //dynamically creates a grid layout for taxi or ticket
+    private GridLayout createGridLayout(String type) {
+        boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
+        boolean isSplitScreen = getActivity().isInMultiWindowMode();
+
+        int textsize;
+        if (isTablet) {
+            textsize = 28;
+        } else if (isSplitScreen) {
+            textsize = 24;
+        } else {
+            textsize = 20;
+        }
+
+        GridLayout gridLayout = new GridLayout(getContext());
+        gridLayout.setTag(type);
+        gridLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        gridLayout.setUseDefaultMargins(true);
+        gridLayout.setColumnCount(2);
+        gridLayout.setPadding(10, 10, 10, 10);
+
+        TextView labelView = new TextView(getContext());
+        labelView.setText(type);
+        labelView.setTextColor(getResources().getColor(R.color.button_dettagli_mezzo));
+        labelView.setTextSize(textsize);
+        labelView.setGravity(Gravity.CENTER);
+        labelView.setPadding(0, 0, 0, 10);
+
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.rowSpec = GridLayout.spec(0);
+        params.columnSpec = GridLayout.spec(0, 2);
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+
+        labelView.setLayoutParams(params);
+
+        gridLayout.addView(labelView);
+
+        if (type.equals(callingActivity.getString(R.string.numeriTaxi))) {
+            ArrayList<Taxi> taxiPortoList = new ArrayList<>();
+
+            for (int i = 0; i < taxis.size(); i++)
+                if (porto.contains(taxis.get(i).getPorto()) && !(porto.contentEquals("Monte di Procida") && taxis.get(i).getPorto().contentEquals("Procida")))
+                    taxiPortoList.add(taxis.get(i));
+
+            if (!taxiPortoList.isEmpty()) {
+                for (Taxi taxi : taxiPortoList) {
+                    addGridItem(gridLayout, taxi.getCompagnia(), taxi.getNumero(), true);
+                }
+            }
+        } else if (type.equals(callingActivity.getString(R.string.numeriUtili))) {
+            if (c == null) {
+                addGridItem(gridLayout, getString(R.string.NoBiglietterie), "", false);
+            } else {
+                int contactsCount = c.getContactsCount();
+                for (int i = 0; i < contactsCount; i++) {
+                    String contactName = c.getContactName(i);
+                    String contactNumber = c.getContactNumber(i);
+                    addGridItem(gridLayout, contactName, contactNumber, true);
+                }
+            }
+        }
+
+        return gridLayout;
+    }
+
+    //dynamically creates a label:value item for taxi or ticket
+    private void addGridItem(GridLayout grid, String label, String value, boolean addLinkify) {
+        boolean isTablet = getResources().getConfiguration().smallestScreenWidthDp >= 600;
+        boolean isSplitScreen = getActivity().isInMultiWindowMode();
+
+        int textsize;
+        if (isTablet) {
+            textsize = 20;
+        } else if (isSplitScreen) {
+            textsize = 18;
+        } else {
+            textsize = 16;
+        }
+
+        TextView labelView = new TextView(getContext());
+
+        // If the label is "NoBiglietteria", create only the label without ":" and without a value
+        if (label.equals(getString(R.string.NoBiglietterie))) {
+            labelView.setText(label);
+            labelView.setTypeface(null, Typeface.BOLD);
+            labelView.setTextColor(getResources().getColor(R.color.grey));
+            labelView.setGravity(Gravity.START);
+            labelView.setTextSize(textsize);
+
+            GridLayout.LayoutParams labelParams = new GridLayout.LayoutParams();
+            labelParams.width = GridLayout.LayoutParams.WRAP_CONTENT;
+            labelParams.height = GridLayout.LayoutParams.WRAP_CONTENT;
+            labelParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2); // Occupies both columns
+            labelView.setLayoutParams(labelParams);
+
+            grid.addView(labelView);
+            return;
+        }
+
+        labelView.setText(String.format("%s:", label));
+        labelView.setTypeface(null, Typeface.BOLD);
+        labelView.setTextColor(getResources().getColor(R.color.grey));
+        labelView.setGravity(Gravity.END);
+        labelView.setTextSize(textsize);
+
+        GridLayout.LayoutParams labelParams = new GridLayout.LayoutParams();
+        labelParams.width = 0;
+        labelParams.height = GridLayout.LayoutParams.WRAP_CONTENT;
+        labelParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+        labelView.setLayoutParams(labelParams);
+
+        TextView valueView = new TextView(getContext());
+        valueView.setText(value);
+        valueView.setGravity(Gravity.START);
+        valueView.setTextColor(getResources().getColor(R.color.tertiaryColor));
+        valueView.setTextSize(textsize);
+
+        GridLayout.LayoutParams valueParams = new GridLayout.LayoutParams();
+        valueParams.width = 0;
+        valueParams.height = GridLayout.LayoutParams.WRAP_CONTENT;
+        valueParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+        valueView.setLayoutParams(valueParams);
+
+        if (addLinkify) {
+            Linkify.addLinks(valueView, Linkify.PHONE_NUMBERS);
+        }
+
+        grid.addView(labelView);
+        grid.addView(valueView);
+    }
+//dynamically shows or hides report layout and a separator line
+    private void toggleReportGrid() {
+        if (currentDynamicView != null) {
+            view_separator.setVisibility(GONE);
+            linear_layout_dettagli_mezzo.removeView(currentDynamicView);
+            if (callingActivity.getString(R.string.confermaOSmentisci).equals(currentDynamicView.getTag())) {
+                currentDynamicView = null;
+                return;
+            }
+        }
+        currentDynamicView = createReportLinearLayout();
+        view_separator.setVisibility(VISIBLE);
+        linear_layout_dettagli_mezzo.addView(currentDynamicView);
+    }
+//dynamically creates a linear layout for report
+    private LinearLayout createReportLinearLayout() {
+        int marginHorizontal = 15 , marginVertical = 8;
+        float scale = getContext().getResources().getDisplayMetrics().density;
+        int marginHorizontalPx = (int) (marginHorizontal * scale + 0.5f);
+        int marginVerticalPx = (int) (marginVertical * scale + 0.5f);
+
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(marginHorizontalPx, marginVerticalPx, marginHorizontalPx, marginVerticalPx);
+
+        linearLayout.setLayoutParams(layoutParams);
+        linearLayout.setPadding(10, 10, 10, 10);
+        linearLayout.setTag(callingActivity.getString(R.string.confermaOSmentisci));
+
+
+        Spinner spnRagioni = new Spinner(callingContext);
+        spnRagioni.setPopupBackgroundResource(R.drawable.spinner_dropdown_background);
+        spnRagioni.setBackgroundResource(R.drawable.dropdown_background_report_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                callingContext, R.array.strRagioni, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
+        LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        spnRagioni.setLayoutParams(spinnerParams);
+        spnRagioni.setPadding(20, 0, 0, 0);
+        spnRagioni.setAdapter(adapter);
+        spnRagioni.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                ragione = pos;
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        linearLayout.addView(spnRagioni);
+
+        EditText editTextDettagli = new EditText(callingContext);
+        LinearLayout.LayoutParams etParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        etParams.topMargin = 30;
+        etParams.bottomMargin = 20;
+        editTextDettagli.setLayoutParams(etParams);
+        editTextDettagli.setBackgroundResource(R.drawable.edit_text_background);
+        editTextDettagli.setHint(getString(R.string.hintDettagli));
+        editTextDettagli.setLines(4);
+        editTextDettagli.setGravity(Gravity.TOP | Gravity.START);
+        editTextDettagli.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+        editTextDettagli.setPadding(16, 16, 16, 16);
+        editTextDettagli.setHintTextColor(getResources().getColor(R.color.grey));
+        editTextDettagli.setTextColor(getResources().getColor(R.color.tertiaryColor));
+        editTextDettagli.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        linearLayout.addView(editTextDettagli);
+
+        Button btnInvia = new Button(callingContext);
+        btnInvia.setText(getString(R.string.invia));
+        LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        btnParams.gravity = END;
+        btnInvia.setLayoutParams(btnParams);
+        btnInvia.setTextSize(11);
+        btnInvia.setPadding(btnInvia.getPaddingLeft(), 0, btnInvia.getPaddingRight(), 0);
+        btnInvia.setMinimumHeight((int) (32 * Resources.getSystem().getDisplayMetrics().density));
+        btnInvia.setMinHeight((int) (32 * Resources.getSystem().getDisplayMetrics().density));
+        btnInvia.setTextColor(getResources().getColor(R.color.red));
+        btnInvia.setBackgroundResource(R.drawable.background_button_report);
+        btnInvia.setOnClickListener(v -> {
+            analytics.send("App Event", "Segnala Avaria");
+            String dettagli = editTextDettagli.getText().toString().replaceAll("\r\n|\r|\n", " ");
+            scriviSegnalazione(true, dettagli);
+            Toast.makeText(v.getContext(), R.string.ringraziamentoSegnalazione, Toast.LENGTH_SHORT).show();
+            toggleReportGrid();
+            updateButtonStates(callingActivity.getString(R.string.confermaOSmentisci));
+        });
+
+        linearLayout.addView(btnInvia);
+
+        return linearLayout;
+    }
+
+
+    private boolean scriviSegnalazione(boolean problema, String dettagli) {
+        try {
+            int reason = problema ? ragione : Alert.REASON_NO_PROBLEM;
+            LocalDate transportDate = LocalDate.of(calen.get(Calendar.YEAR), calen.get(Calendar.MONTH) + 1, calen.get(Calendar.DAY_OF_MONTH));
+
+            if (mezzo.getGiornoSeguente())
+                transportDate = transportDate.plusDays(1);
+
+            Alert alert = new Alert(mezzo.getId(), reason, dettagli, transportDate);
+            alertsDAO.send(alert);
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // Dynamically changes the color of the selected button among report, ticket, and taxi; only one can be selected at a time.
+    private void updateButtonStates(String activeType) {
+        if (callingActivity.getString(R.string.numeriTaxi).equals(activeType) && currentDynamicView != null && callingActivity.getString(R.string.numeriTaxi).equals(currentDynamicView.getTag())) {
+            btnTaxi.setAlpha(0.5f);
+        } else {
+            btnTaxi.setAlpha(1.0f);
+        }
+        if (callingActivity.getString(R.string.numeriUtili).equals(activeType) && currentDynamicView != null && callingActivity.getString(R.string.numeriUtili).equals(currentDynamicView.getTag())) {
+            btnBiglietterie.setAlpha(0.5f);
+        } else {
+            btnBiglietterie.setAlpha(1.0f);
+        }
+        if (callingActivity.getString(R.string.confermaOSmentisci).equals(activeType) && currentDynamicView != null && callingActivity.getString(R.string.confermaOSmentisci).equals(currentDynamicView.getTag())) {
+            buttonSegnala.setAlpha(0.5f);
+        } else {
+            buttonSegnala.setAlpha(1.0f);
+        }
+    }
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        // Imposta reportShortcut a false
+        reportShortcut = false;
+
+        // Distrugge il report grid se esiste
+        if (currentDynamicView != null) {
+            linear_layout_dettagli_mezzo.removeView(currentDynamicView);
+            currentDynamicView = null;
+        }
     }
 
 }

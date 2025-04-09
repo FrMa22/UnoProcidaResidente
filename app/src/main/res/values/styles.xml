@@ -1,10 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="UnoProcidaResidenteTheme" parent="@android:style/Theme.Holo">
+    <style name="UnoProcidaResidenteTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
 
-        <item name="android:actionMenuTextColor">@color/bianco</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+
+        <item name="android:textColorPrimary">@color/tertiaryColor</item>
+        <item name="android:statusBarColor">@color/primaryColor</item>
+        <item name="android:spinnerItemStyle">@style/MySpinnerTextStyle</item>
+        <item name="android:spinnerDropDownItemStyle">@style/MySpinnerDropDownTextStyle</item>
     </style>
 
-    <color name="bianco">#FFFFFF</color>
+    <style name="MySpinnerTextStyle" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:textColor">@color/tertiaryColor</item>
+    </style>
+
+    <style name="MySpinnerDropDownTextStyle" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:textColor">@android:color/holo_red_dark</item>
+    </style>
+
+
+    <style name="DialogButtonStyled" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/tertiaryColor</item>
+    </style>
+
+    <style name="TimePickerTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/mainColorPickerColor</item>
+        <item name="android:textColorPrimary">@color/grey</item>
+        <item name="android:textColorSecondary">@color/grey</item>
+        <item name="android:textColorPrimaryInverse">@color/currentDayPickerColor</item>
+        <item name="android:textColorSecondaryInverse">@color/yearPickerColor</item>
+        <item name="android:windowBackground">@color/backgroundPickerColor</item>
+        <item name="android:textColor">@color/white_black</item>
+        <item name="android:textColorHint">#4E4E4E</item>
+
+        <item name="android:buttonBarPositiveButtonStyle">@style/DialogButtonStyled</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/DialogButtonStyled</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/DialogButtonStyled</item>
+    </style>
+
+
 </resources>

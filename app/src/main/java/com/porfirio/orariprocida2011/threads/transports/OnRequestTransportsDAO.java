@@ -1,5 +1,7 @@
 package com.porfirio.orariprocida2011.threads.transports;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -77,7 +79,6 @@ public class OnRequestTransportsDAO implements TransportsDAO {
         LocalTime departureTime = LocalTime.parse(snapshot.child("oraPartenza").getValue(String.class));
         LocalTime arrivalTime = LocalTime.parse(snapshot.child("oraArrivo").getValue(String.class));
         byte activeDays = snapshot.hasChild("giorniSettimana") ? getActiveDays(snapshot.child("giorniSettimana").getValue(String.class)) : Byte.MIN_VALUE;
-
         return new Mezzo(
                 snapshot.getKey(),
                 snapshot.child("nomeNave").getValue(String.class),

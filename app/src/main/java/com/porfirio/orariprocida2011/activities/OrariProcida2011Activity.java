@@ -1,9 +1,15 @@
 package com.porfirio.orariprocida2011.activities;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -11,22 +17,29 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.porfirio.orariprocida2011.adapter.MezzoAdapter;
+import com.porfirio.orariprocida2011.dialogs.WeatherDialog;
 import com.porfirio.orariprocida2011.threads.companies.CompaniesUpdate;
 import com.porfirio.orariprocida2011.threads.companies.OnRequestCompaniesDAO;
 import com.porfirio.orariprocida2011.threads.taxies.OnRequestTaxisDAO;
@@ -41,12 +54,14 @@ import com.porfirio.orariprocida2011.R;
 import com.porfirio.orariprocida2011.threads.weather.OnRequestWeatherDAO;
 import com.porfirio.orariprocida2011.threads.weather.WeatherUpdate;
 import com.porfirio.orariprocida2011.dialogs.DettagliMezzoDialog;
-import com.porfirio.orariprocida2011.dialogs.SegnalazioneDialog;
 import com.porfirio.orariprocida2011.entity.Compagnia;
 import com.porfirio.orariprocida2011.entity.Meteo;
 import com.porfirio.orariprocida2011.entity.Mezzo;
 import com.porfirio.orariprocida2011.entity.Osservazione;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -67,22 +82,20 @@ public class OrariProcida2011Activity extends FragmentActivity {
     public Calendar c;
     public AlertDialog aboutDialog;
     public Meteo meteo;
-    //    public AlertDialog meteoDialog;
+
     public ArrayList<Mezzo> transportList;
     private String[] ragioni = new String[100];
 
     private String nave;
     private String portoPartenza;
     private String portoArrivo;
-    private ArrayAdapter<String> aalvMezzi;
-    private TextView txtOrario;
-    //public AlertDialog novitaDialog;
+    private MezzoAdapter aalvMezzi;
+    private List<Mezzo> selectMezzi;
     private DettagliMezzoDialog dettagliMezzoDialog;
-    private ArrayList<Mezzo> selectMezzi;
     private final ArrayList<Compagnia> listCompagnia = new ArrayList<>();
     private LocationManager myManager;
     private String BestProvider;
-    private SegnalazioneDialog segnalazioneDialog;
+    private FloatingActionButton weatherFab;
 
     private OnRequestCompaniesDAO companiesDAO;
     private OnRequestWeatherDAO weatherDAO;
@@ -92,6 +105,12 @@ public class OrariProcida2011Activity extends FragmentActivity {
     private Analytics analytics;
 
     private boolean hasReceivedWeather, hasReceivedCompanies, hasReceivedTransports, hasReceivedAlerts;
+
+    private ImageButton timeButton;
+    private Button timeResetButton, dateResetButton;
+    private SwipeRefreshLayout swipe_refresh_layout;
+    private LottieAnimationView lottieLoader;
+    private ImageView blurredBackground;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,9 +126,14 @@ public class OrariProcida2011Activity extends FragmentActivity {
 //            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 534534);
 //        }
 
-        // NOTE (2025-02-25):
-        // these DAO calls are mixed here and there through the code because the UI is confusing to navigate at the moment
-        // they should be moved
+
+        ImageView imageView = findViewById(R.id.info_icon);
+        imageView.setOnClickListener(v -> {
+            Intent intent = new Intent(OrariProcida2011Activity.this, InfoActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter_from_center, R.anim.exit_to_center);
+        });
+
         analytics = new Analytics((AnalyticsApplication) getApplication());
 
         weatherDAO = new OnRequestWeatherDAO();
@@ -122,7 +146,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         alertsDAO = new OnRequestAlertsDAO();
         alertsDAO.getUpdates().observe(this, this::onAlertsUpdate);
-        // alerts are requested after transports data is received
 
         companiesDAO = new OnRequestCompaniesDAO();
         companiesDAO.getUpdates().observe(this, this::onCompaniesUpdate);
@@ -130,7 +153,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         taxisDAO = new OnRequestTaxisDAO();
         taxisDAO.requestUpdate();
-        // taxis data are observed by DettagliMezzoDialog because they were hardcoded in there before and it's useless to fix something that will be refactored in the future
 
         fm = getSupportFragmentManager();
         myManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -150,72 +172,124 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         meteo = new Meteo();
 
+        timeButton = findViewById(R.id.time_button);
+        timeResetButton = findViewById(R.id.timeResetButton);
+        dateResetButton = findViewById(R.id.dateResetButton);
+        weatherFab = findViewById(R.id.fabWeather);
+
+        weatherFab.setOnClickListener(v -> {
+            List<Osservazione> observations = meteo.getForecasts();
+            if (!observations.isEmpty()) {
+                Osservazione lastObservation = observations.get(observations.size() - 1);
+                String windDirection = getWindDirectionString(lastObservation.getWindDirection());
+                String dateTime = lastObservation.getTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
+                String windInfo = getWindBeaufortString(lastObservation) + " da " + windDirection + " (" + (int) Math.floor(lastObservation.getWindSpeed()) + "Km/h)";
+
+                WeatherDialog weatherDialog = new WeatherDialog(this,
+                        dateTime,
+                        windInfo,
+                        meteo
+                );
+                weatherDialog.show();
+            }
+        });
+
+
+        blurredBackground = findViewById(R.id.blurredBackground);
+
+        lottieLoader = findViewById(R.id.lottieLoader);
+        InputStream inputStream = getResources().openRawResource(R.raw.loading_lottie);
+        String jsonString;
+        jsonString = new BufferedReader(new InputStreamReader(inputStream))
+                .lines()
+                .reduce("", (accumulator, actual) -> accumulator + actual);
+
+        LottieAnimationView lottieLoader = findViewById(R.id.lottieLoader);
+        lottieLoader.setAnimationFromJson(jsonString, "loading_animation");
+
+
         c = Calendar.getInstance(TimeZone.getDefault());
-        txtOrario = findViewById(R.id.txtOrario);
-        setTxtOrario(c);
 
-        Button buttonMinusMinus = findViewById(R.id.btnConfermaOSmentisci);
-        buttonMinusMinus.setOnClickListener(v -> {
-            analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Button --");
-            c.add(Calendar.HOUR, -1);
-            setTxtOrario(c);
-            aggiornaLista();
+
+        timeButton.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+
+            TimePickerDialog timePickerDialog = new TimePickerDialog(
+                    OrariProcida2011Activity.this,
+                    R.style.TimePickerTheme,
+                    (view, hourOfDay, minute1) -> {
+                        Calendar currentCalendar = Calendar.getInstance();
+                        if (hourOfDay < currentCalendar.get(Calendar.HOUR_OF_DAY) ||
+                                (hourOfDay == currentCalendar.get(Calendar.HOUR_OF_DAY) && minute1 < currentCalendar.get(Calendar.MINUTE))) {
+                            hourOfDay = currentCalendar.get(Calendar.HOUR_OF_DAY);
+                            minute1 = currentCalendar.get(Calendar.MINUTE);
+                        }
+                        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        c.set(Calendar.MINUTE, minute1);
+                        timeResetButton.setText(String.format("%02d:%02d", hourOfDay, minute1));
+                        timeResetButton.setVisibility(VISIBLE);
+                        aggiornaLista();
+                    },
+                    hour, minute, true);
+            timePickerDialog.show();
+
         });
 
-        Button buttonMinus = findViewById(R.id.button2);
-        buttonMinus.setOnClickListener(v -> {
-            analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Button -");
-            c.add(Calendar.MINUTE, -15);
-            setTxtOrario(c);
-            aggiornaLista();
+
+
+        timeResetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar currentCalendar = Calendar.getInstance();
+                c.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
+                c.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
+                timeResetButton.setVisibility(GONE);
+                aggiornaLista();
+            }
         });
 
-        Button buttonPlus = findViewById(R.id.button3);
-        buttonPlus.setOnClickListener(v -> {
-            //TODO L'unico problema residuo ? che problemi correttamente segnalati con pi? di 24 ore di anticipo vengono visualizzati solo a meno di 24h
-            //Forse potrebbe essere risolto forzando un refresh quando si avanza di 24h rispetto all'orario corrente
-            analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Button +");
-            c.add(Calendar.MINUTE, 15);
-            setTxtOrario(c);
-            aggiornaLista();
+        dateResetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar currentCalendar = Calendar.getInstance();
+                c.set(Calendar.YEAR, currentCalendar.get(Calendar.YEAR));
+                c.set(Calendar.MONTH, currentCalendar.get(Calendar.MONTH));
+                c.set(Calendar.DAY_OF_MONTH, currentCalendar.get(Calendar.DAY_OF_MONTH));
+                dateResetButton.setVisibility(GONE);
+                aggiornaLista();
+            }
         });
 
-        Button buttonPlusPlus = findViewById(R.id.button4);
-        buttonPlusPlus.setOnClickListener(v -> {
-            analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Button ++");
-            c.add(Calendar.HOUR, 1);
-            setTxtOrario(c);
-            aggiornaLista();
+        swipe_refresh_layout = findViewById(R.id.swipe_refresh_layout);
+        swipe_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Update Orari da Web da Menu");
+
+                lottieLoader.setVisibility(VISIBLE);
+                blurredBackground.setVisibility(VISIBLE);
+                transportsDAO.requestUpdate();
+
+                swipe_refresh_layout.setRefreshing(false);
+            }
         });
-
-        // spostato in avanti setSpinner();
-
 
         transportList = new ArrayList<>();
-        ListView lvMezzi = findViewById(R.id.listMezzi);
-        aalvMezzi = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        GridView lvMezzi = findViewById(R.id.listMezzi);
+        selectMezzi = new ArrayList<>();
+        aalvMezzi = new MezzoAdapter(this, selectMezzi);
         lvMezzi.setAdapter(aalvMezzi);
 
         dettagliMezzoDialog = new DettagliMezzoDialog(alertsDAO, taxisDAO);
         dettagliMezzoDialog.setDettagliMezzoDialog(fm, this, this, c);
         dettagliMezzoDialog.setAnalytics(analytics);
 
-        segnalazioneDialog = new SegnalazioneDialog(alertsDAO);
-        //listener sul click di un item della lista
+
         lvMezzi.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
             analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Click Dettagli Mezzo");
-            //aboutDialog.show();
-
-            for (int i = 0; i < aalvMezzi.getCount(); i++) {
-                if (selectMezzi.get(i).getOrderInList() == arg2)
-                    dettagliMezzoDialog.setMezzo(selectMezzi.get(i));
-            }
-
-
-//				problema: clicco sulla lista ma ho solo la stringa, non il mezzo corrispondente
-//				soluzione: mantenere una variabile ordine che abbini lvMezzi con Mezzi
-//				altra soluzione: trovare il mezzo dalla stringa
-            //dettagliMezzoDialog.fill(listCompagnia);
+            dettagliMezzoDialog.setMezzo(selectMezzi.get(arg2));
             dettagliMezzoDialog.setListCompagnia(listCompagnia);
             dettagliMezzoDialog.show(fm, "fragment_edit_name");
 
@@ -227,26 +301,25 @@ public class OrariProcida2011Activity extends FragmentActivity {
             if (!isOnline())
                 Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.soloOnline), Toast.LENGTH_SHORT).show();
             else {
-                for (int i = 0; i < aalvMezzi.getCount(); i++) {
-                    if (selectMezzi.get(i).getOrderInList() == arg2)
-                        segnalazioneDialog.setMezzo(selectMezzi.get(i));
-                }
-
-
-                // problema: clicco sulla lista ma ho solo la stringa, non il mezzo corrispondente
-                // soluzione: mantenere una variabile ordine che abbini lvMezzi con Mezzi
-                // altra soluzione: trovare il mezzo dalla stringa
-                segnalazioneDialog.setOrarioRef(c);
-                segnalazioneDialog.setCallingContext(getApplicationContext());
-                segnalazioneDialog.setAnalytics(analytics);
-                segnalazioneDialog.setListCompagnia(listCompagnia);
-
-                //segnalazioneDialog.fill(listCompagnia);
-                segnalazioneDialog.show(fm, "fragment_edit_name");
-                //segnalazioneDialog.show();
-                aggiornaLista(); //TODO Capire come si fa ad aggiornare dopo una segnalazione (oppure scrivere che prossimamente verr? aggiunta)
+                dettagliMezzoDialog.setMezzo(selectMezzi.get(arg2));
+                dettagliMezzoDialog.setListCompagnia(listCompagnia);
+                dettagliMezzoDialog.setReportShortcut(true);
+                dettagliMezzoDialog.show(fm, "fragment_edit_name");
+                aggiornaLista();
             }
             return true;
+        });
+
+        lvMezzi.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                swipe_refresh_layout.setEnabled(firstVisibleItem == 0);
+            }
         });
 
 
@@ -260,8 +333,26 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         setSpinner();
 
-        if (!portoPartenza.equals(getString(R.string.tutti)))
-            Toast.makeText(this, (getString(R.string.secondoMeVuoiPartireDa) + " " + portoPartenza), Toast.LENGTH_LONG).show();
+        aggiornaLista();
+        if (!portoPartenza.equals(getString(R.string.qualsiasi_porto))) {
+            showSnackBar(getString(R.string.secondoMeVuoiPartireDa) + " " + portoPartenza);
+        }
+
+    }
+
+    private void showSnackBar(String text) {
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
+                text,
+                Snackbar.LENGTH_LONG);
+
+        View snackbarView = snackbar.getView();
+        TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+        textView.setTextSize(14);
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+        textView.setTextColor(ContextCompat.getColor(this, R.color.secondaryColor));
+        snackbarView.setBackgroundColor(ContextCompat.getColor(this, R.color.tertiaryColor));
+
+        snackbar.show();
     }
 
     @Override
@@ -277,53 +368,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         weatherDAO.close();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Open Menu");
 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case (R.id.about):
-                analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "About");
-                aboutDialog.show();
-                return true;
-            // cambiata semantica pulsante: se scelgo, allora carico esplicitamente da web
-            case (R.id.updateWeb):
-                analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Update Orari da Web da Menu");
-                transportsDAO.requestUpdate();
-                return true;
-            case (R.id.meteo):
-                analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Update Meteo da Menu");
-                weatherDAO.requestUpdate();
-                return true;
-            case (R.id.esci):
-                analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Exit da Menu");
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void setTxtOrario(Calendar c) {
-        String s = getString(R.string.dalle) + " ";
-        if (c.get(Calendar.HOUR_OF_DAY) < 10)
-            s += "0";
-        s += c.get(Calendar.HOUR_OF_DAY) + ":";
-        if (c.get(Calendar.MINUTE) < 10)
-            s += "0";
-        s += c.get(Calendar.MINUTE) + " " + getString(R.string.del) + " ";
-        s += c.get(Calendar.DAY_OF_MONTH) + "/";
-        s += (c.get(Calendar.MONTH) + 1) + "";
-        txtOrario.setText(s);
-    }
 
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -332,7 +377,11 @@ public class OrariProcida2011Activity extends FragmentActivity {
         return (netInfo != null && netInfo.isConnected());
     }
 
+
     private void aggiornaLista() {
+        blurredBackground.setVisibility(VISIBLE);
+        lottieLoader.setVisibility(VISIBLE);
+        lottieLoader.playAnimation();
         if (!hasReceivedWeather || !hasReceivedTransports || !hasReceivedCompanies || !hasReceivedAlerts)
             return;
 
@@ -379,16 +428,16 @@ public class OrariProcida2011Activity extends FragmentActivity {
             return 0;
         });
 
-        for (int i = 0; i < selectMezzi.size(); i++) {
-            Mezzo route = selectMezzi.get(i);
+        aalvMezzi.addAll(selectMezzi);
 
-            route.setOrderInList(i);
-
-            String s = formatMezzoInfo(route);
-            aalvMezzi.add(s);
-        }
+        aalvMezzi.notifyDataSetChanged();
 
         reportFullyDrawn();
+
+        blurredBackground.setVisibility(GONE);
+        lottieLoader.cancelAnimation();
+        lottieLoader.setVisibility(GONE);
+
     }
 
     private String espandiNave(String nave) {
@@ -419,38 +468,11 @@ public class OrariProcida2011Activity extends FragmentActivity {
     }
 
     private boolean isNaveCompatibile(String naveEspanso, Mezzo mezzo) {
-        return naveEspanso.contains(mezzo.nave) || nave.equals(getString(R.string.tutti));
+        return naveEspanso.contains(mezzo.nave) || nave.equals(getString(R.string.qualsiasi_imbarcazione));
     }
 
     private boolean isPortoCompatibile(String porto, String portoEspanso, String portoMezzo) {
-        return portoMezzo.equals(porto) || portoEspanso.contains(portoMezzo) || porto.equals(getString(R.string.tutti));
-    }
-
-    private String formatMezzoInfo(Mezzo route) {
-        StringBuilder s = new StringBuilder(route.nave + " - " + route.portoPartenza + " - " + route.portoArrivo + " - ");
-        s.append(route.getDepartureTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
-
-        String spc = "";
-        if (route.segnalazionePiuComune() > -1)
-            spc = ragioni[route.segnalazionePiuComune()];
-        if (route.tot > 0 || route.conferme > 0) {
-            if (route.tot > 0) {
-                if (route.conc) {
-                    s.append(" - ").append(route.tot).append(route.tot == 1 ? " " + getString(R.string.segnalazione) : " " + getString(R.string.segnalazioni));
-                    s.append(" ").append(getString(R.string.diProblemi)).append(" (").append(spc).append(")");
-                } else {
-                    s.append(" - ").append(getString(R.string.possibiliProblemi)).append(" (").append(route.tot);
-                    s.append(route.tot == 1 ? " " + getString(R.string.segnalazione) + ")" : " " + getString(R.string.segnalazioni) + ")");
-                    s.append(", ").append(getString(R.string.inParticolare)).append(" ").append(spc);
-                }
-            }
-            if (route.conferme > 0) {
-                s.append(" - ").append(route.conferme).append(route.conferme == 1 ? " " + getString(R.string.utenteDice) : " " + getString(R.string.utentiDicono));
-                s.append(" ").append(getString(R.string.cheLaCorsaERegolare));
-            }
-        }
-
-        return s.toString();
+        return portoMezzo.equals(porto) || portoEspanso.contains(portoMezzo) || porto.equals(getString(R.string.qualsiasi_porto));
     }
 
     private void setSpinner() {
@@ -460,9 +482,9 @@ public class OrariProcida2011Activity extends FragmentActivity {
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spnNave.setAdapter(adapter);
 
-        nave = getString(R.string.tutti);
-        portoPartenza = getString(R.string.tutti);
-        portoArrivo = getString(R.string.tutti);
+        nave = getString(R.string.qualsiasi_imbarcazione);
+        portoPartenza = getString(R.string.qualsiasi_porto);
+        portoArrivo = getString(R.string.qualsiasi_porto);
 
         spnNave.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -491,7 +513,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         adapter3.setDropDownViewResource(R.layout.spinner_item);
         spnPortoArrivo.setAdapter(adapter3);
 
-        if (!portoPartenza.contentEquals("Procida") || portoPartenza.contentEquals(getString(R.string.tutti))) {
+        if (!portoPartenza.contentEquals("Procida") || portoPartenza.contentEquals(getString(R.string.qualsiasi_porto))) {
             portoArrivo = "Procida";
             setSpnPortoArrivo(spnPortoArrivo, adapter3);
         }
@@ -500,10 +522,10 @@ public class OrariProcida2011Activity extends FragmentActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 portoPartenza = parent.getItemAtPosition(pos).toString();
                 if (portoPartenza.contentEquals("Procida") && portoArrivo.contentEquals("Procida")) {
-                    portoArrivo = getString(R.string.tutti);
+                    portoArrivo = getString(R.string.qualsiasi_porto);
                     setSpnPortoArrivo(spnPortoArrivo, adapter2);
                     setSpnPortoPartenza(spnPortoPartenza, adapter3);
-                } else if (!portoPartenza.contentEquals("Procida") || portoPartenza.contentEquals(getString(R.string.tutti))) {
+                } else if (!portoPartenza.contentEquals("Procida") || portoPartenza.contentEquals(getString(R.string.qualsiasi_porto))) {
                     portoArrivo = "Procida";
                     setSpnPortoArrivo(spnPortoArrivo, adapter2);
                     setSpnPortoPartenza(spnPortoPartenza, adapter3);
@@ -520,10 +542,10 @@ public class OrariProcida2011Activity extends FragmentActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 portoArrivo = parent.getItemAtPosition(pos).toString();
                 if (portoArrivo.contentEquals("Procida") && portoPartenza.contentEquals("Procida")) {
-                    portoPartenza = getString(R.string.tutti);
+                    portoPartenza = getString(R.string.qualsiasi_porto);
                     setSpnPortoPartenza(spnPortoPartenza, adapter2);
                     setSpnPortoArrivo(spnPortoArrivo, adapter3);
-                } else if (!portoArrivo.contentEquals("Procida") || portoArrivo.contentEquals(getString(R.string.tutti))) {
+                } else if (!portoArrivo.contentEquals("Procida") || portoArrivo.contentEquals(getString(R.string.qualsiasi_porto))) {
                     portoPartenza = "Procida";
                     setSpnPortoPartenza(spnPortoPartenza, adapter2);
                     setSpnPortoArrivo(spnPortoArrivo, adapter3);
@@ -559,7 +581,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         if (ActivityCompat.checkSelfPermission(OrariProcida2011Activity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(OrariProcida2011Activity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //System.exit(0);
-            return getString(R.string.tutti);
+            return getString(R.string.qualsiasi_porto);
         }
 
         // l'accesso al GPS potrebbe non essere garantito per ragioni legate a Google Play
@@ -571,7 +593,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
             Log.e("Activity", "GPS: ", e);
         }
         if (l == null)
-            return getString(R.string.tutti);
+            return getString(R.string.qualsiasi_porto);
         //Coordinate angoli Procida
         if ((l.getLatitude() > 40.7374) && (l.getLatitude() < 40.7733) && (l.getLongitude() > 13.9897) && (l.getLongitude() < 14.0325)) {
             analytics.send(ANALYTICS_CATEGORY_USER_EVENT, "From Procida");
@@ -681,12 +703,16 @@ public class OrariProcida2011Activity extends FragmentActivity {
             alertsDAO.requestUpdate();
 
             if (showToast)
-                Toast.makeText(this, getString(R.string.orariAggiornatiAl) + " " + DateTimeFormatter.ISO_LOCAL_DATE.format(update.getUpdateTime()), Toast.LENGTH_SHORT).show();
+                showSnackBar(getString(R.string.orariAggiornatiAl) + " " + DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(update.getUpdateTime()));
+
         } else {
             // TODO: handle exception
             Log.e("MainActivity", "OnTransportsUpdate: ", update.getError());
             Toast.makeText(this, getString(R.string.error_update_transports), Toast.LENGTH_SHORT).show();
         }
+        lottieLoader.setVisibility(GONE);
+        lottieLoader.cancelAnimation();
+        blurredBackground.setVisibility(GONE);
     }
 
     private void onWeatherUpdate(WeatherUpdate update) {
@@ -701,8 +727,15 @@ public class OrariProcida2011Activity extends FragmentActivity {
             aggiornaLista();
 
             // NOTE: before it would show a complete dialog, as of now I changed it to just display a toast
-            if (showToast)
-                showWeatherUpdateMessage(meteo.getForecasts().get(0));
+            if (showToast) {
+                Osservazione forecast = meteo.getForecasts().get(0);
+                String message = getString(R.string.updated) + " " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(forecast.getTime()) + "\n" +
+                        getString(R.string.condimeteo) + " " + getWindBeaufortString(forecast) +
+                        " (" + (int) forecast.getWindSpeed() + " km/h) " + getString(R.string.da) + " " + getWindDirectionString(forecast);
+
+                showSnackBar(message);
+            }
+
         } else {
             // TODO: handle exception
             Log.e("MainActivity", "OnWeatherUpdate: ", update.getError());
@@ -710,13 +743,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
         }
     }
 
-    private void showWeatherUpdateMessage(Osservazione forecast) {
-        String message = getString(R.string.updated) + " " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(forecast.getTime()) + "\n" +
-                getString(R.string.condimeteo) + " " + getWindBeaufortString(forecast) +
-                " (" + (int) forecast.getWindSpeed() + " km/h) " + getString(R.string.da) + " " + getWindDirectionString(forecast);
-
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
 
     private String getWindBeaufortString(Osservazione forecast) {
         return getWindBeaufortString((int) forecast.getWindBeaufort());
@@ -782,20 +808,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
         }
     }
 
-    private String getWeatherConditionsString(Context context, Mezzo route) {
-        double extraWind = meteo.getForecast(context, route);
-
-        if (extraWind <= 0)
-            return "";
-        else if (extraWind <= 1)
-            return " - " + getString(R.string.pocoProbabile);
-        else if (extraWind <= 2)
-            return " - " + getString(R.string.aRischio);
-        else if (extraWind <= 3)
-            return " - " + getString(R.string.corsaQuasi);
-        else
-            return " - " + getString(R.string.corsaImpossibile);
-    }
 
     private boolean sameTransport(Mezzo transport, Alert alert) {
         LocalDate transportDate = LocalDate.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
@@ -803,7 +815,16 @@ public class OrariProcida2011Activity extends FragmentActivity {
         if (transport.getGiornoSeguente())
             transportDate = transportDate.plusDays(1);
 
-        return alert.getRouteId().equals(transport.getId()) && alert.getTransportDate().equals(transportDate);
+        String routeId = alert.getRouteId();
+        String transportId = transport.getId();
+        LocalDate alertDate = alert.getTransportDate();
+
+        if (routeId == null || transportId == null || alertDate == null) {
+            return false;
+        }
+
+        return routeId.equals(transportId) && alertDate.equals(transportDate);
     }
+
 
 }

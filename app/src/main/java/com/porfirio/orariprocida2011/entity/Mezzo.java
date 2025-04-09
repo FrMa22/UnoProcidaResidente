@@ -1,5 +1,7 @@
 package com.porfirio.orariprocida2011.entity;
 
+import android.util.Log;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -53,13 +55,16 @@ public class Mezzo {
         int max = 0;
         int spc = -1;
         for (int i = 0; i < reports.length; i++) {
+            Log.d("segnalazionePiuComune","Segnalazione " + i + " = " + reports[i]);
             if (reports[i] > max) {
                 max = reports[i];
                 spc = i;
             }
         }
-        if (spc >= 0)
+        if (spc >= 0){
+            Log.d("segnalazionePiuComune","Return di spc = " + spc);
             return spc;
+        }
         else
             return -1;
     }

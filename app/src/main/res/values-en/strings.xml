@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Uno Procida Residente</string>
     <string-array name="strMezzi">
-        <item>Any</item>
+        <item>Any ship</item>
         <item>Ferries (Traghetti)</item>
         <item>Hydrofoils (Aliscafi)</item>
         <item>Traghetto Caremar</item>
@@ -16,7 +16,7 @@
         <item>Traghetto LazioMar</item>
     </string-array>
     <string-array name="strPorti">
-        <item>Any</item>
+        <item>Any port</item>
         <item>Procida</item>
         <item>Napoli</item>
         <item>Pozzuoli</item>
@@ -39,7 +39,7 @@
         <item>Changed Timetable</item>
         <item>Delay</item>
     </string-array>
-    <string name="mezzo">"Ship: "</string>
+    <string name="mezzo">"Ship:"</string>
     <string name="portoPartenza">"From: "</string>
     <string name="portoArrivo">"To: "</string>
     <string name="minusminus">&lt;&lt;</string>
@@ -49,17 +49,17 @@
     <string name="about">Info</string>
     <string name="esci">Quit</string>
     <string name="backTimetable">Back to timetable</string>
-    <string name="numeriUtili">Call to ticket office</string>
-    <string name="tampone">1234567890123456789012345</string>
+    <string name="numeriUtili">Ticket</string>
+    <string name="tampone">Not available</string>
     <string name="labelBackground">labelBackground</string>
     <string name="back">Back</string>
     <string name="inserisciFinestra">Size of time window</string>
     <string name="ok">OK</string>
     <string name="ventiquattro">24</string>
     <string name="updateWeb">Update timetable from Web</string>
-    <string name="numeriTaxi">Call for a taxi</string>
+    <string name="numeriTaxi">Taxi</string>
     <string name="noUpdateWeb">Don\'t update timetable from Web</string>
-    <string name="disclaimer">Timetables are originally published by navigation companies. The author is not responsible for timetable variations.  This application collects some personal data of its users, such as their geographical position (not contnuously), saves some data on the internal storage (timetables and meteo infos), send some data to Google Analytics for statistical purposes. The complete GPDR is accessible at: http://unoprocidaresidente.altervista.org/PrivacyPolicyUnoProcidaResidente.htm</string>
+    <string name="disclaimer">Timetables are originally published by navigation companies.\nThe author is not responsible for timetable variations.\nThis application collects some personal data of its users, such as their geographical position (not contnuously), saves some data on the internal storage (timetables and meteo infos), send some data to Google Analytics for statistical purposes.\nThe complete GPDR is accessible at:</string>
     <string name="condimeteo">Meteorological conditions:</string>
     <string name="dalle">As of </string>
     <string name="orariAggiornatiAl">Last timetable update: </string>
@@ -76,8 +76,8 @@
     <string name="circa">(approximately) </string>
     <string name="residenteO">(reduced for islanders) or  </string>
     <string name="intero">(normal)</string>
-    <string name="trasportaSoloPasseggeri">Passengers only ship</string>
-    <string name="trasportaAutoPasseggeri">The ship carries both cars and passengers</string>
+    <string name="trasportaSoloPasseggeri">No</string>
+    <string name="trasportaAutoPasseggeri">Yes</string>
     <string name="calma">Calm</string>
     <string name="bavaDiVento">Light air</string>
     <string name="brezzaLeggera">Light breeze</string>
@@ -104,7 +104,8 @@
     <string name="sudEst">Soth-East</string>
     <string name="est">East</string>
     <string name="nordEst">North-East</string>
-    <string name="tutti">Any</string>
+    <string name="qualsiasi_porto">Any port</string>
+    <string name="qualsiasi_imbarcazione">Any ship</string>
     <string name="traghetti">Ferries</string>
     <string name="aliscafi">Hydrofoils</string>
     <string name="traghetto">Ferry</string>
@@ -116,21 +117,23 @@
     <string name="ore">hour </string>
     <string name="credits">By Porfirio Tramontana 2011,2012. GPL3 license. Credits: Prof.Tramontana for the metheorological algorithm, Maria for the application name, for the icon, for the international publicity and for the usability discussions, Angela for english version support, Gilda for continuous criticism, Google and Weather Underground for meteo data, the navigation companies for the continuous timetable changes and the procidan voyagers for the broadcasting of timetable changes information.</string>
     <string name="inviaSegnalazione">Do you want to report that this journey will not be made?</string>
+    <string name="invioConfermaAvvenuto">Confirmation sent successfully.</string>
+    <string name="invioConfermaFallito">Error sending confirmation. Please try again.</string>
     <string name="ragione">Reason:</string>
     <string name="altriDettagliRagione">"Other Details: "</string>
-    <string name="invia">Submit the Report</string>
-    <string name="ringraziamentoSegnalazione">Thank you for your report: it will be shown starting from the next app opening!</string>
-    <string name="textConferma">Or do you want to confirm the regularity of this journey?</string>
+    <string name="invia">Submit</string>
+    <string name="ringraziamentoSegnalazione">Thank you for your report!</string>
+    <string name="textConferma">Confirm journey\'s regularity</string>
     <string name="Conferma">Confirm</string>
     <string name="segnalazione">warning</string>
     <string name="segnalazioni">warnings</string>
     <string name="diProblemi">for problems</string>
-    <string name="possibiliProblemi">possible problems</string>
+    <string name="possibiliProblemi">Possible problems</string>
     <string name="utenteDice">user says</string>
     <string name="utentiDicono">user say</string>
     <string name="cheLaCorsaERegolare">that the journey will take place</string>
-    <string name="inParticolare">in particular</string>
-    <string name="confermaOSmentisci">Confirm that the journey will take place or report a problem </string>
+    <string name="inParticolare">in particular:</string>
+    <string name="confermaOSmentisci">Report</string>
     <string name="connessioneLenta">The connection is too slow: timetable updates have not been loaded</string>
     <string name="soloOnline">This function is accessible only when the device is connected to the Internet</string>
     <string name="hintDettagli">Insert details here …</string>
@@ -143,6 +146,14 @@
     <string name="error_update_alerts">An error occurred</string>
     <string name="error_update_transports">An error occurred</string>
     <string name="error_update_companies">An error occurred</string>
+    <string name="text_view_costo_intero">Full:</string>
+    <string name="text_view_costo_ridotto">Residents:</string>
+    <string name="text_view_partenza">Departure:</string>
+    <string name="text_view_destinazione">Destination:</string>
+    <string name="text_view_trasporto_veicoli">Vehicles loading:</string>
+    <string name="welcome_text"><b>Welcome</b> on UnoProcidaResidente!</string>
+    <string name="nessunaInfoTrasportoVeicoli">Not specified</string>
+    <string name="attenzione_lampeggiante">WARNING</string>
 
 </resources>
 

@@ -221,21 +221,27 @@ public class OrariProcida2011Activity extends FragmentActivity {
                     R.style.TimePickerTheme,
                     (view, hourOfDay, minute1) -> {
                         Calendar currentCalendar = Calendar.getInstance();
-                        if (hourOfDay < currentCalendar.get(Calendar.HOUR_OF_DAY) ||
-                                (hourOfDay == currentCalendar.get(Calendar.HOUR_OF_DAY) && minute1 < currentCalendar.get(Calendar.MINUTE))) {
-                            hourOfDay = currentCalendar.get(Calendar.HOUR_OF_DAY);
-                            minute1 = currentCalendar.get(Calendar.MINUTE);
+
+                        Calendar selectedTime = Calendar.getInstance();
+                        selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        selectedTime.set(Calendar.MINUTE, minute1);
+                        selectedTime.set(Calendar.SECOND, 0);
+                        selectedTime.set(Calendar.MILLISECOND, 0);
+
+                        if (selectedTime.before(currentCalendar)) {
+                            selectedTime.add(Calendar.DAY_OF_YEAR, 1);
                         }
-                        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        c.set(Calendar.MINUTE, minute1);
+
+                        c.setTime(selectedTime.getTime());
+
                         timeResetButton.setText(String.format("%02d:%02d", hourOfDay, minute1));
                         timeResetButton.setVisibility(VISIBLE);
                         aggiornaLista();
                     },
                     hour, minute, true);
             timePickerDialog.show();
-
         });
+
 
 
 
@@ -283,7 +289,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         lvMezzi.setAdapter(aalvMezzi);
 
         dettagliMezzoDialog = new DettagliMezzoDialog(alertsDAO, taxisDAO);
-        dettagliMezzoDialog.setDettagliMezzoDialog(fm, this, this, c);
+        dettagliMezzoDialog.setDettagliMezzoDialog(fm, this, this, c, meteo);
         dettagliMezzoDialog.setAnalytics(analytics);
 
 

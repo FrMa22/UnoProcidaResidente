@@ -4,6 +4,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter;
 
 import com.porfirio.orariprocida2011.R;
 import com.porfirio.orariprocida2011.entity.CompanyEnum;
+import com.porfirio.orariprocida2011.entity.Meteo;
 import com.porfirio.orariprocida2011.entity.Mezzo;
 
 import java.time.format.DateTimeFormatter;
@@ -29,6 +31,7 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
     private List<Mezzo> mezziList;
     private ImageView iconLogo;
     private TextView textViewWarning;
+    private Meteo meteo;
 
     public MezzoAdapter(Context context, List<Mezzo> mezziList) {
         super(context, R.layout.list_item, mezziList);
@@ -43,6 +46,7 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
         }
 
         Mezzo mezzo = mezziList.get(position);
+        meteo = new Meteo();
 
         TextView textViewMezzo = convertView.findViewById(R.id.text_view_list_item_mezzo);
         textViewMezzo.setText(mezzo.nave);
@@ -59,7 +63,7 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
 
         textViewWarning = convertView.findViewById(R.id.text_view_warning);
         Animation blinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.blink);
-        if (mezzo.tot > 0) {
+        if (mezzo.tot > 0 || !getWeatherConditionsString(getContext(), mezzo).isEmpty()) {
             textViewWarning.setVisibility(VISIBLE);
             textViewWarning.startAnimation(blinkAnimation);
         } else {
@@ -70,7 +74,19 @@ public class MezzoAdapter extends ArrayAdapter<Mezzo> {
 
         return convertView;
     }
-
+    private String getWeatherConditionsString(Context context, Mezzo route) {
+        double extraWind = meteo.getForecast(context, route);
+        if (extraWind <= 0)
+            return "";
+        else if (extraWind <= 1)
+            return " - " + context.getString(R.string.pocoProbabile);
+        else if (extraWind <= 2)
+            return " - " + context.getString(R.string.aRischio);
+        else if (extraWind <= 3)
+            return " - " + context.getString(R.string.corsaQuasi);
+        else
+            return " - " + context.getString(R.string.corsaImpossibile);
+    }
 
     private int getIconForCompany(String mezzoNome) {
         return CompanyEnum.findDrawByName(mezzoNome.toLowerCase().trim());

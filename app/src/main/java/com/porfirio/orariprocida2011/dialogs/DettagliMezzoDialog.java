@@ -38,6 +38,7 @@ import com.porfirio.orariprocida2011.R;
 import com.porfirio.orariprocida2011.activities.OrariProcida2011Activity;
 import com.porfirio.orariprocida2011.entity.Alert;
 import com.porfirio.orariprocida2011.entity.Compagnia;
+import com.porfirio.orariprocida2011.entity.Meteo;
 import com.porfirio.orariprocida2011.entity.Mezzo;
 import com.porfirio.orariprocida2011.entity.Taxi;
 import com.porfirio.orariprocida2011.threads.alerts.AlertsDAO;
@@ -86,17 +87,19 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     private View view_separator;
     private int ragione;
     private boolean reportShortcut = false;
+    private Meteo meteo;
 
     public DettagliMezzoDialog(AlertsDAO alertsDAO, TaxisDAO taxisDAO) {
         this.alertsDAO = Objects.requireNonNull(alertsDAO);
         this.taxisDAO = taxisDAO;
     }
 
-    public void setDettagliMezzoDialog(FragmentManager fm, OrariProcida2011Activity a, Context context, Calendar cal) {
+    public void setDettagliMezzoDialog(FragmentManager fm, OrariProcida2011Activity a, Context context, Calendar cal, Meteo meteo) {
         fragmentManager = fm;
         callingActivity = a;
         callingContext = context;
         calen = cal;
+        this.meteo = meteo;
     }
 
     public void setAnalytics(Analytics analytics) {
@@ -223,7 +226,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         if (mezzo.segnalazionePiuComune() > -1) {
             spc = ragioni[mezzo.segnalazionePiuComune()];
         }
-        if (mezzo.tot > 0 || mezzo.conferme > 0) {
+        if (mezzo.tot > 0 || mezzo.conferme > 0 || !getWeatherConditionsString(getContext(), mezzo).isEmpty()) {
             StringBuilder alert = new StringBuilder();
             if (mezzo.tot > 0) {
                 if (mezzo.conc) {
@@ -238,6 +241,9 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             if (mezzo.conferme > 0) {
                 alert.append(mezzo.conferme).append(mezzo.conferme == 1 ? " " + getString(R.string.utenteDice) : " " + getString(R.string.utentiDicono));
                 alert.append(" ").append(getString(R.string.cheLaCorsaERegolare));
+            }
+            if(!getWeatherConditionsString(getContext(), mezzo).isEmpty()){
+                alert.append(getWeatherConditionsString(getContext(), mezzo));
             }
             txtAllertaMeteo.setVisibility(VISIBLE);
             txtAllertaMeteo.setText(alert);
@@ -557,6 +563,20 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         } else {
             buttonSegnala.setAlpha(1.0f);
         }
+    }
+    private String getWeatherConditionsString(Context context, Mezzo route) {
+        double extraWind = meteo.getForecast(context, route);
+
+        if (extraWind <= 0)
+            return "";
+        else if (extraWind <= 1)
+            return " - " + context.getString(R.string.pocoProbabile);
+        else if (extraWind <= 2)
+            return " - " + context.getString(R.string.aRischio);
+        else if (extraWind <= 3)
+            return " - " + context.getString(R.string.corsaQuasi);
+        else
+            return " - " + context.getString(R.string.corsaImpossibile);
     }
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {

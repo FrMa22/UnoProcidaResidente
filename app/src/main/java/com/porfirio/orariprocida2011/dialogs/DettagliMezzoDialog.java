@@ -87,15 +87,15 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     private View view_separator;
     private int ragione;
     private boolean reportShortcut = false;
-    private OnDialogDismissListener dismissListener;
+    private OnReportListener onReportListener;
     private Meteo meteo;
 
-    public interface OnDialogDismissListener {
+    public interface OnReportListener {
         void onDialogDismissed();
     }
 
-    public void setOnDialogDismissListener(OnDialogDismissListener listener) {
-        this.dismissListener = listener;
+    public void setOnReportListener(OnReportListener listener) {
+        this.onReportListener = listener;
     }
 
     public DettagliMezzoDialog(AlertsDAO alertsDAO, TaxisDAO taxisDAO) {
@@ -251,7 +251,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
                 alert.append(mezzo.conferme).append(mezzo.conferme == 1 ? " " + getString(R.string.utenteDice) : " " + getString(R.string.utentiDicono));
                 alert.append(" ").append(getString(R.string.cheLaCorsaERegolare));
             }
-            if(!getWeatherConditionsString(getContext(), mezzo).isEmpty()){
+            if (!getWeatherConditionsString(getContext(), mezzo).isEmpty()) {
                 alert.append(getWeatherConditionsString(getContext(), mezzo));
             }
             txtAllertaMeteo.setVisibility(VISIBLE);
@@ -263,16 +263,16 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             if (!callingActivity.isOnline()) {
                 Toast.makeText(getContext(), callingActivity.getString(R.string.soloOnline), Toast.LENGTH_SHORT).show();
             } else {
-                if(scriviSegnalazione(false,null)) {
+                if (scriviSegnalazione(false, null)) {
                     Toast.makeText(getContext(), R.string.invioConfermaAvvenuto, Toast.LENGTH_SHORT).show();
                     dismiss();
-                }else{
-                    Toast.makeText(getContext(),R.string.invioConfermaFallito, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), R.string.invioConfermaFallito, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        if (reportShortcut){
+        if (reportShortcut) {
             buttonSegnala.callOnClick();
         }
 
@@ -437,7 +437,8 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         grid.addView(labelView);
         grid.addView(valueView);
     }
-//dynamically shows or hides report layout and a separator line
+
+    //dynamically shows or hides report layout and a separator line
     private void toggleReportGrid() {
         if (currentDynamicView != null) {
             view_separator.setVisibility(GONE);
@@ -451,9 +452,10 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         view_separator.setVisibility(VISIBLE);
         linear_layout_dettagli_mezzo.addView(currentDynamicView);
     }
-//dynamically creates a linear layout for report
+
+    //dynamically creates a linear layout for report
     private LinearLayout createReportLinearLayout() {
-        int marginHorizontal = 15 , marginVertical = 8;
+        int marginHorizontal = 15, marginVertical = 8;
         float scale = getContext().getResources().getDisplayMetrics().density;
         int marginHorizontalPx = (int) (marginHorizontal * scale + 0.5f);
         int marginVerticalPx = (int) (marginVertical * scale + 0.5f);
@@ -530,6 +532,9 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             Toast.makeText(v.getContext(), R.string.ringraziamentoSegnalazione, Toast.LENGTH_SHORT).show();
             toggleReportGrid();
             updateButtonStates(callingActivity.getString(R.string.confermaOSmentisci));
+            if (onReportListener != null) {
+                onReportListener.onDialogDismissed();
+            }
             dismiss();
         });
 
@@ -574,6 +579,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             buttonSegnala.setAlpha(1.0f);
         }
     }
+
     private String getWeatherConditionsString(Context context, Mezzo route) {
         double extraWind = meteo.getForecast(context, route);
 
@@ -588,6 +594,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         else
             return " - " + context.getString(R.string.corsaImpossibile);
     }
+
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
@@ -601,9 +608,6 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             currentDynamicView = null;
         }
 
-        if (dismissListener != null) {
-            dismissListener.onDialogDismissed();
-        }
     }
 
 }

@@ -7,7 +7,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -307,7 +306,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         });
 
-        dettagliMezzoDialog.setOnDialogDismissListener(() -> {
+        dettagliMezzoDialog.setOnReportListener(() -> {
             analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Update Orari da Web da Menu");
 
             lottieLoader.setVisibility(VISIBLE);

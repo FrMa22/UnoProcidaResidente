@@ -7,6 +7,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -151,6 +152,10 @@ public class OrariProcida2011Activity extends FragmentActivity {
         companiesDAO.getUpdates().observe(this, this::onCompaniesUpdate);
         companiesDAO.requestUpdate();
 
+        alertsDAO = new OnRequestAlertsDAO();
+        alertsDAO.getUpdates().observe(this, this::onAlertsUpdate);
+        alertsDAO.requestUpdate();
+
         taxisDAO = new OnRequestTaxisDAO();
         taxisDAO.requestUpdate();
 
@@ -204,7 +209,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
                 .lines()
                 .reduce("", (accumulator, actual) -> accumulator + actual);
 
-        LottieAnimationView lottieLoader = findViewById(R.id.lottieLoader);
         lottieLoader.setAnimationFromJson(jsonString, "loading_animation");
 
 
@@ -236,12 +240,12 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
                         timeResetButton.setText(String.format("%02d:%02d", hourOfDay, minute1));
                         timeResetButton.setVisibility(VISIBLE);
+
                         aggiornaLista();
                     },
                     hour, minute, true);
             timePickerDialog.show();
         });
-
 
 
 
@@ -275,6 +279,8 @@ public class OrariProcida2011Activity extends FragmentActivity {
                 analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Update Orari da Web da Menu");
 
                 lottieLoader.setVisibility(VISIBLE);
+                lottieLoader.playAnimation();
+
                 blurredBackground.setVisibility(VISIBLE);
                 transportsDAO.requestUpdate();
 
@@ -300,6 +306,18 @@ public class OrariProcida2011Activity extends FragmentActivity {
             dettagliMezzoDialog.show(fm, "fragment_edit_name");
 
         });
+
+        dettagliMezzoDialog.setOnDialogDismissListener(() -> {
+            analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "Update Orari da Web da Menu");
+
+            lottieLoader.setVisibility(VISIBLE);
+            lottieLoader.playAnimation();
+
+            blurredBackground.setVisibility(VISIBLE);
+            transportsDAO.requestUpdate();
+        });
+
+
         lvMezzi.setLongClickable(true);
         lvMezzi.setOnItemLongClickListener((arg0, arg1, arg2, arg3) -> {
             analytics.send(ANALYTICS_CATEGORY_UI_EVENT, "LongClick DettagliMezzo");
@@ -324,7 +342,15 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                swipe_refresh_layout.setEnabled(firstVisibleItem == 0);
+                if (firstVisibleItem == 0) {
+                    View firstVisibleChild = view.getChildAt(0);
+                    if (firstVisibleChild != null) {
+                        int top = firstVisibleChild.getTop();
+                        swipe_refresh_layout.setEnabled(top >= 0);
+                    }
+                } else {
+                    swipe_refresh_layout.setEnabled(false);
+                }
             }
         });
 
@@ -373,7 +399,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
         weatherDAO.getUpdates().removeObservers(this);
         weatherDAO.close();
     }
-
 
 
     public boolean isOnline() {
@@ -671,8 +696,9 @@ public class OrariProcida2011Activity extends FragmentActivity {
             // FIXME: highly inefficient, transport list is sorted by time so it could be possible to do a binary search
             for (Alert alert : update.getData()) {
                 for (Mezzo transport : transportList) {
-                    if (sameTransport(transport, alert))
+                    if (sameTransport(transport, alert)) {
                         transport.addReason(alert.getReason());
+                    }
                 }
             }
 
@@ -700,7 +726,8 @@ public class OrariProcida2011Activity extends FragmentActivity {
     private void onTransportsUpdate(TransportsUpdate update) {
         boolean showToast = hasReceivedTransports;
         hasReceivedTransports = true;
-
+        lottieLoader.setVisibility(VISIBLE);
+        lottieLoader.playAnimation();
         if (update.isValid()) {
             transportList.clear();
             transportList.addAll(update.getData());

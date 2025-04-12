@@ -87,7 +87,16 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     private View view_separator;
     private int ragione;
     private boolean reportShortcut = false;
+    private OnDialogDismissListener dismissListener;
     private Meteo meteo;
+
+    public interface OnDialogDismissListener {
+        void onDialogDismissed();
+    }
+
+    public void setOnDialogDismissListener(OnDialogDismissListener listener) {
+        this.dismissListener = listener;
+    }
 
     public DettagliMezzoDialog(AlertsDAO alertsDAO, TaxisDAO taxisDAO) {
         this.alertsDAO = Objects.requireNonNull(alertsDAO);
@@ -521,6 +530,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             Toast.makeText(v.getContext(), R.string.ringraziamentoSegnalazione, Toast.LENGTH_SHORT).show();
             toggleReportGrid();
             updateButtonStates(callingActivity.getString(R.string.confermaOSmentisci));
+            dismiss();
         });
 
         linearLayout.addView(btnInvia);
@@ -589,6 +599,10 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         if (currentDynamicView != null) {
             linear_layout_dettagli_mezzo.removeView(currentDynamicView);
             currentDynamicView = null;
+        }
+
+        if (dismissListener != null) {
+            dismissListener.onDialogDismissed();
         }
     }
 

@@ -38,6 +38,7 @@ import com.porfirio.orariprocida2011.R;
 import com.porfirio.orariprocida2011.activities.OrariProcida2011Activity;
 import com.porfirio.orariprocida2011.entity.Alert;
 import com.porfirio.orariprocida2011.entity.Compagnia;
+import com.porfirio.orariprocida2011.entity.Meteo;
 import com.porfirio.orariprocida2011.entity.Mezzo;
 import com.porfirio.orariprocida2011.entity.Taxi;
 import com.porfirio.orariprocida2011.threads.alerts.AlertsDAO;
@@ -86,17 +87,28 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
     private View view_separator;
     private int ragione;
     private boolean reportShortcut = false;
+    private OnReportListener onReportListener;
+    private Meteo meteo;
+
+    public interface OnReportListener {
+        void onDialogDismissed();
+    }
+
+    public void setOnReportListener(OnReportListener listener) {
+        this.onReportListener = listener;
+    }
 
     public DettagliMezzoDialog(AlertsDAO alertsDAO, TaxisDAO taxisDAO) {
         this.alertsDAO = Objects.requireNonNull(alertsDAO);
         this.taxisDAO = taxisDAO;
     }
 
-    public void setDettagliMezzoDialog(FragmentManager fm, OrariProcida2011Activity a, Context context, Calendar cal) {
+    public void setDettagliMezzoDialog(FragmentManager fm, OrariProcida2011Activity a, Context context, Calendar cal, Meteo meteo) {
         fragmentManager = fm;
         callingActivity = a;
         callingContext = context;
         calen = cal;
+        this.meteo = meteo;
     }
 
     public void setAnalytics(Analytics analytics) {
@@ -223,7 +235,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         if (mezzo.segnalazionePiuComune() > -1) {
             spc = ragioni[mezzo.segnalazionePiuComune()];
         }
-        if (mezzo.tot > 0 || mezzo.conferme > 0) {
+        if (mezzo.tot > 0 || mezzo.conferme > 0 || !getWeatherConditionsString(getContext(), mezzo).isEmpty()) {
             StringBuilder alert = new StringBuilder();
             if (mezzo.tot > 0) {
                 if (mezzo.conc) {
@@ -239,6 +251,9 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
                 alert.append(mezzo.conferme).append(mezzo.conferme == 1 ? " " + getString(R.string.utenteDice) : " " + getString(R.string.utentiDicono));
                 alert.append(" ").append(getString(R.string.cheLaCorsaERegolare));
             }
+            if (!getWeatherConditionsString(getContext(), mezzo).isEmpty()) {
+                alert.append(getWeatherConditionsString(getContext(), mezzo));
+            }
             txtAllertaMeteo.setVisibility(VISIBLE);
             txtAllertaMeteo.setText(alert);
         }
@@ -248,16 +263,16 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             if (!callingActivity.isOnline()) {
                 Toast.makeText(getContext(), callingActivity.getString(R.string.soloOnline), Toast.LENGTH_SHORT).show();
             } else {
-                if(scriviSegnalazione(false,null)) {
+                if (scriviSegnalazione(false, null)) {
                     Toast.makeText(getContext(), R.string.invioConfermaAvvenuto, Toast.LENGTH_SHORT).show();
                     dismiss();
-                }else{
-                    Toast.makeText(getContext(),R.string.invioConfermaFallito, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), R.string.invioConfermaFallito, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        if (reportShortcut){
+        if (reportShortcut) {
             buttonSegnala.callOnClick();
         }
 
@@ -422,7 +437,8 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         grid.addView(labelView);
         grid.addView(valueView);
     }
-//dynamically shows or hides report layout and a separator line
+
+    //dynamically shows or hides report layout and a separator line
     private void toggleReportGrid() {
         if (currentDynamicView != null) {
             view_separator.setVisibility(GONE);
@@ -436,9 +452,10 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
         view_separator.setVisibility(VISIBLE);
         linear_layout_dettagli_mezzo.addView(currentDynamicView);
     }
-//dynamically creates a linear layout for report
+
+    //dynamically creates a linear layout for report
     private LinearLayout createReportLinearLayout() {
-        int marginHorizontal = 15 , marginVertical = 8;
+        int marginHorizontal = 15, marginVertical = 8;
         float scale = getContext().getResources().getDisplayMetrics().density;
         int marginHorizontalPx = (int) (marginHorizontal * scale + 0.5f);
         int marginVerticalPx = (int) (marginVertical * scale + 0.5f);
@@ -515,6 +532,10 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             Toast.makeText(v.getContext(), R.string.ringraziamentoSegnalazione, Toast.LENGTH_SHORT).show();
             toggleReportGrid();
             updateButtonStates(callingActivity.getString(R.string.confermaOSmentisci));
+            if (onReportListener != null) {
+                onReportListener.onDialogDismissed();
+            }
+            dismiss();
         });
 
         linearLayout.addView(btnInvia);
@@ -558,6 +579,22 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             buttonSegnala.setAlpha(1.0f);
         }
     }
+
+    private String getWeatherConditionsString(Context context, Mezzo route) {
+        double extraWind = meteo.getForecast(context, route);
+
+        if (extraWind <= 0)
+            return "";
+        else if (extraWind <= 1)
+            return " - " + context.getString(R.string.pocoProbabile);
+        else if (extraWind <= 2)
+            return " - " + context.getString(R.string.aRischio);
+        else if (extraWind <= 3)
+            return " - " + context.getString(R.string.corsaQuasi);
+        else
+            return " - " + context.getString(R.string.corsaImpossibile);
+    }
+
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
@@ -570,6 +607,7 @@ public class DettagliMezzoDialog extends DialogFragment implements OnClickListen
             linear_layout_dettagli_mezzo.removeView(currentDynamicView);
             currentDynamicView = null;
         }
+
     }
 
 }

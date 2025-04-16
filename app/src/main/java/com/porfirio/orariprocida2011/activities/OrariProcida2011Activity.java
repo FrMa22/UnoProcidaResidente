@@ -228,15 +228,21 @@ public class OrariProcida2011Activity extends FragmentActivity {
                     (view, hourOfDay, minute1) -> {
                         Calendar currentCalendar = Calendar.getInstance();
 
-                        Calendar selectedTime = Calendar.getInstance();
+                        Calendar selectedTime = (Calendar) c.clone();;
                         selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         selectedTime.set(Calendar.MINUTE, minute1);
                         selectedTime.set(Calendar.SECOND, 0);
                         selectedTime.set(Calendar.MILLISECOND, 0);
 
-                        if (selectedTime.before(currentCalendar)) {
+                        if (selectedTime.before(currentCalendar) && dateResetButton.getVisibility() != VISIBLE) {
                             selectedTime.add(Calendar.DAY_OF_YEAR, 1);
+                            dateResetButton.setText(String.format("%02d/%02d/%04d",
+                                    selectedTime.get(Calendar.DAY_OF_MONTH),
+                                    selectedTime.get(Calendar.MONTH) + 1,
+                                    selectedTime.get(Calendar.YEAR)));
+                            dateResetButton.setVisibility(View.VISIBLE);
                         }
+
 
                         c.setTime(selectedTime.getTime());
 
@@ -248,7 +254,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
                     hour, minute, true);
             timePickerDialog.show();
         });
-
 
         dateButton.setOnClickListener(v -> {
             // Ottieni la data corrente
@@ -272,11 +277,36 @@ public class OrariProcida2011Activity extends FragmentActivity {
                             dayOfMonth1 = currentCalendar.get(Calendar.DAY_OF_MONTH);
                         }
 
+                        // Imposta la data scelta
                         c.set(Calendar.YEAR, year1);
                         c.set(Calendar.MONTH, monthOfYear);
                         c.set(Calendar.DAY_OF_MONTH, dayOfMonth1);
+
+                        //se si sceglie la data di oggi si imposta l'orario a quello attuale così da non mostrare corse antecedenti
+                        if (year1 == currentCalendar.get(Calendar.YEAR) && monthOfYear == currentCalendar.get(Calendar.MONTH) && dayOfMonth1 == currentCalendar.get(Calendar.DAY_OF_MONTH)) {
+                           c.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
+                           c.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
+                           c.set(Calendar.SECOND, 0);
+                           c.set(Calendar.MILLISECOND, 0);
+
+                           timeResetButton.setText(String.format("%02d:%02d", currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE)));
+                           timeResetButton.setVisibility(VISIBLE);
+                        }else{
+                            // Se l'orario non è stato ancora scelto, imposta a mezzanotte
+                            if (timeResetButton.getVisibility() != VISIBLE) {
+                                c.set(Calendar.HOUR_OF_DAY, 0);
+                                c.set(Calendar.MINUTE, 0);
+                                c.set(Calendar.SECOND, 0);
+                                c.set(Calendar.MILLISECOND, 0);
+                                timeResetButton.setText(String.format("%02d:%02d", c.get(Calendar.HOUR_OF_DAY),c.get(Calendar.MINUTE)));
+                                timeResetButton.setVisibility(VISIBLE);
+                            }
+                        }
+
+
                         dateResetButton.setText(String.format("%02d/%02d/%04d", dayOfMonth1, monthOfYear + 1, year1));
                         dateResetButton.setVisibility(View.VISIBLE);
+
                         aggiornaLista();
                     },
                     year, month, dayOfMonth);
@@ -285,26 +315,18 @@ public class OrariProcida2011Activity extends FragmentActivity {
             datePickerDialog.show();
         });
 
+
         timeResetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar currentCalendar = Calendar.getInstance();
-                c.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
-                c.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
-                timeResetButton.setVisibility(GONE);
-                aggiornaLista();
+                resetTime();
             }
         });
 
         dateResetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar currentCalendar = Calendar.getInstance();
-                c.set(Calendar.YEAR, currentCalendar.get(Calendar.YEAR));
-                c.set(Calendar.MONTH, currentCalendar.get(Calendar.MONTH));
-                c.set(Calendar.DAY_OF_MONTH, currentCalendar.get(Calendar.DAY_OF_MONTH));
-                dateResetButton.setVisibility(GONE);
-                aggiornaLista();
+                timeResetButton.callOnClick();
             }
         });
 
@@ -327,7 +349,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         transportList = new ArrayList<>();
         GridView lvMezzi = findViewById(R.id.listMezzi);
         selectMezzi = new ArrayList<>();
-        aalvMezzi = new MezzoAdapter(this, selectMezzi);
+        aalvMezzi = new MezzoAdapter(this, selectMezzi, c);
         lvMezzi.setAdapter(aalvMezzi);
 
         dettagliMezzoDialog = new DettagliMezzoDialog(alertsDAO, taxisDAO);
@@ -408,6 +430,19 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
     }
 
+    private void resetTime() {
+        Calendar currentCalendar = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
+        c.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
+        c.set(Calendar.YEAR, currentCalendar.get(Calendar.YEAR));
+        c.set(Calendar.MONTH, currentCalendar.get(Calendar.MONTH));
+        c.set(Calendar.DAY_OF_MONTH, currentCalendar.get(Calendar.DAY_OF_MONTH));
+
+        dateResetButton.setVisibility(GONE);
+        timeResetButton.setVisibility(GONE);
+        aggiornaLista();
+    }
+
     private void showSnackBar(String text) {
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
                 text,
@@ -463,7 +498,9 @@ public class OrariProcida2011Activity extends FragmentActivity {
         String expandedArrivalLocation = espandiPorto(portoArrivo);
 
         LocalDateTime selectedDate = LocalDateTime.ofInstant(c.toInstant(), c.getTimeZone().toZoneId());
+        Log.d("selectedDate", "selectedDate " + selectedDate.toString());
         LocalDateTime oraLimite = selectedDate.plusDays(1);
+        Log.d("selectedDate", "oraLimite " + oraLimite.toString());
 
 
         for (Mezzo mezzo : transportList) {
@@ -505,6 +542,8 @@ public class OrariProcida2011Activity extends FragmentActivity {
         blurredBackground.setVisibility(GONE);
         lottieLoader.cancelAnimation();
         lottieLoader.setVisibility(GONE);
+        GridView lvMezzi = findViewById(R.id.listMezzi);
+        lvMezzi.smoothScrollToPosition(0);
 
     }
 

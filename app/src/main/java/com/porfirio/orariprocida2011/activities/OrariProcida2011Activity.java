@@ -465,9 +465,6 @@ public class OrariProcida2011Activity extends FragmentActivity {
         LocalDateTime selectedDate = LocalDateTime.ofInstant(c.toInstant(), c.getTimeZone().toZoneId());
         LocalDateTime oraLimite = selectedDate.plusDays(1);
 
-        System.out.println("=== AGGIORNA LISTA ===");
-        System.out.println("Data/ora selezionata: " + selectedDate);
-        System.out.println("Ora limite: " + oraLimite);
 
         for (Mezzo mezzo : transportList) {
             LocalDateTime oraNave = selectedDate.toLocalDate().atTime(mezzo.getDepartureTime());

@@ -4,7 +4,9 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -106,7 +108,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
     private boolean hasReceivedWeather, hasReceivedCompanies, hasReceivedTransports, hasReceivedAlerts;
 
-    private ImageButton timeButton;
+    private ImageButton timeButton, dateButton;
     private Button timeResetButton, dateResetButton;
     private SwipeRefreshLayout swipe_refresh_layout;
     private LottieAnimationView lottieLoader;
@@ -177,6 +179,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         meteo = new Meteo();
 
         timeButton = findViewById(R.id.time_button);
+        dateButton = findViewById(R.id.date_button);
         timeResetButton = findViewById(R.id.timeResetButton);
         dateResetButton = findViewById(R.id.dateResetButton);
         weatherFab = findViewById(R.id.fabWeather);
@@ -247,6 +250,40 @@ public class OrariProcida2011Activity extends FragmentActivity {
         });
 
 
+        dateButton.setOnClickListener(v -> {
+            // Ottieni la data corrente
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+            // Mostra il DatePickerDialog
+            @SuppressLint("DefaultLocale") DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    OrariProcida2011Activity.this,
+                    R.style.DatePickerTheme,
+                    (view, year1, monthOfYear, dayOfMonth1) -> {
+                        // Impedire la selezione di date antecedenti alla data attuale
+                        Calendar currentCalendar = Calendar.getInstance();
+                        if (year1 < currentCalendar.get(Calendar.YEAR) ||
+                                (year1 == currentCalendar.get(Calendar.YEAR) && monthOfYear < currentCalendar.get(Calendar.MONTH)) ||
+                                (year1 == currentCalendar.get(Calendar.YEAR) && monthOfYear == currentCalendar.get(Calendar.MONTH) && dayOfMonth1 < currentCalendar.get(Calendar.DAY_OF_MONTH))) {
+                            year1 = currentCalendar.get(Calendar.YEAR);
+                            monthOfYear = currentCalendar.get(Calendar.MONTH);
+                            dayOfMonth1 = currentCalendar.get(Calendar.DAY_OF_MONTH);
+                        }
+
+                        c.set(Calendar.YEAR, year1);
+                        c.set(Calendar.MONTH, monthOfYear);
+                        c.set(Calendar.DAY_OF_MONTH, dayOfMonth1);
+                        dateResetButton.setText(String.format("%02d/%02d/%04d", dayOfMonth1, monthOfYear + 1, year1));
+                        dateResetButton.setVisibility(View.VISIBLE);
+                        aggiornaLista();
+                    },
+                    year, month, dayOfMonth);
+
+            datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+            datePickerDialog.show();
+        });
 
         timeResetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -427,6 +464,10 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         LocalDateTime selectedDate = LocalDateTime.ofInstant(c.toInstant(), c.getTimeZone().toZoneId());
         LocalDateTime oraLimite = selectedDate.plusDays(1);
+
+        System.out.println("=== AGGIORNA LISTA ===");
+        System.out.println("Data/ora selezionata: " + selectedDate);
+        System.out.println("Ora limite: " + oraLimite);
 
         for (Mezzo mezzo : transportList) {
             LocalDateTime oraNave = selectedDate.toLocalDate().atTime(mezzo.getDepartureTime());

@@ -113,6 +113,8 @@ public class OrariProcida2011Activity extends FragmentActivity {
     private SwipeRefreshLayout swipe_refresh_layout;
     private LottieAnimationView lottieLoader;
     private ImageView blurredBackground;
+    private boolean isTimePicked = false;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -243,6 +245,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
                                 selectedTime.get(Calendar.MONTH) + 1,
                                 selectedTime.get(Calendar.YEAR), hourOfDay, minute1));
                         dateTimeChip.setVisibility(VISIBLE);
+                        isTimePicked = true;
 
                         aggiornaLista();
                     },
@@ -278,23 +281,24 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
                         //se si sceglie la data di oggi si imposta l'orario a quello attuale così da non mostrare corse antecedenti
                         if (year1 == currentCalendar.get(Calendar.YEAR) && monthOfYear == currentCalendar.get(Calendar.MONTH) && dayOfMonth1 == currentCalendar.get(Calendar.DAY_OF_MONTH)) {
+                            Log.d("selectedDate", "entrato 1");
                             c.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
                             c.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
                             c.set(Calendar.SECOND, 0);
                             c.set(Calendar.MILLISECOND, 0);
-
+                            dateTimeChip.setText(String.format("%02d/%02d/%04d - %02d:%02d", dayOfMonth1, monthOfYear + 1, year1, currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE)));
                         } else {
                             // Se l'orario non è stato ancora scelto, imposta a mezzanotte
-                            if (dateTimeChip.getVisibility() != VISIBLE) {
+                            if (!isTimePicked) {
+                                Log.d("selectedDate", "entrato 2");
                                 c.set(Calendar.HOUR_OF_DAY, 0);
                                 c.set(Calendar.MINUTE, 0);
                                 c.set(Calendar.SECOND, 0);
                                 c.set(Calendar.MILLISECOND, 0);
                             }
+                            dateTimeChip.setText(String.format("%02d/%02d/%04d - %02d:%02d", dayOfMonth1, monthOfYear + 1, year1, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)));
                         }
-                        dateTimeChip.setText(String.format("%02d/%02d/%04d - %02d:%02d", dayOfMonth1, monthOfYear + 1, year1, currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE)));
                         dateTimeChip.setVisibility(VISIBLE);
-
                         aggiornaLista();
                     },
                     year, month, dayOfMonth);
@@ -421,6 +425,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         c.set(Calendar.DAY_OF_MONTH, currentCalendar.get(Calendar.DAY_OF_MONTH));
 
         dateTimeChip.setVisibility(GONE);
+        isTimePicked = false;
         aggiornaLista();
     }
 

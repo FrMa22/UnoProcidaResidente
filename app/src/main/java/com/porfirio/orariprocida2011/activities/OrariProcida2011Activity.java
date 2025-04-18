@@ -40,26 +40,26 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.porfirio.orariprocida2011.R;
 import com.porfirio.orariprocida2011.adapter.MezzoAdapter;
+import com.porfirio.orariprocida2011.dialogs.DettagliMezzoDialog;
 import com.porfirio.orariprocida2011.dialogs.WeatherDialog;
+import com.porfirio.orariprocida2011.entity.Alert;
+import com.porfirio.orariprocida2011.entity.Compagnia;
+import com.porfirio.orariprocida2011.entity.Meteo;
+import com.porfirio.orariprocida2011.entity.Mezzo;
+import com.porfirio.orariprocida2011.entity.Osservazione;
+import com.porfirio.orariprocida2011.threads.alerts.AlertUpdate;
+import com.porfirio.orariprocida2011.threads.alerts.OnRequestAlertsDAO;
 import com.porfirio.orariprocida2011.threads.companies.CompaniesUpdate;
 import com.porfirio.orariprocida2011.threads.companies.OnRequestCompaniesDAO;
 import com.porfirio.orariprocida2011.threads.taxies.OnRequestTaxisDAO;
 import com.porfirio.orariprocida2011.threads.transports.OnRequestTransportsDAO;
 import com.porfirio.orariprocida2011.threads.transports.TransportsUpdate;
-import com.porfirio.orariprocida2011.entity.Alert;
-import com.porfirio.orariprocida2011.threads.alerts.AlertUpdate;
-import com.porfirio.orariprocida2011.threads.alerts.OnRequestAlertsDAO;
-import com.porfirio.orariprocida2011.utils.Analytics;
-import com.porfirio.orariprocida2011.utils.AnalyticsApplication;
-import com.porfirio.orariprocida2011.R;
 import com.porfirio.orariprocida2011.threads.weather.OnRequestWeatherDAO;
 import com.porfirio.orariprocida2011.threads.weather.WeatherUpdate;
-import com.porfirio.orariprocida2011.dialogs.DettagliMezzoDialog;
-import com.porfirio.orariprocida2011.entity.Compagnia;
-import com.porfirio.orariprocida2011.entity.Meteo;
-import com.porfirio.orariprocida2011.entity.Mezzo;
-import com.porfirio.orariprocida2011.entity.Osservazione;
+import com.porfirio.orariprocida2011.utils.Analytics;
+import com.porfirio.orariprocida2011.utils.AnalyticsApplication;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -109,7 +109,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
     private boolean hasReceivedWeather, hasReceivedCompanies, hasReceivedTransports, hasReceivedAlerts;
 
     private ImageButton timeButton, dateButton;
-    private Button timeResetButton, dateResetButton;
+    private Button dateTimeChip;
     private SwipeRefreshLayout swipe_refresh_layout;
     private LottieAnimationView lottieLoader;
     private ImageView blurredBackground;
@@ -180,8 +180,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
         timeButton = findViewById(R.id.time_button);
         dateButton = findViewById(R.id.date_button);
-        timeResetButton = findViewById(R.id.timeResetButton);
-        dateResetButton = findViewById(R.id.dateResetButton);
+        dateTimeChip = findViewById(R.id.timeResetButton);
         weatherFab = findViewById(R.id.fabWeather);
 
         weatherFab.setOnClickListener(v -> {
@@ -218,9 +217,9 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
 
         timeButton.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            int minute = calendar.get(Calendar.MINUTE);
+
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
 
             TimePickerDialog timePickerDialog = new TimePickerDialog(
                     OrariProcida2011Activity.this,
@@ -228,39 +227,34 @@ public class OrariProcida2011Activity extends FragmentActivity {
                     (view, hourOfDay, minute1) -> {
                         Calendar currentCalendar = Calendar.getInstance();
 
-                        Calendar selectedTime = (Calendar) c.clone();;
+                        Calendar selectedTime = (Calendar) c.clone();
                         selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         selectedTime.set(Calendar.MINUTE, minute1);
                         selectedTime.set(Calendar.SECOND, 0);
                         selectedTime.set(Calendar.MILLISECOND, 0);
 
-                        if (selectedTime.before(currentCalendar) && dateResetButton.getVisibility() != VISIBLE) {
+                        if (selectedTime.before(currentCalendar)) {
                             selectedTime.add(Calendar.DAY_OF_YEAR, 1);
-                            dateResetButton.setText(String.format("%02d/%02d/%04d",
-                                    selectedTime.get(Calendar.DAY_OF_MONTH),
-                                    selectedTime.get(Calendar.MONTH) + 1,
-                                    selectedTime.get(Calendar.YEAR)));
-                            dateResetButton.setVisibility(View.VISIBLE);
                         }
-
 
                         c.setTime(selectedTime.getTime());
 
-                        timeResetButton.setText(String.format("%02d:%02d", hourOfDay, minute1));
-                        timeResetButton.setVisibility(VISIBLE);
+                        dateTimeChip.setText(String.format("%02d/%02d/%04d - %02d:%02d", selectedTime.get(Calendar.DAY_OF_MONTH),
+                                selectedTime.get(Calendar.MONTH) + 1,
+                                selectedTime.get(Calendar.YEAR), hourOfDay, minute1));
+                        dateTimeChip.setVisibility(VISIBLE);
 
                         aggiornaLista();
                     },
                     hour, minute, true);
+
             timePickerDialog.show();
         });
 
         dateButton.setOnClickListener(v -> {
-            // Ottieni la data corrente
-            Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
 
             // Mostra il DatePickerDialog
             @SuppressLint("DefaultLocale") DatePickerDialog datePickerDialog = new DatePickerDialog(
@@ -284,51 +278,39 @@ public class OrariProcida2011Activity extends FragmentActivity {
 
                         //se si sceglie la data di oggi si imposta l'orario a quello attuale così da non mostrare corse antecedenti
                         if (year1 == currentCalendar.get(Calendar.YEAR) && monthOfYear == currentCalendar.get(Calendar.MONTH) && dayOfMonth1 == currentCalendar.get(Calendar.DAY_OF_MONTH)) {
-                           c.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
-                           c.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
-                           c.set(Calendar.SECOND, 0);
-                           c.set(Calendar.MILLISECOND, 0);
+                            c.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
+                            c.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
+                            c.set(Calendar.SECOND, 0);
+                            c.set(Calendar.MILLISECOND, 0);
 
-                           timeResetButton.setText(String.format("%02d:%02d", currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE)));
-                           timeResetButton.setVisibility(VISIBLE);
-                        }else{
+                        } else {
                             // Se l'orario non è stato ancora scelto, imposta a mezzanotte
-                            if (timeResetButton.getVisibility() != VISIBLE) {
+                            if (dateTimeChip.getVisibility() != VISIBLE) {
                                 c.set(Calendar.HOUR_OF_DAY, 0);
                                 c.set(Calendar.MINUTE, 0);
                                 c.set(Calendar.SECOND, 0);
                                 c.set(Calendar.MILLISECOND, 0);
-                                timeResetButton.setText(String.format("%02d:%02d", c.get(Calendar.HOUR_OF_DAY),c.get(Calendar.MINUTE)));
-                                timeResetButton.setVisibility(VISIBLE);
                             }
                         }
-
-
-                        dateResetButton.setText(String.format("%02d/%02d/%04d", dayOfMonth1, monthOfYear + 1, year1));
-                        dateResetButton.setVisibility(View.VISIBLE);
+                        dateTimeChip.setText(String.format("%02d/%02d/%04d - %02d:%02d", dayOfMonth1, monthOfYear + 1, year1, currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE)));
+                        dateTimeChip.setVisibility(VISIBLE);
 
                         aggiornaLista();
                     },
                     year, month, dayOfMonth);
 
-            datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+            datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
             datePickerDialog.show();
         });
 
 
-        timeResetButton.setOnClickListener(new View.OnClickListener() {
+        dateTimeChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 resetTime();
             }
         });
 
-        dateResetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                timeResetButton.callOnClick();
-            }
-        });
 
         swipe_refresh_layout = findViewById(R.id.swipe_refresh_layout);
         swipe_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -438,8 +420,7 @@ public class OrariProcida2011Activity extends FragmentActivity {
         c.set(Calendar.MONTH, currentCalendar.get(Calendar.MONTH));
         c.set(Calendar.DAY_OF_MONTH, currentCalendar.get(Calendar.DAY_OF_MONTH));
 
-        dateResetButton.setVisibility(GONE);
-        timeResetButton.setVisibility(GONE);
+        dateTimeChip.setVisibility(GONE);
         aggiornaLista();
     }
 
